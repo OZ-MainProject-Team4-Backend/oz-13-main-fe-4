@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "prepare": "panda codegen",
+    "prepare": "panda codegen && husky",
     "dev": "panda codegen & vite",
     "build": "panda codegen && tsc && vite build",
     "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
@@ -33,6 +33,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
     "globals": "^16.4.0",
+    "husky": "^9.1.7",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "typescript": "~5.9.3",

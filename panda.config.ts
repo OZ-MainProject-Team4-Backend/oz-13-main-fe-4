@@ -1,20 +1,35 @@
-import { defineConfig } from "@pandacss/dev";
+import { defineConfig } from '@pandacss/dev';
 
 export default defineConfig({
-  // Whether to use css reset
-  preflight: true,
+  // 1️⃣ 소스 경로 설정
+  include: ['./src/**/*.{js,jsx,ts,tsx}'],
 
-  // Where to look for your css declarations
-  include: ["./src/**/*.{js,jsx,ts,tsx}", "./pages/**/*.{js,jsx,ts,tsx}"],
+  // 2️⃣ 출력 경로 설정 (Panda가 생성하는 스타일 코드 위치)
+  outdir: 'styled-system',
 
-  // Files to exclude
-  exclude: [],
+  // 3️⃣ 프리셋 (기본 테마 포함)
+  presets: ['@pandacss/preset-panda'],
 
-  // Useful for theme customization
+  // 4️⃣ 테마 커스터마이징
   theme: {
-    extend: {},
+    extend: {
+      tokens: {
+        colors: {
+          brand: { value: '#1a73e8' },
+        },
+        fonts: {
+          pretendard: { value: 'Pretendard, sans-serif' },
+        },
+      },
+    },
   },
 
-  // The output directory for your css system
-  outdir: "styled-system",
+  // 5️⃣ global 스타일
+  globalCss: {
+    'html, body': {
+      fontFamily: 'Pretendard, sans-serif',
+      backgroundColor: '#fff',
+      color: '#111',
+    },
+  },
 });
