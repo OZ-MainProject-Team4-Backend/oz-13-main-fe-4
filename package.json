@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "prepare": "panda codegen && husky install",
+    "prepare": "panda codegen && husky",
     "dev": "panda codegen & vite",
     "build": "panda codegen && tsc && vite build",
     "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
