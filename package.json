@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "prepare": "husky install",
-    "build": "tsc -b && vite build",
+    "prepare": "panda codegen && husky install",
+    "dev": "panda codegen & vite",
+    "build": "panda codegen && tsc && vite build",
     "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
     "preview": "vite preview"
   },
