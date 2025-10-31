@@ -4,17 +4,25 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "prepare": "panda codegen && husky",
+    "dev": "panda codegen & vite",
+    "build": "panda codegen && tsc && vite build",
     "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@suspensive/react": "^3.13.0",
+    "@tanstack/react-query": "^5.90.5",
+    "msw": "^2.11.6",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.9.5",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
+    "@pandacss/dev": "^1.4.3",
+    "@tanstack/react-query-devtools": "^5.90.2",
     "@types/node": "^24.6.0",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
@@ -25,9 +33,20 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
     "globals": "^16.4.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
+    "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.45.0",
     "vite": "^7.1.7"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": ["prettier --write","eslint --fix"]
   }
 }
