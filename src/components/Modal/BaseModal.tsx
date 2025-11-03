@@ -17,7 +17,7 @@ const BaseModal = ({ isOpen, title, subtitle, children, footer }: BaseModalProps
         position: 'fixed',
         top: 0,
         left: 0,
-        bg: 'rgba(0,0,0,0.6)',
+        bg: 'rgba(0,0,0,0.7)',
         width: '100vw',
         height: '100vh',
         display: 'flex',
@@ -38,7 +38,7 @@ const BaseModal = ({ isOpen, title, subtitle, children, footer }: BaseModalProps
         onClick={(e) => e.stopPropagation()}
       >
         <div>
-          <h2>{title}</h2>
+          <h3>{title}</h3>
           {subtitle && <p>{subtitle}</p>}
         </div>
         {children}
