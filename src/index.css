@@ -2,8 +2,8 @@
 
 /* CSS 변수 정의 (전역에서 사용 가능) */
 :root {
+  /* 색상 변수 */
   --color-background: #dbeafe;
-
 }
 
 /* 폰트 정의 */
