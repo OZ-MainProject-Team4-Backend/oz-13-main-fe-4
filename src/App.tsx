@@ -1,7 +1,8 @@
 import './App.css';
+import SignUpPage from './pages/auth/SignUpPage';
 
 function App() {
-  return <h1>하윙</h1>;
+  return <SignUpPage />;
 }
 
 export default App;
