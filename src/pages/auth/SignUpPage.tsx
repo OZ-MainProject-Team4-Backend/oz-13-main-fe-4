@@ -27,7 +27,7 @@ export default function SignUpPage() {
             회원가입
           </h1>
 
-          <form className={stack({ gap: 5 })} action=''>
+          <form className={stack({ gap: { base: 4, md: 10 } })} action=''>
             <div className={grid({ columns: { base: 1, md: 2 }, gap: 3 })}>
               <Input label='이름' type='text' placeholder='이름을 입력해주세요' id='userName' />
               <Input
@@ -38,19 +38,30 @@ export default function SignUpPage() {
               />
             </div>
             <div className={grid({ columns: { base: 1, md: 2 }, gap: 3 })}>
-              <Input label='전화번호' type='text' placeholder='01012345678' />
+              <Input
+                label='전화번호'
+                type='text'
+                placeholder='01012345678'
+                helperText='(-)빼고 입력해주세요'
+              />
               <div>
                 <label
                   className={css({
                     display: 'block',
-                    mb: 2,
+                    mb: 5,
                     fontWeight: 'medium',
                     color: 'gray.700',
                   })}
                 >
                   성별
                 </label>
-                <div className={hstack({ gap: 6 })}>
+                <div
+                  className={hstack({
+                    gap: 10,
+                    flex: 'content',
+                    justify: 'center',
+                  })}
+                >
                   <label className={hstack({ gap: 2 })}>
                     <input type='radio' name='gender' value='male' defaultChecked /> 남자
                   </label>
@@ -73,12 +84,14 @@ export default function SignUpPage() {
                 type='password'
                 placeholder='숫자,영문포함 8자 이상'
                 id='userPassword'
+                helperText='숫자,영문 포함 하여 8자 이상 입력해주세요'
               />
               <Input
                 label='비밀번호 확인'
                 type='password'
                 placeholder='비밀번호 확인'
                 id='userPasswordConfirm'
+                helperText='동일한 비밀번호를 입력해주세요'
               />
             </div>
 
@@ -86,7 +99,7 @@ export default function SignUpPage() {
               회원가입하기
             </Button>
 
-            <hr className={css({ m: 6, borderColor: 'gray.200' })} />
+            <hr className={css({ m: 1, borderColor: 'gray.200' })} />
 
             <div className={stack({ gap: 3 })}>
               <p className={css({ textAlign: 'center', color: 'gray.600' })}>

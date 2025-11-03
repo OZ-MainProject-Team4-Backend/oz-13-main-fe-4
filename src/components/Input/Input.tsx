@@ -16,7 +16,6 @@ export default function Input({ label, error, helperText, ...props }: InputProps
           className={css({
             width: 'full',
             display: 'block',
-            mb: 2,
             fontSize: 'md',
             fontWeight: 'medium',
             color: 'gray.700',
@@ -25,6 +24,17 @@ export default function Input({ label, error, helperText, ...props }: InputProps
           {label}
         </label>
       )}
+      <div className={css({ h: '18px', mb: 1 })}>
+        {error ? (
+          <p className={css({ fontSize: 'xs', color: 'red.500', m: 0, textAlign: 'left' })}>
+            {error}
+          </p>
+        ) : helperText ? (
+          <p className={css({ fontSize: 'xs', color: 'gray.400', m: 0, textAlign: 'left' })}>
+            {helperText}
+          </p>
+        ) : null}
+      </div>
       <input
         id={props.id}
         className={css({
@@ -33,6 +43,7 @@ export default function Input({ label, error, helperText, ...props }: InputProps
           boxSizing: 'border-box',
           px: 3,
           py: 2,
+          bg: 'gray.100',
           border: '1px solid',
           borderColor: error ? 'red.500' : 'gray.300',
           borderRadius: 'md',
@@ -47,11 +58,6 @@ export default function Input({ label, error, helperText, ...props }: InputProps
         })}
         {...props}
       />
-      {error && <p className={css({ mt: 1, fontSize: 'sm', color: 'red.500' })}>{error}</p>}
-
-      {helperText && !error && (
-        <p className={css({ mt: 1, fontSize: 'sm', color: 'gray.500' })}>{helperText}</p>
-      )}
     </div>
   );
 }
