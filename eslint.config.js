@@ -5,6 +5,7 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import prettier from 'eslint-plugin-prettier';
 import globals from 'globals';
+import prettierConfig from 'eslint-config-prettier';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -74,6 +75,7 @@ export default [
       },
     },
   },
+  prettierConfig,
 
   // 테스트 파일 제외 (선택사항)
   {
