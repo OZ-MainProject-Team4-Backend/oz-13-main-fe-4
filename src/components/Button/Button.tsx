@@ -4,7 +4,15 @@ import { css } from '../../../styled-system/css';
 
 //타입정의
 interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'success' | 'beforeVerify' | 'outline';
+  variant?:
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'beforeVerify'
+    | 'outline'
+    | 'google'
+    | 'naver'
+    | 'kakao';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
@@ -40,9 +48,20 @@ export default function Button({
                   ? 'blue.300'
                   : variant === 'outline'
                     ? 'blue.100'
-                    : 'transparent',
-        color: variant === 'outline' ? 'blue.500' : variant === 'secondary' ? 'black' : 'white',
-        border: variant === 'outline' ? '1px solid' : 'none',
+                    : variant === 'google'
+                      ? 'white'
+                      : variant === 'naver'
+                        ? 'green.500'
+                        : variant === 'kakao'
+                          ? 'yellow.400'
+                          : 'transparent',
+        color:
+          variant === 'outline'
+            ? 'blue.500'
+            : variant === 'secondary' || variant === 'google' || variant === 'kakao'
+              ? 'black'
+              : 'white',
+        border: variant === 'outline' || variant === 'google' ? '1px solid' : 'none',
         _hover: {
           bg:
             variant === 'primary'
@@ -51,7 +70,13 @@ export default function Button({
                 ? 'gray.300'
                 : variant === 'success'
                   ? 'green.700'
-                  : 'blue.400',
+                  : variant === 'google'
+                    ? 'gray.300'
+                    : variant === 'naver'
+                      ? 'green.600'
+                      : variant === 'kakao'
+                        ? 'yellow.500'
+                        : 'blue.400',
         },
       })}
       {...props}

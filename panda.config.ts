@@ -28,7 +28,7 @@ export default defineConfig({
   globalCss: {
     'html, body': {
       fontFamily: 'Pretendard, sans-serif',
-      backgroundColor: '#fff',
+      backgroundColor: 'blue.100',
       color: '#111',
     },
   },
