@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
-import { GoogleButton, KakaoButton, NaverButton } from '../../components/Button/Button';
+import { GoogleButton, KakaoButton, NaverButton } from '../../components/Button';
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
