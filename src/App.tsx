@@ -1,5 +1,6 @@
-import './App.css';
 import { css } from '@emotion/react';
+import './App.css';
+import ColorButtons from './components/Button/Button';
 
 function App() {
   return (
@@ -8,12 +9,15 @@ function App() {
         background-color: #dbeafe;
         min-height: 100vh;
         display: flex;
+        direction: column;
+        gap: 20px;
         justify-content: center;
         align-items: center;
         font-family: 'Pretendard', sans-serif;
       `}
     >
       <h1>Emotion 스타일 적용 완료 🎨</h1>
+      <ColorButtons />
     </div>
   );
 }
