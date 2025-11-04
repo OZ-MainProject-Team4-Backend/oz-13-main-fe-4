@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "prepare": "panda codegen && husky",
-    "dev": "panda codegen & vite",
-    "build": "panda codegen && tsc && vite build",
+    "prepare": "husky",
+    "dev": "vite",
+    "build": "tsc && vite build",
     "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
     "preview": "vite preview"
   },
@@ -21,7 +21,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
-    "@pandacss/dev": "^1.4.3",
     "@tanstack/react-query-devtools": "^5.90.2",
     "@types/node": "^24.6.0",
     "@types/react": "^19.1.16",
@@ -36,7 +35,6 @@
     "globals": "^16.4.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.6",
-    "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.45.0",
