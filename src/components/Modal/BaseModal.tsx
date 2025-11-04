@@ -6,7 +6,8 @@ interface BaseModalProps {
   onClose: () => void;
   title: string;
   subtitle: string;
-  footer: React.ReactNode;
+  footer?: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const overlayStyle = css`
@@ -54,7 +55,14 @@ const footerStyle = css`
   padding-top: 24px;
 `;
 
-export const BaseModal = ({ isOpen, onClose, title, subtitle, footer }: BaseModalProps) => {
+export const BaseModal = ({
+  isOpen,
+  onClose,
+  title,
+  subtitle,
+  footer,
+  children,
+}: BaseModalProps) => {
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -70,6 +78,7 @@ export const BaseModal = ({ isOpen, onClose, title, subtitle, footer }: BaseModa
       <div css={modalStyle} onClick={(e) => e.stopPropagation()}>
         {title && <h2 css={titleStyle}>{title}</h2>}
         {subtitle && <p css={subtitleStyle}>{subtitle}</p>}
+        {children && <p>{children}</p>}
         {footer && <div css={footerStyle}>{footer}</div>}
       </div>
     </div>
