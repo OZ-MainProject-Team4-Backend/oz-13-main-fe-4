@@ -1,6 +1,14 @@
 import { useCallback, useState } from 'react';
 import { GeolocationPosition, getCurrentPosition } from '../utils/geolocation';
-
+/**
+ * 현재 위치를 조회하는 훅
+ * @example
+ * const { location, fetchLocation } = useCurrentLocation();
+ * useEffect(() => {
+ *   fetchLocation();
+ * }, [fetchLocation]);
+ * @returns location, loading, error, fetchLocation
+ */
 export const useCurrentLocation = () => {
   const [location, setLocation] = useState<GeolocationPosition | null>(null);
   const [loading, setLoading] = useState(false);
