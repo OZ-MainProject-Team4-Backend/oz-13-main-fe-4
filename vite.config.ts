@@ -1,13 +1,16 @@
-import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import { defineConfig } from 'vite';
 
 // Vite 설정
 export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'), // src를 @로 접근 가능하게
+      '@components': path.resolve(__dirname, './src/components'),
+      '@features': path.resolve(__dirname, './src/features'),
+      '@constants': path.resolve(__dirname, './src/constants'),
+      '@pages': path.resolve(__dirname, './src/pages'),
     },
   },
   css: {
