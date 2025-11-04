@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import './App.css';
-import SignIn from './pages/auth/SignIn';
 
 function App() {
   return (
@@ -15,10 +14,7 @@ function App() {
         align-items: center;
         font-family: 'Pretendard', sans-serif;
       `}
-    >
-      <h1>Emotion 스타일 적용 완료 🎨</h1>
-      <SignIn />
-    </div>
+    />
   );
 }
 

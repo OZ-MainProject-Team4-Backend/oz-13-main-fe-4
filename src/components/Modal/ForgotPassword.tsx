@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -6,6 +5,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import * as React from 'react';
 
 interface ForgotPasswordProps {
   open: boolean;
@@ -24,18 +24,16 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
             event.preventDefault();
             handleClose();
           },
-          sx: { backgroundImage: 'none' },
+          sx: { backgroundImage: 'none', p: 3 },
         },
       }}
     >
-      <DialogTitle>Reset password</DialogTitle>
-      <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}>
+      <DialogTitle>비밀번호 교체</DialogTitle>
+      <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <DialogContentText>
-          Enter your account&apos;s email address, and we&apos;ll send you a link to reset your
-          password.
+          이메일 주소를 입력하시면 비밀번호 재설정 링크를 보내드립니다.
         </DialogContentText>
         <OutlinedInput
-          autoFocus
           required
           margin='dense'
           id='email'
@@ -47,9 +45,11 @@ export default function ForgotPassword({ open, handleClose }: ForgotPasswordProp
         />
       </DialogContent>
       <DialogActions sx={{ pb: 3, px: 3 }}>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose} variant='outlined' type='submit'>
+          취소
+        </Button>
         <Button variant='contained' type='submit'>
-          Continue
+          메일 보내기
         </Button>
       </DialogActions>
     </Dialog>
