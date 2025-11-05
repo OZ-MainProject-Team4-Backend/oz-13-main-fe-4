@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 
 import { styled } from '@mui/material/styles';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { GoogleButton, KakaoButton, NaverButton } from '../../components/Button';
 
@@ -55,6 +55,12 @@ const signUpSchema = z
       .min(1, '닉네임 입력 필수입니다.')
       .max(10, '닉네임은10자 이내로 작성해주세요'),
     phone: z.string().regex(/^[0-9]{10,11}$/, '하이픈 없이 10-11자리 숫자만 입력해주세요'),
+    gender: z.enum(['', 'male', 'female'], {
+      message: '성별을 선택해주세요',
+    }),
+    age: z.enum(['', 'ten', 'twenty', 'thirty', 'fourthy', 'fifth', 'sixth'], {
+      message: '연령대를 선택해주세요',
+    }),
     email: z.string().email('유효한 이메일 주소를 입력해주세요.'),
     password: z
       .string()
@@ -82,6 +88,7 @@ export default function SignUp() {
   //2. react-hook-form 사용
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormField>({
@@ -93,6 +100,8 @@ export default function SignUp() {
       email: '',
       password: '',
       passwordConfirm: '',
+      gender: 'male', //디폴트값 선택되게끔
+      age: 'thirty',
     },
   });
 
@@ -153,15 +162,17 @@ export default function SignUp() {
             }}
           >
             <FormControl fullWidth>
-              <FormLabel htmlFor='nickname'>성별</FormLabel>
-              <RadioGroup
-                row
-                aria-labelledby='demo-row-radio-buttons-group-label'
-                name='row-radio-buttons-group'
-              >
-                <FormControlLabel value='male' control={<Radio checked />} label='남자' />
-                <FormControlLabel value='female' control={<Radio />} label='여자' />
-              </RadioGroup>
+              <FormLabel htmlFor='gender'>성별</FormLabel>
+              <Controller
+                name='gender'
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup {...field} row>
+                    <FormControlLabel value='male' control={<Radio />} label='남자' />
+                    <FormControlLabel value='female' control={<Radio />} label='여자' />
+                  </RadioGroup>
+                )}
+              />
             </FormControl>
             <FormControl fullWidth>
               <FormLabel htmlFor='phone'>전화번호</FormLabel>
@@ -179,19 +190,21 @@ export default function SignUp() {
             </FormControl>
           </Stack>
           <FormControl>
-            <FormLabel htmlFor='nickname'>연령대</FormLabel>
-            <RadioGroup
-              row
-              aria-labelledby='demo-row-radio-buttons-group-label'
-              name='row-radio-buttons-group'
-            >
-              <FormControlLabel value='ten' control={<Radio />} label='10대' />
-              <FormControlLabel value='twenty' control={<Radio checked />} label='20대' />
-              <FormControlLabel value='thirty' control={<Radio />} label='30대' />
-              <FormControlLabel value='fourthy' control={<Radio />} label='40대' />
-              <FormControlLabel value='fifth' control={<Radio />} label='50대' />
-              <FormControlLabel value='sixth' control={<Radio />} label='60대' />
-            </RadioGroup>
+            <FormLabel htmlFor='age'>연령대</FormLabel>
+            <Controller
+              name='age'
+              control={control}
+              render={({ field }) => (
+                <RadioGroup {...field} row>
+                  <FormControlLabel value='ten' control={<Radio />} label='10대' />
+                  <FormControlLabel value='twenty' control={<Radio />} label='20대' />
+                  <FormControlLabel value='thirty' control={<Radio />} label='30대' />
+                  <FormControlLabel value='fourthy' control={<Radio />} label='40대' />
+                  <FormControlLabel value='fifth' control={<Radio />} label='50대' />
+                  <FormControlLabel value='sixth' control={<Radio />} label='60대' />
+                </RadioGroup>
+              )}
+            />
           </FormControl>
           <FormControl>
             <FormLabel htmlFor='email'>이메일</FormLabel>
