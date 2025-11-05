@@ -1,7 +1,7 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Box,
   Button,
-  Checkbox,
   Divider,
   FormControl,
   FormControlLabel,
@@ -15,15 +15,20 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+
 import { styled } from '@mui/material/styles';
-import * as React from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import * as z from 'zod';
 import { GoogleButton, KakaoButton, NaverButton } from '../../components/Button';
+
+//MUI스타일
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignSelf: 'center',
   width: '100%',
   padding: theme.spacing(4),
+  borderRadius: 15,
   gap: theme.spacing(2),
   margin: 'auto',
   boxShadow:
@@ -40,64 +45,52 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
     padding: theme.spacing(4),
   },
 }));
+
+//1. ZOD스키마 정의
+const signUpSchema = z
+  .object({
+    name: z.string().min(1, '이름 입력은 필수입니다.'),
+    nickname: z
+      .string()
+      .min(1, '닉네임 입력 필수입니다.')
+      .max(10, '닉네임은10자 이내로 작성해주세요'),
+    phone: z.string().regex(/^[0-9]{10,11}$/, '하이픈 없이 10-11자리 숫자만 입력해주세요'),
+    email: z.string().email('유효한 이메일 주소를 입력해주세요.'),
+    password: z
+      .string()
+      .min(6, '비밀번호는 6자 이상 입력해주세요')
+      .max(20, '비밀번호는 20자 이하로 입력해주세요')
+      .regex(/^(?=.*[a-z])(?=.*[0-9])[a-z0-9]+$/, '영문 소문자와 숫자 조합으로 입력해주세요'),
+    passwordConfirm: z.string(),
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: '비밀번호가 일치하지 않습니다',
+    path: ['passwordConfirm'], // 👈 에러를 어느 필드에 표시 할지 지정
+  });
+
+//1-1. 타입정의 (조드로 유추하기 )
+type FormField = z.infer<typeof signUpSchema>;
+
 export default function SignUp() {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-  const [nameError, setNameError] = React.useState(false);
-  const [nameErrorMessage, setNameErrorMessage] = React.useState('');
+  //폼제출 함수
+  const onSubmit: SubmitHandler<FormField> = (data) => console.log(data);
 
-  const validateInputs = () => {
-    const email = document.getElementById('email') as HTMLInputElement;
-    const password = document.getElementById('password') as HTMLInputElement;
-    const name = document.getElementById('name') as HTMLInputElement;
-
-    let isValid = true;
-
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage('Please enter a valid email address.');
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage('');
-    }
-
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage('');
-    }
-
-    if (!name.value || name.value.length < 1) {
-      setNameError(true);
-      setNameErrorMessage('Name is required.');
-      isValid = false;
-    } else {
-      setNameError(false);
-      setNameErrorMessage('');
-    }
-
-    return isValid;
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (nameError || emailError || passwordError) {
-      event.preventDefault();
-      return;
-    }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
-      lastName: data.get('lastName'),
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
+  //2. react-hook-form 사용
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormField>({
+    resolver: zodResolver(signUpSchema), // ⭐ 이게 핵심!
+    defaultValues: {
+      name: '',
+      nickname: '',
+      email: '',
+      password: '',
+      passwordConfirm: '',
+    },
+  });
 
   return (
     <SignUpContainer direction='column' justifyContent='space-between'>
@@ -111,22 +104,22 @@ export default function SignUp() {
         </Typography>
         <Box
           component='form'
-          onSubmit={handleSubmit}
           sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+          onSubmit={() => {}}
         >
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, md: 6 }}>
               <FormControl fullWidth>
                 <FormLabel htmlFor='name'>이름</FormLabel>
                 <TextField
+                  {...register('name')}
+                  error={!!errors.name}
+                  helperText={errors.name?.message}
                   autoComplete='name'
-                  name='name'
                   fullWidth
                   id='name'
                   placeholder='Jon Snow'
-                  error={nameError}
-                  helperText={nameErrorMessage}
-                  color={nameError ? 'error' : 'primary'}
+                  color={errors.name ? 'error' : 'primary'}
                 />
               </FormControl>
             </Grid>
@@ -134,11 +127,14 @@ export default function SignUp() {
               <FormControl fullWidth>
                 <FormLabel htmlFor='nickname'>닉네임</FormLabel>
                 <TextField
+                  {...register('nickname')}
+                  error={!!errors.nickname}
+                  helperText={errors.nickname?.message}
                   autoComplete='nickname'
-                  name='nickname'
                   fullWidth
                   id='nickname'
                   placeholder='Snow'
+                  color={errors.nickname ? 'error' : 'primary'}
                 />
               </FormControl>
             </Grid>
@@ -159,13 +155,16 @@ export default function SignUp() {
                 aria-labelledby='demo-row-radio-buttons-group-label'
                 name='row-radio-buttons-group'
               >
-                <FormControlLabel value='female' control={<Radio />} label='Female' />
-                <FormControlLabel value='male' control={<Radio />} label='Male' />
+                <FormControlLabel value='male' control={<Radio checked />} label='남자' />
+                <FormControlLabel value='female' control={<Radio />} label='여자' />
               </RadioGroup>
             </FormControl>
             <FormControl fullWidth>
               <FormLabel htmlFor='phone'>전화번호</FormLabel>
               <TextField
+                {...register('phone')}
+                error={!!errors.phone}
+                helperText={errors.phone?.message}
                 autoComplete='phone'
                 name='phone'
                 fullWidth
@@ -183,7 +182,7 @@ export default function SignUp() {
               name='row-radio-buttons-group'
             >
               <FormControlLabel value='ten' control={<Radio />} label='10대' />
-              <FormControlLabel value='twenty' control={<Radio />} label='20대' />
+              <FormControlLabel value='twenty' control={<Radio checked />} label='20대' />
               <FormControlLabel value='thirty' control={<Radio />} label='30대' />
               <FormControlLabel value='fourthy' control={<Radio />} label='40대' />
               <FormControlLabel value='fifth' control={<Radio />} label='50대' />
@@ -193,55 +192,58 @@ export default function SignUp() {
           <FormControl>
             <FormLabel htmlFor='email'>이메일</FormLabel>
             <TextField
+              {...register('email')}
               fullWidth
               id='email'
               placeholder='your@email.com'
-              name='email'
               autoComplete='email'
               variant='outlined'
-              error={emailError}
-              helperText={emailErrorMessage}
-              color={passwordError ? 'error' : 'primary'}
+              error={!!errors.email}
+              helperText={errors.email?.message}
+              color={errors.email ? 'error' : 'primary'}
             />
           </FormControl>
           <FormControl>
             <FormLabel htmlFor='password'>비밀번호</FormLabel>
             <TextField
+              {...register('password')}
+              error={!!errors.password}
+              helperText={errors.password?.message}
               required
               fullWidth
-              name='password'
               placeholder='••••••'
               type='password'
               id='password'
               autoComplete='new-password'
               variant='outlined'
-              error={passwordError}
-              helperText={passwordErrorMessage}
-              color={passwordError ? 'error' : 'primary'}
+              color={errors.password ? 'error' : 'primary'}
             />
           </FormControl>
           <FormControl>
             <FormLabel htmlFor='passwordConfirm'>비밀번호 확인</FormLabel>
             <TextField
+              {...register('passwordConfirm')} // 이게 name, onChange 등을 자동으로 추가
+              error={!!errors.passwordConfirm}
+              helperText={errors.passwordConfirm?.message}
               required
               fullWidth
-              name='passwordConfirm'
               placeholder='••••••'
               type='password'
               id='passwordConfirm'
               autoComplete='new-password'
               variant='outlined'
-              error={passwordError}
-              helperText={passwordErrorMessage}
-              color={passwordError ? 'error' : 'primary'}
+              color={errors.passwordConfirm ? 'error' : 'primary'}
             />
           </FormControl>
-          <FormControlLabel
-            control={<Checkbox value='allowExtraEmails' color='primary' />}
-            label='I want to receive updates via email.'
-          />
-          <Button type='submit' fullWidth variant='contained' onClick={validateInputs}>
-            Sign up
+
+          <Button
+            size='large'
+            type='button'
+            fullWidth
+            variant='contained'
+            onClick={handleSubmit(onSubmit)}
+          >
+            회원가입
           </Button>
         </Box>
         <Divider>
@@ -258,13 +260,13 @@ export default function SignUp() {
             네이버 로그인
           </NaverButton>
           <Typography sx={{ textAlign: 'center' }}>
-            Already have an account?{' '}
+            이미 계정이 있으신가요?{' '}
             <Link
               href='/material-ui/getting-started/templates/sign-in/'
               variant='body2'
               sx={{ alignSelf: 'center' }}
             >
-              Sign in
+              로그인
             </Link>
           </Typography>
         </Box>
