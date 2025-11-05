@@ -51,6 +51,7 @@ export const authHandlers = [
 
       //실패! 사용자 음슴
       if (!user) {
+        alert('이메일 또는 비밀번호가 일치하지 않습니다');
         return HttpResponse.json(
           { message: '이메일 또는 비밀번호가 일치하지 않습니다.' },
           { status: 401 }

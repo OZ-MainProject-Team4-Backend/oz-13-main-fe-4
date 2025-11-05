@@ -73,6 +73,7 @@ export default function LogIn() {
       console.log('로그인 성공', result);
     } catch (error) {
       setError(error instanceof Error ? error.message : '알 수 없는 오류');
+      alert('유저를 찾을 수 없습니다');
     }
   };
   return (
