@@ -1,15 +1,13 @@
 import './App.css';
 import { Footer } from './components/Footer';
 import { Header } from './components/Header';
-import SignUp from './pages/auth/SignUp';
+import LogIn from './pages/auth/LogIn';
 
 function App() {
   return (
     <>
       <Header />
-      <div>
-        <SignUp />
-      </div>
+      <LogIn />
       <Footer />
     </>
   );

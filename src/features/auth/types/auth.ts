@@ -31,8 +31,14 @@ export type RequestLoginDTO = {
 
 //4.로그인 응답
 export type ResponseLoginDTO = {
-  id: number;
-  name: string;
-  accessToken: string;
-  refreshToken: string;
+  token: string;
+  user: {
+    id: number;
+    age: string;
+    email: string;
+    gender: string;
+    name: string;
+    nickname: string;
+    phone: string;
+  };
 };
