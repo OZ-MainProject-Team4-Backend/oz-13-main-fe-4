@@ -1,7 +1,8 @@
-// DiaryCalendar.tsx (디자인만)
 import { css } from '@emotion/react';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
-import { DAYS } from '../../../constants/calenderConst';
+import { DAYS, MONTHS } from '../../../constants/calenderConst';
+import { DiaryCalendarProps } from '../types/types';
+import { useState } from 'react';
 
 const containerStyle = css`
   margin: 0 auto;
@@ -69,65 +70,78 @@ const dateStyle = css`
   min-height: 100px;
 `;
 
-const emptyDateStyle = css`
+const currentMonthDateStyle = css`
   ${dateStyle}
-  background-color: #f9f9f9;
+  background-color: white;
 `;
 
-const DiaryCalendar = () => {
-  // 정적인 더미 데이터 (UI 확인용)
-  const calendarDays = [
-    null,
-    null,
-    null,
-    null,
-    null,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    8,
-    9,
-    10,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16,
-    17,
-    18,
-    19,
-    20,
-    21,
-    22,
-    23,
-    24,
-    25,
-    26,
-    27,
-    28,
-    29,
-    30,
-  ];
+const otherMonthDateStyle = css`
+  ${dateStyle}
+  color: #bbb;
+  background-color: #fafafa;
+`;
+
+const DiaryCalendar = ({ startingDate = new Date() }: DiaryCalendarProps) => {
+  const [currentDate, setCurrentDate] = useState(startingDate);
+
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+
+  // 이번 달 총 일수
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  // 이번 달 1일이 무슨 요일인지
+  const firstDayOfMonth = new Date(year, month, 1).getDay();
+
+  // 지난 달 마지막 날
+  const prevMonthLastDate = new Date(year, month, 0).getDate();
+
+  // 이전 달 날짜들 ( 회색으로 표시할 날짜들 )
+  const prevMonthDays = Array.from({ length: firstDayOfMonth }, (_, i) => ({
+    date: prevMonthLastDate - firstDayOfMonth + i + 1,
+    isCurrentMonth: false,
+  }));
+
+  // 이번 달 날짜들
+  const currentMonthDays = Array.from({ length: daysInMonth }, (_, i) => ({
+    date: i + 1,
+    isCurrentMonth: true,
+  }));
+
+  // 다음 달 날짜들 (총 42칸을 채우기 위함)
+  const totalCells = 42;
+  const remainingCells = totalCells - (prevMonthDays.length + currentMonthDays.length);
+  const nextMonthDays = Array.from({ length: remainingCells }, (_, i) => ({
+    date: i + 1,
+    isCurrentMonth: false,
+  }));
+
+  const calendarDays = [...prevMonthDays, ...currentMonthDays, ...nextMonthDays];
+
+  const goToPrevMonth = () => {
+    setCurrentDate(new Date(year, month - 1, 1));
+  };
+
+  const goToNextMonth = () => {
+    setCurrentDate(new Date(year, month + 1, 1));
+  };
 
   return (
     <div css={containerStyle}>
       {/* 캘린더 헤더 */}
       <div css={headerStyle}>
-        <button type='button' css={navButtonStyle}>
+        <button type='button' css={navButtonStyle} onClick={goToPrevMonth}>
           <IoChevronBack />
         </button>
-        <h2 css={titleStyle}>2025년 11월</h2>
-        <button type='button' css={navButtonStyle}>
+        <h2 css={titleStyle}>
+          {year}년 {MONTHS[month]}
+        </h2>
+        <button type='button' css={navButtonStyle} onClick={goToNextMonth}>
           <IoChevronForward />
         </button>
       </div>
 
-      {/* 요일 헤더 */}
+      {/* 요일 (mon - sun)*/}
       <div css={daysHeaderStyle}>
         {DAYS.map((day) => (
           <div key={day} css={dayLabelStyle}>
@@ -139,8 +153,8 @@ const DiaryCalendar = () => {
       {/* 캘린더 바디 */}
       <div css={calendarBodyStyle}>
         {calendarDays.map((day, index) => (
-          <div key={index} css={day ? dateStyle : emptyDateStyle}>
-            {day}
+          <div key={index} css={day.isCurrentMonth ? currentMonthDateStyle : otherMonthDateStyle}>
+            {day.date}
           </div>
         ))}
       </div>
