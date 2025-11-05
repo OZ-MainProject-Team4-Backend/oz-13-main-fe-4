@@ -89,7 +89,7 @@ export default function SignUp() {
     try {
       setError(null);
       const result = await signUp(rest);
-      console.log('회원가입 성공', result);
+      alert(`회원가입 성공! : ${result}`);
     } catch (error) {
       setError(error instanceof Error ? error.message : '알 수 없는 오류');
     }

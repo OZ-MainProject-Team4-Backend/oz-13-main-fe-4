@@ -72,6 +72,7 @@ export default function LogIn() {
       //🌱토큰저장
       localStorage.setItem('token', result.token);
       localStorage.setItem('userName', result.user.name);
+      alert(`안녕하세요,${result.user.name}님 !`);
     } catch (error) {
       setError(error instanceof Error ? error.message : '알 수 없는 오류');
       alert('유저를 찾을 수 없습니다');
