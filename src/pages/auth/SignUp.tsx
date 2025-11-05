@@ -81,10 +81,9 @@ export default function SignUp() {
 
   //2. react-hook-form 사용
   const {
-    control,
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormField>({
     resolver: zodResolver(signUpSchema), // ⭐ 조드의 타입 스키마 받아옴 이게 핵심!
     mode: 'onBlur', //🎃onBlur추가
@@ -242,6 +241,7 @@ export default function SignUp() {
           </FormControl>
 
           <Button
+            disabled={isSubmitting}
             size='large'
             type='button'
             fullWidth
