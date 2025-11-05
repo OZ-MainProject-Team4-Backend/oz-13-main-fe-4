@@ -104,7 +104,7 @@ export default function SignUp() {
         </Typography>
         <Box
           component='form'
-          sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+          sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}
           onSubmit={() => {}}
         >
           <Grid container spacing={2}>
@@ -118,7 +118,7 @@ export default function SignUp() {
                   autoComplete='name'
                   fullWidth
                   id='name'
-                  placeholder='Jon Snow'
+                  placeholder='홍길동'
                   color={errors.name ? 'error' : 'primary'}
                 />
               </FormControl>
@@ -133,7 +133,7 @@ export default function SignUp() {
                   autoComplete='nickname'
                   fullWidth
                   id='nickname'
-                  placeholder='Snow'
+                  placeholder='동해번쩍 서해번쩍'
                   color={errors.nickname ? 'error' : 'primary'}
                 />
               </FormControl>
@@ -174,7 +174,7 @@ export default function SignUp() {
               />
             </FormControl>
           </Stack>
-          <FormControl sx={{ justifyContent: 'center' }}>
+          <FormControl>
             <FormLabel htmlFor='nickname'>연령대</FormLabel>
             <RadioGroup
               row
