@@ -73,7 +73,11 @@ type FormField = z.infer<typeof signUpSchema>;
 
 export default function SignUp() {
   //폼제출 함수
-  const onSubmit: SubmitHandler<FormField> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<FormField> = (data) => {
+    //🎃confirm비밀번호는 제외해야함 -> 구조분해 할당
+    const { passwordConfirm, ...rest } = data;
+    console.log(rest);
+  };
 
   //2. react-hook-form 사용
   const {
