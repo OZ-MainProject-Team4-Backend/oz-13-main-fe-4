@@ -6,9 +6,9 @@ import { useState } from 'react';
 
 const containerStyle = css`
   margin: 0 auto;
-  width: 100%;
+  min-width: 700px;
   max-width: 1200px;
-  height: 750px;
+  height: 700px;
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -97,6 +97,29 @@ const todayCircleStyle = css`
   padding: 2px;
 `;
 
+const addDiaryButtonStyle = css`
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-background);
+  color: #10498a;
+  border: none;
+  border-radius: 16px;
+  padding: 6px 5px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  text-align: center;
+  width: 80%;
+
+  &:hover {
+    background-color: #1976d2;
+    color: white;
+  }
+`;
+
 const DiaryCalendar = ({ startingDate = new Date() }: DiaryCalendarProps) => {
   const [currentDate, setCurrentDate] = useState(startingDate);
 
@@ -151,6 +174,10 @@ const DiaryCalendar = ({ startingDate = new Date() }: DiaryCalendarProps) => {
     return isCurrentMonth && year === todayYear && month === todayMonth && date === todayDate;
   };
 
+  const handleAddDiary = () => {
+    console.log('일기 작성');
+  };
+
   return (
     <div css={containerStyle}>
       {/* 캘린더 헤더 */}
@@ -180,9 +207,14 @@ const DiaryCalendar = ({ startingDate = new Date() }: DiaryCalendarProps) => {
         {calendarDays.map((day, index) => (
           <div key={index} css={day.isCurrentMonth ? currentMonthDateStyle : otherMonthDateStyle}>
             {isToday(day.date, day.isCurrentMonth) ? (
-              <div css={todayCircleStyle}>
-                <span>{day.date}</span>
-              </div>
+              <>
+                <div css={todayCircleStyle}>
+                  <span>{day.date}</span>
+                </div>
+                <button type='button' css={addDiaryButtonStyle} onClick={handleAddDiary}>
+                  + 일기 작성
+                </button>
+              </>
             ) : (
               day.date
             )}
