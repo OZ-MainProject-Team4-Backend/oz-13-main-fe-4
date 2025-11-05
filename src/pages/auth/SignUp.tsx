@@ -232,6 +232,14 @@ export default function SignUp() {
               color={errors.email ? 'error' : 'primary'}
             />
           </FormControl>
+          <Button
+            variant='contained'
+            color='success'
+            type='button'
+            onClick={() => console.log('이메일 인증 링크')}
+          >
+            이메일 인증
+          </Button>
           <FormControl>
             <FormLabel htmlFor='password'>비밀번호</FormLabel>
             <TextField
