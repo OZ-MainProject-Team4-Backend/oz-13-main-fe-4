@@ -17,9 +17,11 @@ import {
 } from '@mui/material';
 
 import { styled } from '@mui/material/styles';
+import { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { GoogleButton, KakaoButton, NaverButton } from '../../components/Button';
+import signUp from '../../features/auth/api/auth';
 
 //MUI스타일
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -78,11 +80,19 @@ const signUpSchema = z
 type FormField = z.infer<typeof signUpSchema>;
 
 export default function SignUp() {
+  const [error, setError] = useState<string | null>(null);
   //폼제출 함수
-  const onSubmit: SubmitHandler<FormField> = (data) => {
+  const onSubmit: SubmitHandler<FormField> = async (data) => {
     //🎃confirm비밀번호는 제외해야함 -> 구조분해 할당
     const { passwordConfirm, ...rest } = data;
-    console.log(rest);
+
+    try {
+      setError(null);
+      const result = await signUp(rest);
+      console.log('회원가입 성공', result);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : '알 수 없는 오류');
+    }
   };
 
   //2. react-hook-form 사용
@@ -108,6 +118,8 @@ export default function SignUp() {
   return (
     <SignUpContainer direction='column' justifyContent='space-between'>
       <Card variant='outlined'>
+        {/* 에러 메시지 표시 */}
+        {error && <Typography color='error'>{error}</Typography>}
         <Typography
           component='h1'
           variant='h4'
@@ -118,7 +130,7 @@ export default function SignUp() {
         <Box
           component='form'
           sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}
-          onSubmit={() => {}}
+          onSubmit={handleSubmit(onSubmit)}
         >
           <Grid container spacing={2}>
             <Grid size={{ xs: 12, md: 6 }}>
@@ -255,11 +267,9 @@ export default function SignUp() {
 
           <Button
             disabled={isSubmitting}
-            size='large'
-            type='button'
+            type='submit' // ⭐ 'button' → 'submit'
             fullWidth
             variant='contained'
-            onClick={handleSubmit(onSubmit)}
           >
             회원가입
           </Button>
