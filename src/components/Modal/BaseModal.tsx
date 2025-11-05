@@ -78,7 +78,7 @@ export const BaseModal = ({
       <div css={modalStyle} onClick={(e) => e.stopPropagation()}>
         {title && <h2 css={titleStyle}>{title}</h2>}
         {subtitle && <p css={subtitleStyle}>{subtitle}</p>}
-        {children && <p>{children}</p>}
+        {children}
         {footer && <div css={footerStyle}>{footer}</div>}
       </div>
     </div>
