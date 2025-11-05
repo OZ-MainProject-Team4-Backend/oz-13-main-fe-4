@@ -82,7 +82,8 @@ export default function SignUp() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormField>({
-    resolver: zodResolver(signUpSchema), // ⭐ 이게 핵심!
+    resolver: zodResolver(signUpSchema), // ⭐ 조드의 타입 스키마 받아옴 이게 핵심!
+    mode: 'onBlur', //🎃onBlur추가
     defaultValues: {
       name: '',
       nickname: '',
