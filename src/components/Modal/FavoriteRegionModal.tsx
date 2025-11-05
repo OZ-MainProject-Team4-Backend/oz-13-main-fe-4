@@ -9,6 +9,7 @@ import {
 import BaseModal from './BaseModal';
 import { useState } from 'react';
 import { REGIONS } from '../../constants/region';
+import styled from '@emotion/styled';
 
 interface FavoriteRegionModalProps {
   isOpen: boolean;
@@ -49,6 +50,12 @@ const FavoriteRegionModal = ({ isOpen, onClose, onSave }: FavoriteRegionModalPro
     }
   };
 
+  const CustomDiv = styled('div')({
+    display: 'flex',
+    gap: '12px',
+    marginTop: '16px',
+  });
+
   return (
     <BaseModal
       isOpen={isOpen}
@@ -71,7 +78,7 @@ const FavoriteRegionModal = ({ isOpen, onClose, onSave }: FavoriteRegionModalPro
         </>
       }
     >
-      <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
+      <CustomDiv>
         <FormControl fullWidth>
           <InputLabel id='city-select-label'>시도 선택</InputLabel>
           <Select
@@ -108,7 +115,7 @@ const FavoriteRegionModal = ({ isOpen, onClose, onSave }: FavoriteRegionModalPro
               ))}
           </Select>
         </FormControl>
-      </div>
+      </CustomDiv>
     </BaseModal>
   );
 };
