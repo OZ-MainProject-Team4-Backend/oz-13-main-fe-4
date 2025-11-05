@@ -11,7 +11,7 @@ export type RequestSignUpDTO = {
   phone: string;
 };
 
-//2. 백으로 응답받은 회원가입 상태 정보
+//2. 백으로 응답받은 회원가입 상태 정보 (MSW 응답값을 기반 )
 export type ResponseSignUpDTO = {
   id: number;
   email: string;
@@ -21,4 +21,18 @@ export type ResponseSignUpDTO = {
   phone: string;
   age: string;
   is_verified: boolean;
+};
+
+//3. 로그인 관련
+export type RequestLoginDTO = {
+  email: string;
+  password: string;
+};
+
+//4.로그인 응답
+export type ResponseLoginDTO = {
+  id: number;
+  name: string;
+  accessToken: string;
+  refreshToken: string;
 };
