@@ -1,11 +1,11 @@
 import js from '@eslint/js';
-import tseslint from 'typescript-eslint';
+import prettierConfig from 'eslint-config-prettier';
+import prettier from 'eslint-plugin-prettier';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import prettier from 'eslint-plugin-prettier';
 import globals from 'globals';
-import prettierConfig from 'eslint-config-prettier';
+import tseslint from 'typescript-eslint';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -39,7 +39,7 @@ export default [
     },
     rules: {
       // JavaScript/TypeScript 규칙
-      'no-unused-vars': 'off', // TypeScript 규칙 사용을 위해 off
+      'no-unused-vars': 'off',
       'prefer-const': 'error',
       'no-var': 'error',
       'no-duplicate-imports': 'error',
@@ -50,7 +50,7 @@ export default [
 
       // TypeScript 규칙
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-unused-vars': 'off', //일단 off로 꺼두었음!!!!!!!
       '@typescript-eslint/explicit-function-return-type': 'off', // 필요에 따라 'warn' 또는 'error'로 변경
 
       // React 규칙

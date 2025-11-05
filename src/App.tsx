@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import './App.css';
 import ColorButtons from './components/Button/Button';
 import { Footer } from './components/Footer/Footer';
