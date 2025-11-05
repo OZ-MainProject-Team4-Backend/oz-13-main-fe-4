@@ -63,11 +63,13 @@ const calendarBodyStyle = css`
 `;
 
 const dateStyle = css`
-  text-align: right;
-  padding: 7px 8px 0 0;
+  position: relative;
+  text-align: left;
+  padding: 10px 0 0 10px;
   border-right: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   min-height: 100px;
+  cursor: pointer;
 `;
 
 const currentMonthDateStyle = css`
@@ -81,8 +83,27 @@ const otherMonthDateStyle = css`
   background-color: #fafafa;
 `;
 
+const todayCircleStyle = css`
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  color: white;
+  background-color: #1976d2;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  font-weight: 700;
+  padding: 2px;
+`;
+
 const DiaryCalendar = ({ startingDate = new Date() }: DiaryCalendarProps) => {
   const [currentDate, setCurrentDate] = useState(startingDate);
+
+  const today = new Date();
+  const todayYear = today.getFullYear();
+  const todayMonth = today.getMonth();
+  const todayDate = today.getDate();
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -126,6 +147,10 @@ const DiaryCalendar = ({ startingDate = new Date() }: DiaryCalendarProps) => {
     setCurrentDate(new Date(year, month + 1, 1));
   };
 
+  const isToday = (date: number, isCurrentMonth: boolean) => {
+    return isCurrentMonth && year === todayYear && month === todayMonth && date === todayDate;
+  };
+
   return (
     <div css={containerStyle}>
       {/* 캘린더 헤더 */}
@@ -154,7 +179,13 @@ const DiaryCalendar = ({ startingDate = new Date() }: DiaryCalendarProps) => {
       <div css={calendarBodyStyle}>
         {calendarDays.map((day, index) => (
           <div key={index} css={day.isCurrentMonth ? currentMonthDateStyle : otherMonthDateStyle}>
-            {day.date}
+            {isToday(day.date, day.isCurrentMonth) ? (
+              <div css={todayCircleStyle}>
+                <span>{day.date}</span>
+              </div>
+            ) : (
+              day.date
+            )}
           </div>
         ))}
       </div>
