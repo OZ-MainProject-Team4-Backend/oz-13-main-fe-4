@@ -24,45 +24,6 @@ export const handlers = [
       즐겨찾기 CRUD
  */
 export const locationHandlers = [
-  // 위치 검색
-  http.get('/api/location/search', ({ request }) => {
-    const url = new URL(request.url);
-    const lat = url.searchParams.get('lat');
-    const lon = url.searchParams.get('lon');
-    if (!lat || !lon) {
-      return HttpResponse.json(
-        {
-          detail: '위도/경도 값이 누락되었습니다',
-        },
-        { status: 400 }
-      );
-    }
-
-    const latitude = parseFloat(lat);
-    const longitude = parseFloat(lon);
-
-    // 좌표가 0,0인 경우 데이터 없음
-    if (latitude === 0 && longitude === 0) {
-      return HttpResponse.json(
-        {
-          detail: '해당 좌표에 대한 지역 정보를 찾을 수 없습니다.',
-        },
-        { status: 404 }
-      );
-    }
-
-    if (!location) {
-      return HttpResponse.json(
-        {
-          detail: '해당 좌표에 대한 지역 정보를 찾을 수 없습니다.',
-        },
-        { status: 404 }
-      );
-    }
-
-    return HttpResponse.json(location, { status: 200 });
-  }),
-
   // 시·구 직접 선택 (즐겨찾기용)
   http.post('/api/location/select', async ({ request }) => {
     const body = await request.json();
