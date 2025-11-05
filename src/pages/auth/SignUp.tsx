@@ -21,7 +21,7 @@ import { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { GoogleButton, KakaoButton, NaverButton } from '../../components/Button';
-import signUp from '../../features/auth/api/auth';
+import { signUp } from '../../features/auth/api/auth';
 
 //MUI스타일
 const Card = styled(MuiCard)(({ theme }) => ({
