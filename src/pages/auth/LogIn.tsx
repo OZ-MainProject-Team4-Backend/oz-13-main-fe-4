@@ -66,11 +66,12 @@ export default function LogIn() {
   });
   //폼제출 함수
   const onSubmit: SubmitHandler<FormField> = async (data) => {
-    //🎃confirm비밀번호는 제외해야함 -> 구조분해 할당
     try {
       setError(null);
       const result = await logIn(data);
-      console.log('로그인 성공', result);
+      //🌱토큰저장
+      localStorage.setItem('token', result.token);
+      localStorage.setItem('userName', result.user.name);
     } catch (error) {
       setError(error instanceof Error ? error.message : '알 수 없는 오류');
       alert('유저를 찾을 수 없습니다');
