@@ -72,7 +72,7 @@ export const Header = () => {
       <NavBar>
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
           <NavButton>Today</NavButton>
-          <NavButton>날씨 알리미</NavButton>
+          <NavButton>날씨 일기장</NavButton>
           {userState === 'prelogin' && (
             <>
               <NavButton>로그인</NavButton>
