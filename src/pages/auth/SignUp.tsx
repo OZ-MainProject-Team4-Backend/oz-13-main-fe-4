@@ -297,11 +297,7 @@ export default function SignUp() {
           </NaverButton>
           <Typography sx={{ textAlign: 'center' }}>
             이미 계정이 있으신가요?{' '}
-            <Link
-              href='/material-ui/getting-started/templates/sign-in/'
-              variant='body2'
-              sx={{ alignSelf: 'center' }}
-            >
+            <Link href='/login' variant='body2' sx={{ alignSelf: 'center' }}>
               로그인
             </Link>
           </Typography>

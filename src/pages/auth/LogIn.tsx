@@ -18,6 +18,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import z from 'zod';
 import { GoogleButton, KakaoButton, NaverButton } from '../../components/Button';
+import ForgotPassword from '../../components/Modal/ForgotPassword';
 import { logIn } from '../../features/auth/api/auth';
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -53,6 +54,8 @@ type FormField = z.infer<typeof logInSchema>;
 export default function LogIn() {
   const navigator = useNavigate();
   const [error, setError] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+
   //2. react-hook-form 사용
   const {
     register,
@@ -81,6 +84,14 @@ export default function LogIn() {
       alert('유저를 찾을 수 없습니다');
     }
   };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <Card variant='outlined'>
       {/* MSW 통신 에러 메시지 표시 */}
@@ -147,6 +158,7 @@ export default function LogIn() {
           control={<Checkbox value='remember' color='primary' />}
           label='로그인 정보 저장'
         />
+        <ForgotPassword open={open} handleClose={handleClose} />
         <Button
           disabled={isSubmitting}
           type='submit' // ⭐ 'button' → 'submit'
@@ -155,6 +167,15 @@ export default function LogIn() {
         >
           로그인
         </Button>
+        <Link
+          component='button'
+          type='button'
+          onClick={handleClickOpen}
+          variant='body2'
+          sx={{ alignSelf: 'center' }}
+        >
+          비밀번호를 잊으셨나요?
+        </Link>
       </Box>
       <Divider sx={{ my: 3 }}>or</Divider>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -169,11 +190,7 @@ export default function LogIn() {
         </NaverButton>
         <Typography sx={{ textAlign: 'center' }}>
           계정이 없으신가요?{' '}
-          <Link
-            href='/material-ui/getting-started/templates/sign-in/'
-            variant='body2'
-            sx={{ alignSelf: 'center' }}
-          >
+          <Link href='/signup' variant='body2' sx={{ alignSelf: 'center' }}>
             회원가입
           </Link>
         </Typography>
