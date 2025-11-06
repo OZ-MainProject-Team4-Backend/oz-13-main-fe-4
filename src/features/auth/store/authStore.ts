@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { RequestSignUpDTO } from '../types/auth';
+import { User } from '../types/auth';
 
 //- 타입정의
 type AuthState = {
   token: string | null; //유저의 토큰값 저장
-  user: RequestSignUpDTO | null; //유저의 타입 설정함
-  setAuth: (token: string, user: RequestSignUpDTO) => void; // 로그인 시 호출
+  user: User | null; //유저의 타입 설정함
+  setAuth: (token: string, user: User) => void; // 로그인 시 호출
   clearAuth: () => void; //로그아웃 시 호출
 };
 
