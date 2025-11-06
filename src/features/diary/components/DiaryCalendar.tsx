@@ -8,7 +8,7 @@ const containerStyle = css`
   margin: 0 auto;
   min-width: 700px;
   max-width: 1200px;
-  height: 700px;
+  min-height: 700px;
   background-color: white;
   display: flex;
   flex-direction: column;
