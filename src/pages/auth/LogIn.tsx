@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Box,
   Button,
@@ -12,9 +13,11 @@ import {
   Typography,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import * as React from 'react';
+import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import z from 'zod';
 import { GoogleButton, KakaoButton, NaverButton } from '../../components/Button';
-import ForgotPassword from '../../components/Modal/ForgotPassword';
+import { logIn } from '../../features/auth/api/auth';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -33,62 +36,52 @@ const Card = styled(MuiCard)(({ theme }) => ({
   },
 }));
 
-export default function SignIn() {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-  const [open, setOpen] = React.useState(false);
+//1. ZOD스키마 정의
+const logInSchema = z.object({
+  email: z.string().email('유효한 이메일 주소를 입력해주세요.'),
+  password: z
+    .string()
+    .min(6, '비밀번호는 6자 이상 입력해주세요')
+    .max(20, '비밀번호는 20자 이하로 입력해주세요')
+    .regex(/^(?=.*[a-z])(?=.*[0-9])[a-z0-9]+$/, '영문 소문자와 숫자 조합으로 입력해주세요'),
+});
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+//1-1. 타입정의 (조드로 유추하기 )
+type FormField = z.infer<typeof logInSchema>;
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (emailError || passwordError) {
-      event.preventDefault();
-      return;
+export default function LogIn() {
+  const [error, setError] = useState<string | null>(null);
+  //2. react-hook-form 사용
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormField>({
+    resolver: zodResolver(logInSchema), // ⭐ 조드의 타입 스키마 받아옴 이게 핵심!
+    mode: 'onBlur', //🎃onBlur추가
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+  //폼제출 함수
+  const onSubmit: SubmitHandler<FormField> = async (data) => {
+    try {
+      setError(null);
+      const result = await logIn(data);
+      //🌱토큰저장
+      localStorage.setItem('token', result.token);
+      localStorage.setItem('userName', result.user.name);
+      alert(`안녕하세요,${result.user.name}님 !`);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : '알 수 없는 오류');
+      alert('유저를 찾을 수 없습니다');
     }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
   };
-
-  const validateInputs = () => {
-    const email = document.getElementById('email') as HTMLInputElement;
-    const password = document.getElementById('password') as HTMLInputElement;
-
-    let isValid = true;
-
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage('올바른 이메일 형식 입력해주세요');
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage('');
-    }
-
-    if (!password.value || password.value.length < 8) {
-      setPasswordError(true);
-      setPasswordErrorMessage('비밀번호는 최소8자 이상입니다');
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage('');
-    }
-
-    return isValid;
-  };
-
   return (
     <Card variant='outlined'>
+      {/* MSW 통신 에러 메시지 표시 */}
+      {error && <Typography color='error'>{error}</Typography>}
       <Typography
         component='h1'
         variant='h4'
@@ -98,7 +91,7 @@ export default function SignIn() {
       </Typography>
       <Box
         component='form'
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         noValidate
         sx={{
           display: 'flex',
@@ -112,8 +105,10 @@ export default function SignIn() {
             이메일(아이디)
           </FormLabel>
           <TextField
-            error={emailError}
-            helperText={emailErrorMessage}
+            {...register('email')}
+            error={!!errors.email}
+            helperText={errors.email?.message}
+            color={errors.email ? 'error' : 'primary'}
             id='email'
             type='email'
             name='email'
@@ -123,7 +118,6 @@ export default function SignIn() {
             required
             fullWidth
             variant='outlined'
-            color={emailError ? 'error' : 'primary'}
           />
         </FormControl>
         <FormControl>
@@ -131,8 +125,9 @@ export default function SignIn() {
             비밀번호
           </FormLabel>
           <TextField
-            error={passwordError}
-            helperText={passwordErrorMessage}
+            {...register('password')}
+            error={!!errors.password}
+            helperText={errors.password?.message}
             name='password'
             placeholder='••••••'
             type='password'
@@ -142,26 +137,21 @@ export default function SignIn() {
             required
             fullWidth
             variant='outlined'
-            color={passwordError ? 'error' : 'primary'}
+            color={errors.password ? 'error' : 'primary'}
           />
         </FormControl>
         <FormControlLabel
           control={<Checkbox value='remember' color='primary' />}
           label='로그인 정보 저장'
         />
-        <ForgotPassword open={open} handleClose={handleClose} />
-        <Button type='submit' fullWidth variant='contained' onClick={validateInputs}>
+        <Button
+          disabled={isSubmitting}
+          type='submit' // ⭐ 'button' → 'submit'
+          fullWidth
+          variant='contained'
+        >
           로그인
         </Button>
-        <Link
-          component='button'
-          type='button'
-          onClick={handleClickOpen}
-          variant='body2'
-          sx={{ alignSelf: 'center' }}
-        >
-          비밀번호를 잊으셨나요?
-        </Link>
       </Box>
       <Divider sx={{ my: 3 }}>or</Divider>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
