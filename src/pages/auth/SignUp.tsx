@@ -17,11 +17,11 @@ import {
 } from '@mui/material';
 
 import { styled } from '@mui/material/styles';
-import { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import * as z from 'zod';
 import { GoogleButton, KakaoButton, NaverButton } from '../../components/Button';
-import { signUp } from '../../features/auth/api/auth';
+import { useSignUpMutation } from '../../features/auth/hooks/useSignUpMutation';
 
 //MUI스타일
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -80,19 +80,19 @@ const signUpSchema = z
 type FormField = z.infer<typeof signUpSchema>;
 
 export default function SignUp() {
-  const [error, setError] = useState<string | null>(null);
-  //폼제출 함수
-  const onSubmit: SubmitHandler<FormField> = async (data) => {
+  const signUpMutation = useSignUpMutation();
+  const navigator = useNavigate();
+
+  //회원가입 버튼 클릭하면?mutation 불러서 비동기 통신해야함.
+  const onSubmit: SubmitHandler<FormField> = (data) => {
     //🎃confirm비밀번호는 제외해야함 -> 구조분해 할당
     const { passwordConfirm, ...rest } = data;
-
-    try {
-      setError(null);
-      const result = await signUp(rest);
-      alert(`회원가입 성공! : ${result}`);
-    } catch (error) {
-      setError(error instanceof Error ? error.message : '알 수 없는 오류');
-    }
+    signUpMutation.mutate(rest, {
+      onSuccess: () => {
+        alert('회원가입 성공👋🏻');
+        navigator('/');
+      },
+    });
   };
 
   //2. react-hook-form 사용
@@ -100,7 +100,7 @@ export default function SignUp() {
     register,
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<FormField>({
     resolver: zodResolver(signUpSchema), // ⭐ 조드의 타입 스키마 받아옴 이게 핵심!
     mode: 'onBlur', //🎃onBlur추가
@@ -119,7 +119,7 @@ export default function SignUp() {
     <SignUpContainer direction='column' justifyContent='space-between'>
       <Card variant='outlined'>
         {/* 에러 메시지 표시 */}
-        {error && <Typography color='error'>{error}</Typography>}
+        {signUpMutation.error && <p>에러 발생!</p>}
         <Typography
           component='h1'
           variant='h4'
@@ -274,7 +274,6 @@ export default function SignUp() {
           </FormControl>
 
           <Button
-            disabled={isSubmitting}
             type='submit' // ⭐ 'button' → 'submit'
             fullWidth
             variant='contained'
@@ -297,11 +296,7 @@ export default function SignUp() {
           </NaverButton>
           <Typography sx={{ textAlign: 'center' }}>
             이미 계정이 있으신가요?{' '}
-            <Link
-              href='/material-ui/getting-started/templates/sign-in/'
-              variant='body2'
-              sx={{ alignSelf: 'center' }}
-            >
+            <Link href='/login' variant='body2' sx={{ alignSelf: 'center' }}>
               로그인
             </Link>
           </Typography>

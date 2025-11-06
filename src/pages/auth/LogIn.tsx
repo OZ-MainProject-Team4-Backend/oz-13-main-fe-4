@@ -15,9 +15,11 @@ import {
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import z from 'zod';
 import { GoogleButton, KakaoButton, NaverButton } from '../../components/Button';
-import { logIn } from '../../features/auth/api/auth';
+import ForgotPassword from '../../components/Modal/ForgotPassword';
+import { useLogInMutation } from '../../features/auth/hooks/useLogInMutation';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -50,12 +52,15 @@ const logInSchema = z.object({
 type FormField = z.infer<typeof logInSchema>;
 
 export default function LogIn() {
-  const [error, setError] = useState<string | null>(null);
+  const navigator = useNavigate();
+  const [open, setOpen] = useState(false);
+  const logInMutation = useLogInMutation();
+
   //2. react-hook-form 사용
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<FormField>({
     resolver: zodResolver(logInSchema), // ⭐ 조드의 타입 스키마 받아옴 이게 핵심!
     mode: 'onBlur', //🎃onBlur추가
@@ -64,24 +69,25 @@ export default function LogIn() {
       password: '',
     },
   });
-  //폼제출 함수
-  const onSubmit: SubmitHandler<FormField> = async (data) => {
-    try {
-      setError(null);
-      const result = await logIn(data);
-      //🌱토큰저장
-      localStorage.setItem('token', result.token);
-      localStorage.setItem('userName', result.user.name);
-      alert(`안녕하세요,${result.user.name}님 !`);
-    } catch (error) {
-      setError(error instanceof Error ? error.message : '알 수 없는 오류');
-      alert('유저를 찾을 수 없습니다');
-    }
+  //로그인 버튼 클릭시! mutation(비동기처리되어있음)으로 고고
+  const onSubmit: SubmitHandler<FormField> = (data) => {
+    logInMutation.mutate(data, {
+      onSuccess: (data) => {
+        alert(`안녕하세요, ${data.user.name} 님!`);
+        navigator('/');
+      },
+    });
   };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <Card variant='outlined'>
-      {/* MSW 통신 에러 메시지 표시 */}
-      {error && <Typography color='error'>{error}</Typography>}
       <Typography
         component='h1'
         variant='h4'
@@ -89,6 +95,8 @@ export default function LogIn() {
       >
         로그인
       </Typography>
+      {/* 로그인 실패!  */}
+      {logInMutation.error && <Typography color='error'>로그인에 실패했습니다.</Typography>}
       <Box
         component='form'
         onSubmit={handleSubmit(onSubmit)}
@@ -144,14 +152,23 @@ export default function LogIn() {
           control={<Checkbox value='remember' color='primary' />}
           label='로그인 정보 저장'
         />
+        <ForgotPassword open={open} handleClose={handleClose} />
         <Button
-          disabled={isSubmitting}
           type='submit' // ⭐ 'button' → 'submit'
           fullWidth
           variant='contained'
         >
           로그인
         </Button>
+        <Link
+          component='button'
+          type='button'
+          onClick={handleClickOpen}
+          variant='body2'
+          sx={{ alignSelf: 'center' }}
+        >
+          비밀번호를 잊으셨나요?
+        </Link>
       </Box>
       <Divider sx={{ my: 3 }}>or</Divider>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -166,11 +183,7 @@ export default function LogIn() {
         </NaverButton>
         <Typography sx={{ textAlign: 'center' }}>
           계정이 없으신가요?{' '}
-          <Link
-            href='/material-ui/getting-started/templates/sign-in/'
-            variant='body2'
-            sx={{ alignSelf: 'center' }}
-          >
+          <Link href='/signup' variant='body2' sx={{ alignSelf: 'center' }}>
             회원가입
           </Link>
         </Typography>
