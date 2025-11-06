@@ -15,6 +15,7 @@ import {
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import z from 'zod';
 import { GoogleButton, KakaoButton, NaverButton } from '../../components/Button';
 import { logIn } from '../../features/auth/api/auth';
@@ -50,6 +51,7 @@ const logInSchema = z.object({
 type FormField = z.infer<typeof logInSchema>;
 
 export default function LogIn() {
+  const navigator = useNavigate();
   const [error, setError] = useState<string | null>(null);
   //2. react-hook-form 사용
   const {
@@ -73,6 +75,7 @@ export default function LogIn() {
       localStorage.setItem('token', result.token);
       localStorage.setItem('userName', result.user.name);
       alert(`안녕하세요,${result.user.name}님 !`);
+      navigator('/');
     } catch (error) {
       setError(error instanceof Error ? error.message : '알 수 없는 오류');
       alert('유저를 찾을 수 없습니다');

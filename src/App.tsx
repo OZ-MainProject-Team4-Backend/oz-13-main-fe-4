@@ -1,15 +1,16 @@
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import { Footer } from './components/Footer';
-import { Header } from './components/Header';
+import Home from './pages/Home';
 import LogIn from './pages/auth/LogIn';
+import SignUp from './pages/auth/SignUp';
 
 function App() {
   return (
-    <>
-      <Header />
-      <LogIn />
-      <Footer />
-    </>
+    <Routes>
+      <Route path='/' element={<Home />} />
+      <Route path='/login' element={<LogIn />} />
+      <Route path='/signup' element={<SignUp />} />
+    </Routes>
   );
 }
 
