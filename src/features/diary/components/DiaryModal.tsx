@@ -3,6 +3,7 @@ import BaseModal from '../../../components/Modal/BaseModal';
 import * as styles from './DiaryModal.styles';
 import { SiAccuweather } from 'react-icons/si';
 import { Box, Button, TextField } from '@mui/material';
+import { useEffect, useState } from 'react';
 
 interface DiaryModalProps {
   isOpen: boolean;
@@ -13,9 +14,36 @@ interface DiaryModalProps {
 const MOODS = ['😊', '😆', '😌', '😢', '😠'];
 
 const DiaryModal = ({ isOpen, onClose, selectedDate }: DiaryModalProps) => {
+  const [image, setImage] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [title, setTitle] = useState('');
+  const [mood, setMood] = useState<number | null>(null);
+  const [content, setContent] = useState('');
+
   const formattedDate = selectedDate
     ? `${selectedDate.getFullYear()}년 ${selectedDate.getMonth() + 1}월 ${selectedDate.getDate()}일`
     : '';
+
+  const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    const file = files[0];
+
+    // 이전 미리보기 url 해제
+    if (preview) URL.revokeObjectURL(preview);
+
+    // 새 미리보기 url 생성
+    const newUrl = URL.createObjectURL(file);
+    setPreview(newUrl);
+    setImage(file);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
@@ -29,11 +57,24 @@ const DiaryModal = ({ isOpen, onClose, selectedDate }: DiaryModalProps) => {
         </div>
 
         {/* 이미지 */}
-        <div css={styles.imageDisplay}>
-          <div css={styles.uploadPlaceholder}>
-            <IoImageOutline />
-            <span>사진 추가하기</span>
-          </div>
+        <div css={styles.imageContainer}>
+          <input
+            type='file'
+            accept='image/*'
+            id='upload-input'
+            onChange={handleImage}
+            css={styles.fileInput}
+          />
+          <label htmlFor='upload-input' css={styles.imageLabel}>
+            {image ? (
+              <img src={preview!} alt='미리보기' width={'100%'} css={styles.previewImage} />
+            ) : (
+              <div css={styles.uploadPlaceholder}>
+                <IoImageOutline />
+                <span>사진 추가하기</span>
+              </div>
+            )}
+          </label>
         </div>
 
         {/* 제목 */}

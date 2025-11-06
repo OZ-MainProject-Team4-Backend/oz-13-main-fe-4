@@ -34,7 +34,11 @@ export const closeButton = css`
   }
 `;
 
-export const imageDisplay = css`
+export const fileInput = css`
+  display: none;
+`;
+
+export const imageContainer = css`
   margin: 10px 0;
   width: 100%;
   aspect-ratio: 16/9;
@@ -45,7 +49,7 @@ export const imageDisplay = css`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-
+  overflow: hidden;
   &:hover {
     border-color: #9ca3af;
   }
@@ -61,6 +65,22 @@ export const uploadPlaceholder = css`
   svg {
     font-size: 48px;
   }
+`;
+
+export const imageLabel = css`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const previewImage = css`
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  object-position: center;
+  border-radius: 10px;
 `;
 
 export const titleWrapper = css`
