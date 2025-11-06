@@ -1,10 +1,11 @@
 // src/features/auth/api/authApi.ts
 
-import { RequestLoginDTO, RequestSignUpDTO } from '../types/auth';
+import { RequestLoginDTO, RequestSignUpDTO, ResponseLoginDTO } from '../types/auth';
 
 //MSW와 통신하는 API로직
 //* (fetch 사용 )
-export async function signUp(data: RequestSignUpDTO) {
+//! 비동기 함수 호출은 꼭 반환타입도 명시하기.
+export async function signUp(data: RequestSignUpDTO): Promise<{ message: string }> {
   const res = await fetch('/api/auth/signup', {
     method: 'POST',
     headers: {
@@ -19,7 +20,9 @@ export async function signUp(data: RequestSignUpDTO) {
 
   return res.json();
 }
-export async function logIn(data: RequestLoginDTO) {
+
+//! 반환타입 로그인 (토큰 + 유저 정보 받음)
+export async function logIn(data: RequestLoginDTO): Promise<ResponseLoginDTO> {
   const res = await fetch('/api/auth/login', {
     method: 'POST',
     headers: {
@@ -34,23 +37,3 @@ export async function logIn(data: RequestLoginDTO) {
 
   return res.json();
 }
-
-//* Axios사용
-// import axios from 'axios';
-// import {
-//   RequestLoginDTO,
-//   RequestSignUpDTO,
-//   ResponseLoginDTO,
-//   ResponseSignUpDTO,
-// } from '../types/auth';
-
-//body타입은 리퀘스트타입으로 받아옴
-//반환값은 프로미스의 리스폰스타입임
-// export const signUp = async (body: RequestSignUpDTO): Promise<ResponseSignUpDTO> => {
-//   const { data } = await axios.post('/api/auth/signup', body); //body받아서 넘겨주고 응답값은 data임 무조건
-//   return data;
-// };
-// export const logIn = async (body: RequestLoginDTO): Promise<ResponseLoginDTO> => {
-//   const { data } = await axios.post('/api/auth/login', body); //body받아서 넘겨주고 응답값은 data임 무조건
-//   return data;
-// };
