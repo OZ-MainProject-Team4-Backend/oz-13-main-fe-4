@@ -8,7 +8,8 @@ export default function Home() {
   //로그아웃기능(zustand의 스토어 활용)
   const handleLogout = () => {
     userAuth.clearAuth();
-    navigator('/');
+    alert('로그아웃되었습니다 🐝');
+    navigator('/login');
   };
   return (
     <div>
