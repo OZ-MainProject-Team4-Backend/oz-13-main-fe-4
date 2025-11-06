@@ -1,4 +1,5 @@
 import { CurrentWeather } from './components/CurrentWeather';
+import { HourlyWeather } from './components/HourlyWeather';
 import { TodayOutfitRecommendation } from './components/TodayOutfitRecommendation';
 import {
   ComponentsGrid,
@@ -22,7 +23,7 @@ export const Mainpage = () => {
 
         <TodayOutfitRecommendation temperature={18} />
 
-        <FullWidthCard>시간대별 날씨</FullWidthCard>
+        <HourlyWeather />
 
         <FullWidthCard>AI 추천 문구</FullWidthCard>
 
