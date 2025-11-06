@@ -71,17 +71,18 @@ export const Header = () => {
       </HeaderAppBar>
       <NavBar>
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-          <NavButton>Today</NavButton>
-          <NavButton>날씨 일기장</NavButton>
+          <NavButton href='/'>Today</NavButton>
+          <NavButton href='/'>날씨 일기장</NavButton>
+          {/* 날씨 일기장 처리필요 */}
           {userState === 'prelogin' && (
             <>
-              <NavButton>로그인</NavButton>
-              <NavButton>회원가입</NavButton>
+              <NavButton href='/login'>로그인</NavButton>
+              <NavButton href='/signup'>회원가입</NavButton>
             </>
           )}
           {userState !== 'prelogin' && (
             <>
-              <NavButton>마이페이지</NavButton>
+              <NavButton href='/mypage'>마이페이지</NavButton>
               <NavButton>로그아웃</NavButton>
             </>
           )}
