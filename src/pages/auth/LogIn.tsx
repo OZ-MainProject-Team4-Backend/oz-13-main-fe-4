@@ -8,11 +8,9 @@ import {
   FormControlLabel,
   FormLabel,
   Link,
-  Card as MuiCard,
   TextField,
   Typography,
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -20,23 +18,7 @@ import z from 'zod';
 import { GoogleButton, KakaoButton, NaverButton } from '../../components/Button';
 import ForgotPassword from '../../components/Modal/ForgotPassword';
 import { useLogInMutation } from '../../features/auth/hooks/useLogInMutation';
-
-const Card = styled(MuiCard)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignSelf: 'center',
-  width: '100%',
-  maxWidth: '640px',
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
-  margin: 'auto',
-  boxShadow:
-    'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
-  [theme.breakpoints.down('sm')]: {
-    maxWidth: '400px',
-    padding: theme.spacing(3),
-  },
-}));
+import { Card } from './SignUp';
 
 //1. ZOD스키마 정의
 const logInSchema = z.object({

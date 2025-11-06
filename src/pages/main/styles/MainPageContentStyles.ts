@@ -1,4 +1,4 @@
-import { Box, Button, Container, styled, Typography } from '@mui/material';
+import { Box, Container, styled, Typography } from '@mui/material';
 
 // MainPage Styles--------------------------------------
 export const MainContainer = styled(Container)({
