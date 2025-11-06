@@ -1,4 +1,5 @@
 import { CurrentWeather } from './components/CurrentWeather';
+import { HourlyWeather } from './components/HourlyWeather';
 import {
   ComponentsGrid,
   FullWidthCard,
@@ -21,7 +22,7 @@ export const Mainpage = () => {
 
         <PlaceholderCard>오늘의 3벌 추천 코디</PlaceholderCard>
 
-        <FullWidthCard>시간대별 날씨</FullWidthCard>
+        <HourlyWeather />
 
         <FullWidthCard>AI 추천 문구</FullWidthCard>
 
