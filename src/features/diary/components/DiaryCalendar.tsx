@@ -2,19 +2,7 @@ import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 import { DAYS, MONTHS } from '../../../constants/calenderConst';
 import { useState } from 'react';
 import DiaryModal from './DiaryModal';
-import {
-  addDiaryButtonStyle,
-  calendarBodyStyle,
-  containerStyle,
-  currentMonthDateStyle,
-  dayLabelStyle,
-  daysHeaderStyle,
-  headerStyle,
-  navButtonStyle,
-  otherMonthDateStyle,
-  titleStyle,
-  todayCircleStyle,
-} from './DiaryCalendar.styles';
+import * as styles from './DiaryCalendar.styles';
 
 const DiaryCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -85,41 +73,44 @@ const DiaryCalendar = () => {
 
   return (
     <>
-      <div css={containerStyle}>
+      <div css={styles.containerStyle}>
         {/* 캘린더 헤더 */}
-        <div css={headerStyle}>
-          <button type='button' css={navButtonStyle} onClick={goToPrevMonth}>
+        <div css={styles.headerStyle}>
+          <button type='button' css={styles.navButtonStyle} onClick={goToPrevMonth}>
             <IoChevronBack />
           </button>
-          <h2 css={titleStyle}>
+          <h2 css={styles.titleStyle}>
             {year}년 {MONTHS[month]}
           </h2>
-          <button type='button' css={navButtonStyle} onClick={goToNextMonth}>
+          <button type='button' css={styles.navButtonStyle} onClick={goToNextMonth}>
             <IoChevronForward />
           </button>
         </div>
 
         {/* 요일 (mon - sun)*/}
-        <div css={daysHeaderStyle}>
+        <div css={styles.daysHeaderStyle}>
           {DAYS.map((day) => (
-            <div key={day} css={dayLabelStyle}>
+            <div key={day} css={styles.dayLabelStyle}>
               {day}
             </div>
           ))}
         </div>
 
         {/* 캘린더 바디 */}
-        <div css={calendarBodyStyle}>
+        <div css={styles.calendarBodyStyle}>
           {calendarDays.map((day, index) => (
-            <div key={index} css={day.isCurrentMonth ? currentMonthDateStyle : otherMonthDateStyle}>
+            <div
+              key={index}
+              css={day.isCurrentMonth ? styles.currentMonthDateStyle : styles.otherMonthDateStyle}
+            >
               {isToday(day.date, day.isCurrentMonth) ? (
                 <>
-                  <div css={todayCircleStyle}>
+                  <div css={styles.todayCircleStyle}>
                     <span>{day.date}</span>
                   </div>
                   <button
                     type='button'
-                    css={addDiaryButtonStyle}
+                    css={styles.addDiaryButtonStyle}
                     onClick={() => handleAddDiary(day.date)}
                   >
                     + 일기 작성
