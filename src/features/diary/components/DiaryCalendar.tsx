@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 import { DAYS, MONTHS } from '../../../constants/calenderConst';
-import { DiaryCalendarProps } from '../types/types';
 import { useState } from 'react';
+import DiaryModal from './DiaryModal';
 
 const containerStyle = css`
   margin: 0 auto;
@@ -120,8 +120,10 @@ const addDiaryButtonStyle = css`
   }
 `;
 
-const DiaryCalendar = ({ startingDate = new Date() }: DiaryCalendarProps) => {
-  const [currentDate, setCurrentDate] = useState(startingDate);
+const DiaryCalendar = () => {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const today = new Date();
   const todayYear = today.getFullYear();
@@ -174,54 +176,68 @@ const DiaryCalendar = ({ startingDate = new Date() }: DiaryCalendarProps) => {
     return isCurrentMonth && year === todayYear && month === todayMonth && date === todayDate;
   };
 
-  const handleAddDiary = () => {
-    console.log('일기 작성');
+  const handleAddDiary = (date: number) => {
+    const selected = new Date(year, month, date);
+    setSelectedDate(selected);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedDate(null);
   };
 
   return (
-    <div css={containerStyle}>
-      {/* 캘린더 헤더 */}
-      <div css={headerStyle}>
-        <button type='button' css={navButtonStyle} onClick={goToPrevMonth}>
-          <IoChevronBack />
-        </button>
-        <h2 css={titleStyle}>
-          {year}년 {MONTHS[month]}
-        </h2>
-        <button type='button' css={navButtonStyle} onClick={goToNextMonth}>
-          <IoChevronForward />
-        </button>
-      </div>
+    <>
+      <div css={containerStyle}>
+        {/* 캘린더 헤더 */}
+        <div css={headerStyle}>
+          <button type='button' css={navButtonStyle} onClick={goToPrevMonth}>
+            <IoChevronBack />
+          </button>
+          <h2 css={titleStyle}>
+            {year}년 {MONTHS[month]}
+          </h2>
+          <button type='button' css={navButtonStyle} onClick={goToNextMonth}>
+            <IoChevronForward />
+          </button>
+        </div>
 
-      {/* 요일 (mon - sun)*/}
-      <div css={daysHeaderStyle}>
-        {DAYS.map((day) => (
-          <div key={day} css={dayLabelStyle}>
-            {day}
-          </div>
-        ))}
-      </div>
+        {/* 요일 (mon - sun)*/}
+        <div css={daysHeaderStyle}>
+          {DAYS.map((day) => (
+            <div key={day} css={dayLabelStyle}>
+              {day}
+            </div>
+          ))}
+        </div>
 
-      {/* 캘린더 바디 */}
-      <div css={calendarBodyStyle}>
-        {calendarDays.map((day, index) => (
-          <div key={index} css={day.isCurrentMonth ? currentMonthDateStyle : otherMonthDateStyle}>
-            {isToday(day.date, day.isCurrentMonth) ? (
-              <>
-                <div css={todayCircleStyle}>
-                  <span>{day.date}</span>
-                </div>
-                <button type='button' css={addDiaryButtonStyle} onClick={handleAddDiary}>
-                  + 일기 작성
-                </button>
-              </>
-            ) : (
-              day.date
-            )}
-          </div>
-        ))}
+        {/* 캘린더 바디 */}
+        <div css={calendarBodyStyle}>
+          {calendarDays.map((day, index) => (
+            <div key={index} css={day.isCurrentMonth ? currentMonthDateStyle : otherMonthDateStyle}>
+              {isToday(day.date, day.isCurrentMonth) ? (
+                <>
+                  <div css={todayCircleStyle}>
+                    <span>{day.date}</span>
+                  </div>
+                  <button
+                    type='button'
+                    css={addDiaryButtonStyle}
+                    onClick={() => handleAddDiary(day.date)}
+                  >
+                    + 일기 작성
+                  </button>
+                </>
+              ) : (
+                day.date
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+      <DiaryModal isOpen={isModalOpen} onClose={handleCloseModal} selectedDate={selectedDate} />
+    </>
   );
 };
 
