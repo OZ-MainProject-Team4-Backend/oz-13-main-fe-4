@@ -1,10 +1,70 @@
 // src/features/auth/api/authApi.ts
 
-import { RequestLoginDTO, RequestSignUpDTO, ResponseLoginDTO } from '../types/auth';
+import {
+  RequestEmailSendDTO,
+  RequestEmailVerifyDTO,
+  RequestLoginDTO,
+  RequestNicknameValidateDTO,
+  RequestSignUpDTO,
+  ResponseEmailSendDTO,
+  ResponseEmailVerifyDTO,
+  ResponseLoginDTO,
+  ResponseNicknameValidateDTO,
+} from '../types/auth';
 
-//MSW와 통신하는 API로직
-//* (fetch 사용 )
-//! 비동기 함수 호출은 꼭 반환타입도 명시하기.
+//- ==================== 닉네임 검증 ====================
+export async function validateNickname(
+  data: RequestNicknameValidateDTO
+): Promise<ResponseNicknameValidateDTO> {
+  const res = await fetch('/api/auth/nickname/validate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json();
+
+  if (!res.ok) {
+    throw new Error(json.error?.message || '닉네임 검증 실패');
+  }
+  return json;
+}
+
+//- ==================== 이메일 검증 ====================
+export async function sendEmailCode(data: RequestEmailSendDTO): Promise<ResponseEmailSendDTO> {
+  const res = await fetch('/api/auth/email/send', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  const json = await res.json();
+  if (!res.ok) {
+    throw new Error(json.error?.message || '이메일 발송 실패');
+  }
+  return json;
+}
+
+//- ==================== 이메일 코드 검증 ====================
+export async function verifyEmailCode(
+  data: RequestEmailVerifyDTO
+): Promise<ResponseEmailVerifyDTO> {
+  const res = await fetch('/api/auth/email/verify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+
+  const json = await res.json();
+
+  if (!res.ok) {
+    throw new Error(json.error?.message || '인증 코드 검증 실패');
+  }
+
+  return json;
+}
+
+//- ==================== 회원가입 ====================
 export async function signUp(data: RequestSignUpDTO): Promise<{ message: string }> {
   const res = await fetch('/api/auth/signup', {
     method: 'POST',
@@ -20,20 +80,25 @@ export async function signUp(data: RequestSignUpDTO): Promise<{ message: string 
 
   return res.json();
 }
-
-//! 반환타입 로그인 (토큰 + 유저 정보 받음)
+//- ==================== 로그인 ====================
 export async function logIn(data: RequestLoginDTO): Promise<ResponseLoginDTO> {
   const res = await fetch('/api/auth/login', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
 
+  const json = await res.json();
+
   if (!res.ok) {
-    throw new Error('로그인실패!');
+    throw new Error(json.error?.message || '로그인 실패');
   }
 
-  return res.json();
+  return json;
+}
+//- ==================== 로그아웃 ====================
+export async function logOut(): Promise<void> {
+  await fetch('/api/auth/logout', {
+    method: 'POST',
+  });
 }

@@ -166,7 +166,7 @@ export const authHandlers = [
   }),
 
   //- ==================== 마이페이지 조회  ====================
-  http.get('/api/auth/me', async ({ request }) => {
+  http.get('/api/auth/me', () => {
     //실제로는 토큰값?쿠키값?으로 사용자 식별함
     const user = mockUsers[0];
     if (!user) {

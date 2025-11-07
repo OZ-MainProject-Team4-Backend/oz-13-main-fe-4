@@ -11,6 +11,7 @@ export const mockUsers: User[] = [
     gender: 'M',
     age: 'twenty',
     is_verified: true,
+    favorite_regions: ['서울시 강남구', '대전광역시 중구', '수원시 장안구'],
     created_at: '2025-01-15T10:30:00Z',
   },
 ];

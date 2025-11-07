@@ -8,6 +8,7 @@ export type User = {
   gender: string;
   age: string;
   is_verified: boolean;
+  favorite_regions?: string[]; // 마이페이지 조회 시에만 포함
   created_at: string;
 };
 export type ApiError = {
@@ -46,6 +47,7 @@ export type ResponseEmailVerifyDTO = ApiResponse;
 //=========== 회원가입(🐝토큰으로 받음 ) ============
 export type RequestSignUpDTO = {
   email: string;
+  name: string;
   password: string;
   nickname: string;
   gender: string;
@@ -76,8 +78,8 @@ export type RequestLoginDTO = {
 export type ResponseLoginDTO = ApiResponse<{ user: User }>;
 
 //=========== 마이페이지 ============
-//! 사용자 정보를 통하여, 사용자가 설정한 지역(3개)의 날씨 조회가 가능해야함.
 export type ResponseMeDTO = ApiResponse<User>;
+
 //=========== 프로필수정 ============
 export type RequestProfileUpdateDTO = {
   nickname?: string;
@@ -85,10 +87,18 @@ export type RequestProfileUpdateDTO = {
   email?: string;
   age?: string;
   password?: string;
-  //즐겨찾는 지역 3개 추가 필요ㅏ
 };
 
 export type ResponseProfileUpdateDTO = ApiResponse;
+
+//==================== 즐겨찾는 지역 수정 ====================
+export type RequestFavoriteRegionsUpdateDTO = {
+  favorite_regions: string[]; // 최대 3개
+};
+
+export type ResponseFavoriteRegionsUpdateDTO = ApiResponse<{
+  favorite_regions: string[];
+}>;
 
 //=========== 비밀번호 변경(새로덮는것임) ============
 export type RequestPasswordChangeDTO = {
@@ -98,3 +108,8 @@ export type RequestPasswordChangeDTO = {
 };
 
 export type ResponsePasswordChangeDTO = ApiResponse;
+
+//==================== 회원탈퇴 ====================
+export type ResponseDeleteAccountDTO = ApiResponse<{
+  deleted: boolean;
+}>;
