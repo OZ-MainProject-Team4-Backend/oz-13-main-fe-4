@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import { User } from '../types/auth';
 
 //- 토큰없이 쿠키로!
@@ -10,13 +9,9 @@ type AuthState = {
 };
 
 //-Zustand 스토어
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set) => ({
-      user: null, //초기값
-      setAuth: (user) => set({ user }),
-      clearAuth: () => set({ user: null }),
-    }),
-    { name: 'auth-storage' } //실제 로컬에 저장되는 이름
-  )
-);
+//- 쿠키 기반으로 전환함 persist제거
+export const useAuthStore = create<AuthState>((set) => ({
+  user: null,
+  setAuth: (user) => set({ user }),
+  clearAuth: () => set({ user: null }),
+}));
