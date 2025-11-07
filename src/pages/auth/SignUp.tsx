@@ -100,7 +100,6 @@ export default function SignUp() {
       {
         onSuccess: () => {
           setIsNicknameValidated(true);
-          alert('닉네임 사용 가능합니다!');
         },
         onError() {
           setIsNicknameValidated(false);

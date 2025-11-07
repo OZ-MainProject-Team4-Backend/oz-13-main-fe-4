@@ -4,5 +4,11 @@ import { validateNickname } from '../api/auth';
 export const useNicknameValidateMutation = () => {
   return useMutation({
     mutationFn: validateNickname,
+    onSuccess(data) {
+      alert(data.message);
+    },
+    onError(error) {
+      alert(error.message);
+    },
   });
 };

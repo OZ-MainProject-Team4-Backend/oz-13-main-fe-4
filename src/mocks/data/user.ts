@@ -7,7 +7,7 @@ export const mockUsers: User[] = [
     id: 1,
     email: 'test@example.com',
     name: '홍길동',
-    nickname: 'testuser',
+    nickname: '동번서번',
     gender: 'M',
     age: 'twenty',
     is_verified: true,
@@ -23,7 +23,7 @@ export const mockPasswords = new Map([['test@example.com', 'test123']]);
 export const emailVerificationCodes = new Map<string, string>();
 
 // 닉네임 중복 체크용
-export const usedNicknames = new Set(['testuser']);
+export const usedNicknames = new Set(['동번서번']);
 
 // 이메일 인증 완료 여부
 export const verifiedEmails = new Set(['test@example.com']);
