@@ -153,12 +153,21 @@ export const authHandlers = [
         },
       });
     }
-    return HttpResponse.json<ResponseLoginDTO>({
-      success: true,
-      statusCode: 200,
-      message: '로그인 성공',
-      data: { user },
-    });
+    return HttpResponse.json<ResponseLoginDTO>(
+      {
+        success: true,
+        statusCode: 200,
+        message: '로그인 성공',
+        data: { user },
+      },
+      //쿠키처럼 흉내내기 !!!!! 육안으로 확인 필요
+      {
+        status: 200,
+        headers: {
+          'Set-Cookie': 'access_token=mockToken; HttpOnly; Path=/;',
+        },
+      }
+    );
   }),
   //- ==================== 로그아웃 ====================
   http.post('/api/auth/logout', () => {

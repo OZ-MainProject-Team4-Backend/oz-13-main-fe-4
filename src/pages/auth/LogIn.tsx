@@ -55,7 +55,7 @@ export default function LogIn() {
   const onSubmit: SubmitHandler<FormField> = (data) => {
     logInMutation.mutate(data, {
       onSuccess: (data) => {
-        alert(`안녕하세요, ${data.user.name} 님!`);
+        alert(`안녕하세요, ${data.data?.user.name} 님!`);
         navigator('/');
       },
     });
