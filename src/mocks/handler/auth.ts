@@ -19,7 +19,7 @@ import {
 // src/mocks/handlers/auth.ts
 export const authHandlers = [
   //-==================== 닉네임 중복 검증 ====================
-  http.post('/api/auth/nickname/validate  ', async ({ request }) => {
+  http.post('/api/auth/nickname/validate', async ({ request }) => {
     //사용자가 입력한 닉네임
     const { nickname } = (await request.json()) as RequestNicknameValidateDTO;
     //서버 닉네임과 사용자 닉네임 일치 확인
