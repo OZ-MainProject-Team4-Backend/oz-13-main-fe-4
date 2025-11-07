@@ -1,5 +1,14 @@
 // src/features/auth/types/auth.ts
-
+//- 전역 상태에 저장되는 유저의 정보
+export type User = {
+  id: number;
+  name: string;
+  email: string;
+  nickname: string;
+  phone: string;
+  gender: string;
+  age: string;
+};
 //1. 백에 요청하는 유저의 정보
 export type RequestSignUpDTO = {
   age: string;

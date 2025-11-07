@@ -1,6 +1,7 @@
 import { AppBar, Box, Button, Toolbar } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../features/auth/store/authStore';
 
 const HeaderAppBar = styled(AppBar)({
   backgroundColor: '#ffffff',
@@ -47,21 +48,19 @@ const AdminButton = styled(Button)({
   transform: 'translateY(-50%)',
 });
 export const Header = () => {
-  const [userState, setUserState] = useState('prelogin');
+  const navigator = useNavigate();
+  const userStore = useAuthStore();
+  const userData = userStore.user;
+
+  const handleLogOut = () => {
+    userStore.clearAuth();
+    alert('로그아웃 성공!!!! ');
+    navigator('/');
+  };
+  console.log(userStore);
+  console.log(userData?.name);
   return (
     <>
-      {/* 권한 변경 임시 토글 버튼 */}
-      <Button
-        onClick={() => {
-          if (userState !== 'admin') {
-            setUserState('admin');
-            return;
-          }
-          setUserState('prelogin');
-        }}
-      >
-        권한변경 {userState}
-      </Button>
       <HeaderAppBar position='static'>
         <Toolbar sx={{ justifyContent: 'space-between', px: 3 }}>
           <LocationButton startIcon={'🔜'}>수원시 영통구</LocationButton>
@@ -71,21 +70,22 @@ export const Header = () => {
       </HeaderAppBar>
       <NavBar>
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
-          <NavButton>Today</NavButton>
-          <NavButton>날씨 일기장</NavButton>
-          {userState === 'prelogin' && (
+          <NavButton href='/'>Today</NavButton>
+          <NavButton href='/'>날씨 일기장</NavButton>
+          {/* 날씨 일기장 처리필요 */}
+
+          {userData === null ? (
             <>
-              <NavButton>로그인</NavButton>
-              <NavButton>회원가입</NavButton>
+              <NavButton href='/login'>로그인</NavButton>
+              <NavButton href='/signup'>회원가입</NavButton>
+            </>
+          ) : (
+            <>
+              <NavButton href='/mypage'>마이페이지</NavButton>
+              <NavButton onClick={handleLogOut}>로그아웃</NavButton>
             </>
           )}
-          {userState !== 'prelogin' && (
-            <>
-              <NavButton>마이페이지</NavButton>
-              <NavButton>로그아웃</NavButton>
-            </>
-          )}
-          {userState === 'admin' && <AdminButton>관리자전용</AdminButton>}
+          {/* {userState === 'admin' && <AdminButton>관리자전용</AdminButton>} */}
         </Box>
       </NavBar>
     </>
