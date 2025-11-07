@@ -11,18 +11,43 @@ interface DiaryModalProps {
   selectedDate: Date | null;
 }
 
+const getFormattedDate = (selectedDate: Date | null) => {
+  if (!selectedDate) return '';
+  const formatetedDate = `${selectedDate.getFullYear()}년 ${selectedDate.getMonth() + 1}월 ${selectedDate.getDate()}일`;
+  return formatetedDate;
+};
+
 const MOODS = ['😊', '😆', '😌', '😢', '😠'];
 
+export interface DiaryData {
+  id: number;
+  date: string;
+  title: string;
+  satisfaction: string;
+  notes: string;
+  weather: {
+    condition: string;
+    temperature: number;
+  };
+  image_url: string | null;
+}
+
 const DiaryModal = ({ isOpen, onClose, selectedDate }: DiaryModalProps) => {
+  const [diary, setDiary] = useState<DiaryData>({
+    id: 1,
+    date: getFormattedDate(selectedDate),
+    title: 'ozcoding',
+    satisfaction: MOODS[0],
+    notes: 'main project',
+    weather: {
+      condition: 'cloudy',
+      temperature: 18,
+    },
+    image_url: null,
+  });
+
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [title, setTitle] = useState('');
-  const [mood, setMood] = useState<number | null>(null);
-  const [content, setContent] = useState('');
-
-  const formattedDate = selectedDate
-    ? `${selectedDate.getFullYear()}년 ${selectedDate.getMonth() + 1}월 ${selectedDate.getDate()}일`
-    : '';
 
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -37,6 +62,32 @@ const DiaryModal = ({ isOpen, onClose, selectedDate }: DiaryModalProps) => {
     const newUrl = URL.createObjectURL(file);
     setPreview(newUrl);
     setImage(file);
+
+    setDiary((prev) => ({
+      ...prev,
+      image_url: newUrl,
+    }));
+  };
+
+  const handleTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDiary((prev) => ({
+      ...prev,
+      title: e.target.value,
+    }));
+  };
+
+  const handleNotes = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDiary((prev) => ({
+      ...prev,
+      notes: e.target.value,
+    }));
+  };
+
+  const handleMood = (mood: string) => {
+    setDiary((prev) => ({
+      ...prev,
+      satisfaction: mood,
+    }));
   };
 
   useEffect(() => {
@@ -50,7 +101,7 @@ const DiaryModal = ({ isOpen, onClose, selectedDate }: DiaryModalProps) => {
       <div css={styles.modalContainer}>
         {/* 헤더 */}
         <div css={styles.header}>
-          <h3 css={styles.dateTitle}>{formattedDate}</h3>
+          <h3 css={styles.dateTitle}>{diary.date}</h3>
           <button type='button' css={styles.closeButton} onClick={onClose}>
             <IoClose />
           </button>
@@ -66,7 +117,7 @@ const DiaryModal = ({ isOpen, onClose, selectedDate }: DiaryModalProps) => {
             css={styles.fileInput}
           />
           <label htmlFor='upload-input' css={styles.imageLabel}>
-            {image ? (
+            {preview ? (
               <img src={preview!} alt='미리보기' width={'100%'} css={styles.previewImage} />
             ) : (
               <div css={styles.uploadPlaceholder}>
@@ -79,15 +130,22 @@ const DiaryModal = ({ isOpen, onClose, selectedDate }: DiaryModalProps) => {
 
         {/* 제목 */}
         <Box css={styles.titleWrapper}>
-          <TextField fullWidth id='diary-title' label='제목' variant='standard' />
+          <TextField
+            fullWidth
+            id='diary-title'
+            label='제목'
+            variant='standard'
+            onChange={handleTitle}
+            value={diary.title}
+          />
         </Box>
 
         {/* 날씨 */}
         <div css={styles.weatherSection}>
           <SiAccuweather css={styles.weatherIcon} />
           <div css={styles.weatherText}>
-            <h3>23°C</h3>
-            <p>맑음</p>
+            <h3>{diary.weather.temperature}°C</h3>
+            <p>{diary.weather.condition}</p>
           </div>
         </div>
 
@@ -96,7 +154,12 @@ const DiaryModal = ({ isOpen, onClose, selectedDate }: DiaryModalProps) => {
           <div css={styles.moodTitle}>오늘의 기분</div>
           <div css={styles.moodContainer}>
             {MOODS.map((mood, index) => (
-              <button key={index} type='button' css={styles.moodButton}>
+              <button
+                key={index}
+                type='button'
+                css={styles.moodButton}
+                onClick={() => handleMood(mood)}
+              >
                 {mood}
               </button>
             ))}
@@ -105,7 +168,15 @@ const DiaryModal = ({ isOpen, onClose, selectedDate }: DiaryModalProps) => {
 
         {/* 본문 */}
         <Box css={styles.inputWrapper}>
-          <TextField fullWidth id='diary-content' label='일기 작성' multiline rows={4} />
+          <TextField
+            fullWidth
+            id='diary-content'
+            label='일기 작성'
+            multiline
+            rows={4}
+            onChange={handleNotes}
+            value={diary.notes}
+          />
         </Box>
         {/* 버튼 */}
         <div css={styles.buttonWrapper}>
