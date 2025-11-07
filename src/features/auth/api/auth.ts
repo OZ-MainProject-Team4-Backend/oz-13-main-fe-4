@@ -86,6 +86,8 @@ export async function logIn(data: RequestLoginDTO): Promise<ResponseLoginDTO> {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
+    // ✅ 쿠키 전송/수신 허용
+    credentials: 'include',
   });
 
   const json = await res.json();
