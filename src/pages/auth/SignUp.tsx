@@ -21,6 +21,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import * as z from 'zod';
 import { GoogleButton, KakaoButton, NaverButton } from '../../components/Button';
+import BaseModal from '../../components/Modal/BaseModal';
 import { useNicknameValidateMutation } from '../../features/auth/hooks/useNicknameValidateMutation';
 import { useSignUpMutation } from '../../features/auth/hooks/useSignUpMutation';
 
@@ -72,8 +73,10 @@ type FormField = z.infer<typeof signUpSchema>;
 
 export default function SignUp() {
   const [isNicknameValidated, setIsNicknameValidated] = useState(false); //닉네임 중복검사 확인 상태
-  const signUpMutation = useSignUpMutation(); //query
-  const nicknameValidate = useNicknameValidateMutation();
+  const signUpMutation = useSignUpMutation(); //회원가입 query
+  const nicknameValidate = useNicknameValidateMutation(); //닉네임중복 query
+  const [showModal, setShowModal] = useState(false); //모달창 상태
+  const [modalMessage, setModalMessage] = useState(''); //모달메시지
   const navigator = useNavigate();
 
   //회원가입 버튼 클릭하면?mutation 불러서 비동기 통신해야함.
@@ -91,17 +94,22 @@ export default function SignUp() {
   const handleNicknameValidate = () => {
     const nickname = getValues('nickname'); // react-hook-form의 getValues 사용
     if (!nickname) {
-      //공백방지
-      return alert('닉네임을 입력해주세요');
+      setModalMessage('닉네임을 입력하세용ㅋ');
+      setShowModal(true);
+      return;
     }
 
     nicknameValidate.mutate(
       { nickname },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          setModalMessage(data.message ?? '닉네임 확인완료');
+          setShowModal(true);
           setIsNicknameValidated(true);
         },
-        onError() {
+        onError(error) {
+          setModalMessage(error.message);
+          setShowModal(true);
           setIsNicknameValidated(false);
         },
       }
@@ -132,6 +140,18 @@ export default function SignUp() {
     <Card variant='outlined'>
       {/* 에러 메시지 표시 */}
       {signUpMutation.error && <p>에러 발생!</p>}
+      {/* 모달창 */}
+      <BaseModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        title='닉네임 중복 확인'
+        subtitle={modalMessage}
+        footer={
+          <Button onClick={() => setShowModal(false)} variant='contained'>
+            확인
+          </Button>
+        }
+      />
       <Typography
         component='h1'
         variant='h4'
