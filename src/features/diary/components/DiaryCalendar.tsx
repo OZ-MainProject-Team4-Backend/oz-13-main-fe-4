@@ -10,6 +10,8 @@ const DiaryCalendar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [diaries, setDiaries] = useState<DiaryData[]>([]);
+  const [mode, setMode] = useState<'create' | 'edit'>('create');
+  const [selectedDiary, setSelectedDiary] = useState<DiaryData | undefined>(undefined);
 
   const today = new Date();
   const todayYear = today.getFullYear();
@@ -18,6 +20,12 @@ const DiaryCalendar = () => {
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
+
+  // 특정 날짜의 일기를 찾는 함수
+  const getDiaryByDate = (year: number, month: number, date: number) => {
+    const targetDate = `${year}년 ${String(month + 1).padStart(2, '0')}월 ${String(date).padStart(2, '0')}일`;
+    return diaries.find((d) => d.date === targetDate);
+  };
 
   // 이번 달 총 일수
   const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -65,16 +73,36 @@ const DiaryCalendar = () => {
   const handleAddDiary = (date: number) => {
     const selected = new Date(year, month, date);
     setSelectedDate(selected);
+    setMode('create');
+    setSelectedDiary(undefined);
+    setIsModalOpen(true);
+  };
+
+  const handleEditDiary = (diary: DiaryData) => {
+    setMode('edit');
+    setSelectedDiary(diary);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedDate(null);
+    setSelectedDiary(undefined);
   };
 
-  const handleSaveDiary = (newDiary: DiaryData, image: File | null) => {
-    setDiaries((prev) => [...prev, newDiary]);
+  const handleSaveDiary = (updatedDiary: DiaryData, image: File | null) => {
+    setDiaries((prev) => {
+      const existingIndex = prev.findIndex((d) => d.id === updatedDiary.id);
+      if (existingIndex !== -1) {
+        //수정
+        const newDiaries = [...prev];
+        newDiaries[existingIndex] = updatedDiary;
+        return newDiaries;
+      } else {
+        return [...prev, updatedDiary];
+      }
+    });
+
     handleCloseModal();
   };
 
@@ -107,29 +135,50 @@ const DiaryCalendar = () => {
 
         {/* 캘린더 바디 */}
         <div css={styles.calendarBodyStyle}>
-          {calendarDays.map((day, index) => (
-            <div
-              key={index}
-              css={day.isCurrentMonth ? styles.currentMonthDateStyle : styles.otherMonthDateStyle}
-            >
-              {isToday(day.date, day.isCurrentMonth) ? (
-                <>
-                  <div css={styles.todayCircleStyle}>
-                    <span>{day.date}</span>
-                  </div>
-                  <button
-                    type='button'
-                    css={styles.addDiaryButtonStyle}
-                    onClick={() => handleAddDiary(day.date)}
-                  >
-                    + 일기 작성
-                  </button>
-                </>
-              ) : (
-                day.date
-              )}
-            </div>
-          ))}
+          {calendarDays.map((day, index) => {
+            const existingDiary = day.isCurrentMonth ? getDiaryByDate(year, month, day.date) : null;
+
+            return (
+              <div
+                key={index}
+                css={day.isCurrentMonth ? styles.currentMonthDateStyle : styles.otherMonthDateStyle}
+              >
+                {day.isCurrentMonth ? (
+                  <>
+                    <div
+                      css={
+                        isToday(day.date, day.isCurrentMonth) ? styles.todayCircleStyle : undefined
+                      }
+                    >
+                      <span>{day.date}</span>
+                    </div>
+
+                    {existingDiary ? (
+                      // 일기가 있으면 제목 표시
+                      <button
+                        type='button'
+                        css={styles.diaryTitleButtonStyle}
+                        onClick={() => handleEditDiary(existingDiary)}
+                      >
+                        {existingDiary.title}
+                      </button>
+                    ) : (
+                      // 일기가 없으면 작성 버튼
+                      <button
+                        type='button'
+                        css={styles.addDiaryButtonStyle}
+                        onClick={() => handleAddDiary(day.date)}
+                      >
+                        + 일기 작성
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  day.date
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
       <DiaryModal
@@ -137,6 +186,8 @@ const DiaryCalendar = () => {
         onClose={handleCloseModal}
         selectedDate={selectedDate}
         onSave={handleSaveDiary}
+        mode={mode}
+        selectedDiary={selectedDiary}
       />
     </>
   );

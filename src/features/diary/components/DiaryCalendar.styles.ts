@@ -93,14 +93,11 @@ export const todayCircleStyle = css`
   padding: 2px;
 `;
 
-export const addDiaryButtonStyle = css`
+const buttonStyle = css`
   position: absolute;
   top: 40px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: var(--color-background);
-  color: #10498a;
-  border: none;
   border-radius: 16px;
   padding: 6px 5px;
   font-size: 13px;
@@ -109,9 +106,26 @@ export const addDiaryButtonStyle = css`
   white-space: nowrap;
   text-align: center;
   width: 80%;
+  border: none;
+`;
+
+export const addDiaryButtonStyle = css`
+  ${buttonStyle}
+  background-color: var(--color-background);
+  color: #10498a;
 
   &:hover {
     background-color: #1976d2;
     color: white;
+  }
+`;
+
+export const diaryTitleButtonStyle = css`
+  ${buttonStyle}
+  background-color: #1976d2;
+  color: white;
+  &:hover {
+    background-color: var(--color-background);
+    color: black;
   }
 `;
