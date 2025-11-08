@@ -4,11 +4,14 @@ import * as styles from './DiaryModal.styles';
 import { SiAccuweather } from 'react-icons/si';
 import { Box, Button, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { DiaryData } from '../types/types';
 
 interface DiaryModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedDate: Date | null;
+  diaryId?: number;
+  onSave?: (diary: DiaryData, image: File | null) => void;
 }
 
 const getFormattedDate = (selectedDate: Date | null) => {
@@ -21,26 +24,13 @@ const getFormattedDate = (selectedDate: Date | null) => {
 
 const MOODS = ['😊', '😆', '😌', '😢', '😠'];
 
-export interface DiaryData {
-  id: number;
-  date: string;
-  title: string;
-  satisfaction: string;
-  notes: string;
-  weather: {
-    condition: string;
-    temperature: number;
-  };
-  image_url: string | null;
-}
-
-const DiaryModal = ({ isOpen, onClose, selectedDate }: DiaryModalProps) => {
+const DiaryModal = ({ isOpen, onClose, selectedDate, onSave }: DiaryModalProps) => {
   const [diary, setDiary] = useState<DiaryData>({
-    id: 1,
+    id: Date.now(),
     date: getFormattedDate(selectedDate),
-    title: 'ozcoding',
+    title: '',
     satisfaction: MOODS[0],
-    notes: 'main project',
+    notes: '',
     weather: {
       condition: 'cloudy',
       temperature: 18,
@@ -50,6 +40,26 @@ const DiaryModal = ({ isOpen, onClose, selectedDate }: DiaryModalProps) => {
 
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (isOpen && selectedDate) {
+      setDiary({
+        id: Date.now(),
+        date: getFormattedDate(selectedDate),
+        title: '',
+        satisfaction: MOODS[0],
+        notes: '',
+        weather: {
+          condition: 'cloudy',
+          temperature: 18,
+        },
+        image_url: null,
+      });
+      setPreview(null);
+      setImage(null);
+    }
+  }, [isOpen, selectedDate]);
 
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -92,20 +102,41 @@ const DiaryModal = ({ isOpen, onClose, selectedDate }: DiaryModalProps) => {
     }));
   };
 
+  const handleCancel = () => {
+    const hasChages = diary.title || diary.notes || image;
+
+    if (hasChages) {
+      const confirmClose = window.confirm('작성 중인 내용이 있습니다. 정말 닫으시겠습니까?');
+      if (!confirmClose) return;
+    }
+
+    onClose();
+  };
+
+  const handleSave = () => {
+    if (!onSave) return;
+
+    if (!diary.title.trim()) {
+      alert('제목을 입력해주세요');
+      return;
+    }
+
+    if (!diary.notes.trim()) {
+      alert('일기 내용을 입력해주세요');
+      return;
+    }
+
+    setIsLoading(true);
+
+    onSave(diary, image);
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     return () => {
       if (preview) URL.revokeObjectURL(preview);
     };
   }, [preview]);
-
-  useEffect(() => {
-    if (selectedDate) {
-      setDiary((prev) => ({
-        ...prev,
-        date: getFormattedDate(selectedDate),
-      }));
-    }
-  }, [selectedDate]);
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
@@ -191,11 +222,11 @@ const DiaryModal = ({ isOpen, onClose, selectedDate }: DiaryModalProps) => {
         </Box>
         {/* 버튼 */}
         <div css={styles.buttonWrapper}>
-          <Button variant='outlined' color='primary'>
+          <Button variant='outlined' color='primary' disabled={isLoading} onClick={handleCancel}>
             취소
           </Button>
-          <Button variant='contained' color='primary'>
-            수정 완료
+          <Button variant='contained' color='primary' onClick={handleSave} disabled={isLoading}>
+            {isLoading ? '저장 중...' : '저장'}
           </Button>
         </div>
       </div>

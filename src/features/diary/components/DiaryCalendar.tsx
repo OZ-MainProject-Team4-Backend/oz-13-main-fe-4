@@ -3,11 +3,13 @@ import { DAYS, MONTHS } from '../../../constants/calenderConst';
 import { useState } from 'react';
 import DiaryModal from './DiaryModal';
 import * as styles from './DiaryCalendar.styles';
+import { DiaryData } from '../types/types';
 
 const DiaryCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [diaries, setDiaries] = useState<DiaryData[]>([]);
 
   const today = new Date();
   const todayYear = today.getFullYear();
@@ -71,6 +73,13 @@ const DiaryCalendar = () => {
     setSelectedDate(null);
   };
 
+  const handleSaveDiary = (newDiary: DiaryData, image: File | null) => {
+    setDiaries((prev) => [...prev, newDiary]);
+    handleCloseModal();
+  };
+
+  console.log('다이어리 기록용', diaries);
+
   return (
     <>
       <div css={styles.containerStyle}>
@@ -123,7 +132,12 @@ const DiaryCalendar = () => {
           ))}
         </div>
       </div>
-      <DiaryModal isOpen={isModalOpen} onClose={handleCloseModal} selectedDate={selectedDate} />
+      <DiaryModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        selectedDate={selectedDate}
+        onSave={handleSaveDiary}
+      />
     </>
   );
 };
