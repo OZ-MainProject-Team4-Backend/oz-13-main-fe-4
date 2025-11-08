@@ -10,8 +10,9 @@ interface DiaryModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedDate: Date | null;
-  diaryId?: number;
   onSave?: (diary: DiaryData, image: File | null) => void;
+  mode: 'create' | 'edit';
+  selectedDiary: DiaryData | undefined;
 }
 
 const getFormattedDate = (selectedDate: Date | null) => {
@@ -24,7 +25,14 @@ const getFormattedDate = (selectedDate: Date | null) => {
 
 const MOODS = ['😊', '😆', '😌', '😢', '😠'];
 
-const DiaryModal = ({ isOpen, onClose, selectedDate, onSave }: DiaryModalProps) => {
+const DiaryModal = ({
+  isOpen,
+  onClose,
+  selectedDate,
+  onSave,
+  mode,
+  selectedDiary,
+}: DiaryModalProps) => {
   const [diary, setDiary] = useState<DiaryData>({
     id: Date.now(),
     date: getFormattedDate(selectedDate),
@@ -43,7 +51,15 @@ const DiaryModal = ({ isOpen, onClose, selectedDate, onSave }: DiaryModalProps) 
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (isOpen && selectedDate) {
+    if (!isOpen) return;
+
+    if (mode === 'edit' && selectedDiary) {
+      // 수정 모드
+      setDiary(selectedDiary);
+      setPreview(selectedDiary.image_url || null);
+      setImage(null);
+    } else {
+      // 작성 모드
       setDiary({
         id: Date.now(),
         date: getFormattedDate(selectedDate),
@@ -59,7 +75,7 @@ const DiaryModal = ({ isOpen, onClose, selectedDate, onSave }: DiaryModalProps) 
       setPreview(null);
       setImage(null);
     }
-  }, [isOpen, selectedDate]);
+  }, [isOpen, mode, selectedDiary, selectedDate]);
 
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -103,9 +119,12 @@ const DiaryModal = ({ isOpen, onClose, selectedDate, onSave }: DiaryModalProps) 
   };
 
   const handleCancel = () => {
-    const hasChages = diary.title || diary.notes || image;
+    const hasChanges =
+      mode === 'create'
+        ? diary.title || diary.notes || image
+        : JSON.stringify(diary) !== JSON.stringify(selectedDiary) || image;
 
-    if (hasChages) {
+    if (hasChanges) {
       const confirmClose = window.confirm('작성 중인 내용이 있습니다. 정말 닫으시겠습니까?');
       if (!confirmClose) return;
     }
@@ -145,7 +164,7 @@ const DiaryModal = ({ isOpen, onClose, selectedDate, onSave }: DiaryModalProps) 
         <div css={styles.header}>
           <h3 css={styles.dateTitle}>{diary.date}</h3>
           <button type='button' css={styles.closeButton} onClick={onClose}>
-            <IoClose />
+            <IoClose onClick={handleCancel} />
           </button>
         </div>
 
@@ -226,7 +245,7 @@ const DiaryModal = ({ isOpen, onClose, selectedDate, onSave }: DiaryModalProps) 
             취소
           </Button>
           <Button variant='contained' color='primary' onClick={handleSave} disabled={isLoading}>
-            {isLoading ? '저장 중...' : '저장'}
+            {mode === 'edit' ? '수정 완료' : '저장'}
           </Button>
         </div>
       </div>
