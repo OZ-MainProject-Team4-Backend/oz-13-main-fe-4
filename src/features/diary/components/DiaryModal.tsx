@@ -13,8 +13,10 @@ interface DiaryModalProps {
 
 const getFormattedDate = (selectedDate: Date | null) => {
   if (!selectedDate) return '';
-  const formatetedDate = `${selectedDate.getFullYear()}년 ${selectedDate.getMonth() + 1}월 ${selectedDate.getDate()}일`;
-  return formatetedDate;
+  const year = selectedDate.getFullYear();
+  const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+  const day = String(selectedDate.getDate()).padStart(2, '0');
+  return `${year}년 ${month}월 ${day}일`;
 };
 
 const MOODS = ['😊', '😆', '😌', '😢', '😠'];
@@ -95,6 +97,15 @@ const DiaryModal = ({ isOpen, onClose, selectedDate }: DiaryModalProps) => {
       if (preview) URL.revokeObjectURL(preview);
     };
   }, [preview]);
+
+  useEffect(() => {
+    if (selectedDate) {
+      setDiary((prev) => ({
+        ...prev,
+        date: getFormattedDate(selectedDate),
+      }));
+    }
+  }, [selectedDate]);
 
   return (
     <BaseModal isOpen={isOpen} onClose={onClose}>
