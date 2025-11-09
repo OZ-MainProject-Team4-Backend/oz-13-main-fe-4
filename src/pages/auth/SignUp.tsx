@@ -60,7 +60,7 @@ const signUpSchema = z
       message: '연령대를 선택해주세요',
     }),
     email: z.string().email('유효한 이메일 주소를 입력해주세요.'),
-    emailCode: z.string().min(1, '숫자코드6자리 입력해주세요').max(6, '숫자ㅗ드 6자리 입니다.'),
+    emailCode: z.string().min(6, '숫자코드6자리 입력해주세요').max(6, '숫자코드 6자리 입니다.'),
     password: z
       .string()
       .min(6, '비밀번호는 6자 이상 입력해주세요')
@@ -128,8 +128,14 @@ export default function SignUp() {
     );
   };
 
-  const handleEmailValidate = () => {
+  const handleEmailValidate = async () => {
     const email = getValues('email');
+    // 이메일 필드만 검증
+    const isValid = await trigger('email');
+
+    if (!isValid) {
+      return;
+    }
     if (!email) {
       setModalMessage('이메일 입력하세용ㅋ');
       setEmailShowModal(true);
@@ -151,9 +157,15 @@ export default function SignUp() {
     );
   };
 
-  const handleEmailCodeValidate = () => {
+  const handleEmailCodeValidate = async () => {
     const code = getValues('emailCode');
     const email = getValues('email');
+    // 인증코드 필드만 검증(리액트훅폼 제공)
+    const isValid = await trigger('emailCode');
+
+    if (!isValid) {
+      return;
+    }
     if (!code) {
       setModalMessage('인증코드를 입력하세요');
       setEmailShowModal(true);
@@ -179,6 +191,7 @@ export default function SignUp() {
   const {
     register,
     control,
+    trigger,
     handleSubmit,
     getValues,
     formState: { errors },
@@ -352,17 +365,18 @@ export default function SignUp() {
             </Button>
           </FormControl>
         ) : (
-          <h1>다시입력</h1>
+          // eslint-disable-next-line react/jsx-no-useless-fragment
+          <></>
         )}
         <BaseModal
           isOpen={emailShowModal}
           onClose={() => setEmailShowModal(false)}
-          title='이메일 인증코드 확인'
+          title='이메일 인증코드'
           subtitle={modalMessage}
           footer={
             <Button
               variant='contained'
-              color='success'
+              color='inherit'
               onClick={() => {
                 setEmailShowModal(false);
               }}
@@ -405,12 +419,7 @@ export default function SignUp() {
           />
         </FormControl>
 
-        <Button
-          type='submit'
-          fullWidth
-          variant='contained'
-          disabled={!isEmailVerified} // 이메일 인증 완료 시에만 활성화
-        >
+        <Button type='submit' fullWidth variant='contained' disabled={!isEmailCodeChecked}>
           회원가입
         </Button>
       </Box>
