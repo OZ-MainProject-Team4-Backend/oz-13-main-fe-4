@@ -65,10 +65,10 @@ const DiaryModalFields = ({
             <button
               key={index}
               type='button'
-              css={[styles.moodButton, diary.satisfaction === mood && styles.moodButtonSelected]}
-              onClick={() => handleMood(mood)}
+              css={[styles.moodButton, diary.satisfaction === index && styles.moodButtonSelected]}
+              onClick={() => handleMood(index)}
             >
-              {mood}
+              <img src={mood.icon} alt={mood.name} />
             </button>
           ))}
         </div>

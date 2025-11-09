@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DiaryData, UseDiaryModalProps } from '../types/types';
 import { getFormattedDate } from '../utils/calendarUtils';
-import { MOODS } from '../constants/moods';
 
 export const useDiaryModal = ({
   mode,
@@ -14,7 +13,7 @@ export const useDiaryModal = ({
     id: Date.now(),
     date: getFormattedDate(selectedDate),
     title: '',
-    satisfaction: MOODS[0],
+    satisfaction: 0,
     notes: '',
     weather: {
       condition: 'cloudy',
@@ -39,7 +38,7 @@ export const useDiaryModal = ({
         id: Date.now(),
         date: getFormattedDate(selectedDate),
         title: '',
-        satisfaction: MOODS[0],
+        satisfaction: 0,
         notes: '',
         weather: {
           condition: 'cloudy',
@@ -86,10 +85,10 @@ export const useDiaryModal = ({
     }));
   };
 
-  const handleMood = (mood: string) => {
+  const handleMood = (index: number) => {
     setDiary((prev) => ({
       ...prev,
-      satisfaction: mood,
+      satisfaction: index,
     }));
   };
 
