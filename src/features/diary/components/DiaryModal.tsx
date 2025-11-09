@@ -156,9 +156,6 @@ const DiaryModal = ({
         {/* 헤더 */}
         <div css={styles.header}>
           <h3 css={styles.dateTitle}>{diary.date}</h3>
-          <button type='button' css={styles.closeButton} onClick={onClose}>
-            <IoClose onClick={handleCancel} />
-          </button>
         </div>
 
         {/* 이미지 */}
