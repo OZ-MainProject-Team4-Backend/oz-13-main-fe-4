@@ -1,62 +1,42 @@
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 import { DAYS, MONTHS } from '../../../constants/calenderConst';
-import { useState } from 'react';
 import DiaryModal from './DiaryModal';
 import * as styles from './DiaryCalendar.styles';
 import { DiaryData } from '../types/types';
 import { getCalendarDays, isToday } from '../utils/calendarUtils';
 import { useCalendarDate } from '../hooks/useCalendarDate';
+import { useDiaryState } from '../hooks/useDiaryState';
 
 const DiaryCalendar = () => {
   const { year, month, goToPrevMonth, goToNextMonth } = useCalendarDate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [diaries, setDiaries] = useState<DiaryData[]>([]);
-  const [mode, setMode] = useState<'create' | 'edit'>('create');
-  const [selectedDiary, setSelectedDiary] = useState<DiaryData | undefined>(undefined);
-
+  const {
+    diaries,
+    isModalOpen,
+    selectedDate,
+    mode,
+    selectedDiary,
+    getDiaryByDate,
+    openCreateModal,
+    openEditModal,
+    closeModal,
+    saveDiary,
+  } = useDiaryState();
   const calendarDays = getCalendarDays(year, month);
 
-  // 특정 날짜의 일기를 찾는 함수
-  const getDiaryByDate = (year: number, month: number, date: number) => {
-    const targetDate = `${year}년 ${String(month + 1).padStart(2, '0')}월 ${String(date).padStart(2, '0')}일`;
-    return diaries.find((d) => d.date === targetDate);
-  };
-
   const handleAddDiary = (date: number) => {
-    const selected = new Date(year, month, date);
-    setSelectedDate(selected);
-    setMode('create');
-    setSelectedDiary(undefined);
-    setIsModalOpen(true);
+    openCreateModal(year, month, date);
   };
 
   const handleEditDiary = (diary: DiaryData) => {
-    setMode('edit');
-    setSelectedDiary(diary);
-    setIsModalOpen(true);
+    openEditModal(diary);
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedDate(null);
-    setSelectedDiary(undefined);
+    closeModal();
   };
 
   const handleSaveDiary = (updatedDiary: DiaryData, image: File | null) => {
-    setDiaries((prev) => {
-      const existingIndex = prev.findIndex((d) => d.id === updatedDiary.id);
-      if (existingIndex !== -1) {
-        //수정
-        const newDiaries = [...prev];
-        newDiaries[existingIndex] = updatedDiary;
-        return newDiaries;
-      } else {
-        return [...prev, updatedDiary];
-      }
-    });
-
-    handleCloseModal();
+    saveDiary(updatedDiary, image);
   };
 
   console.log('다이어리 기록용', diaries);
