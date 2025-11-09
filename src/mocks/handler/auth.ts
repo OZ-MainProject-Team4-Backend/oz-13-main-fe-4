@@ -47,16 +47,35 @@ export const authHandlers = [
   //-==================== 이메일 인증 ====================
   http.post('/api/auth/email/send', async ({ request }) => {
     const { email } = (await request.json()) as RequestEmailSendDTO;
-    //이메일 중복 확인
+    // 이미 인증된 이메일인지 확인
     if (verifiedEmails.has(email)) {
-      return HttpResponse.json({
-        success: false,
-        statusCode: 400,
-        error: {
-          code: 'email_already_verified',
-          message: '이미 인증이 된 이메일',
+      return HttpResponse.json(
+        {
+          success: false,
+          statusCode: 400,
+          error: {
+            code: 'email_already_verified',
+            message: '이미 인증이 된 이메일',
+          },
         },
-      });
+        { status: 400 }
+      );
+    }
+
+    // 이미 가입된 이메일인지 확인
+    const existingUser = mockUsers.find((u) => u.email === email);
+    if (existingUser) {
+      return HttpResponse.json(
+        {
+          success: false,
+          statusCode: 400,
+          error: {
+            code: 'email_duplicate',
+            message: '이미 가입된 이메일입니다',
+          },
+        },
+        { status: 400 }
+      );
     }
     // 6자리 랜덤 코드 생성 -- 이거 우리가 ???
     const code = Math.floor(100000 + Math.random() * 900000).toString();
