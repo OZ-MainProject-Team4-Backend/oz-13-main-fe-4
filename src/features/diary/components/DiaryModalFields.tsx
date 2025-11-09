@@ -1,18 +1,9 @@
 import { IoImageOutline } from 'react-icons/io5';
 import * as styles from './DiaryModal.styles';
 import { Box, TextField } from '@mui/material';
-import { DiaryData } from '../types/types';
+import { DiaryModalFieldsProps } from '../types/types';
 import { SiAccuweather } from 'react-icons/si';
 import { MOODS } from '../constants/moods';
-
-interface DiaryModalFieldsProps {
-  handleImage: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  preview: string | null;
-  handleTitle: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  diary: DiaryData;
-  handleMood: (mood: string) => void;
-  handleNotes: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
 
 const DiaryModalFields = ({
   handleImage,

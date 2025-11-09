@@ -31,3 +31,12 @@ export interface UseDiaryModalProps {
   onSave?: (diary: DiaryData, image: File | null) => void;
   onClose: () => void;
 }
+
+export interface DiaryModalFieldsProps {
+  handleImage: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  preview: string | null;
+  handleTitle: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  diary: DiaryData;
+  handleMood: (mood: string) => void;
+  handleNotes: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
