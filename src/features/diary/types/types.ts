@@ -14,3 +14,20 @@ export interface DiaryData {
   };
   image_url: string | null;
 }
+
+export interface DiaryModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  selectedDate: Date | null;
+  onSave?: (diary: DiaryData, image: File | null) => void;
+  mode: 'create' | 'edit';
+  selectedDiary: DiaryData | undefined;
+}
+
+export interface UseDiaryModalProps {
+  mode: 'create' | 'edit';
+  selectedDate: Date | null;
+  selectedDiary: DiaryData | undefined;
+  onSave?: (diary: DiaryData, image: File | null) => void;
+  onClose: () => void;
+}
