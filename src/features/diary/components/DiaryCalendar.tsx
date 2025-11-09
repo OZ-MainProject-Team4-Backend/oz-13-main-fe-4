@@ -2,7 +2,7 @@ import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 import DiaryModal from './DiaryModal';
 import * as styles from './DiaryCalendar.styles';
 import { DiaryData } from '../types/types';
-import { getCalendarDays, isToday } from '../utils/calendarUtils';
+import { getCalendarDays, isToday } from '../utils/calendar';
 import { useCalendarDate } from '../hooks/useCalendarDate';
 import { useDiaryState } from '../hooks/useDiaryState';
 import { DAYS, MONTHS } from '../constants/calender';

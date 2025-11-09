@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { DiaryData, UseDiaryModalProps } from '../types/types';
-import { getFormattedDate } from '../utils/calendarUtils';
+import { getFormattedDate } from '../utils/calendar';
 
 export const useDiaryModal = ({
   mode,
