@@ -58,17 +58,12 @@ export const useDiaryModal = ({
     const file = files[0];
 
     // 이전 미리보기 url 해제
-    if (preview) URL.revokeObjectURL(preview);
+    if (preview && preview.startsWith('blob:')) URL.revokeObjectURL(preview);
 
     // 새 미리보기 url 생성
     const newUrl = URL.createObjectURL(file);
     setPreview(newUrl);
     setImage(file);
-
-    setDiary((prev) => ({
-      ...prev,
-      image_url: newUrl,
-    }));
   };
 
   const handleTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,7 +122,7 @@ export const useDiaryModal = ({
 
   useEffect(() => {
     return () => {
-      if (preview) URL.revokeObjectURL(preview);
+      if (preview && preview.startsWith('blob:')) URL.revokeObjectURL(preview);
     };
   }, [preview]);
 

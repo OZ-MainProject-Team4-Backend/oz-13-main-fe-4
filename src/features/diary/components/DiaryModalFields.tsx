@@ -27,6 +27,8 @@ const DiaryModalFields = ({
         <label htmlFor='upload-input' css={styles.imageLabel}>
           {preview ? (
             <img src={preview!} alt='미리보기' width={'100%'} css={styles.previewImage} />
+          ) : diary.image_url ? (
+            <img src={diary.image_url} alt='저장된 이미지' />
           ) : (
             <div css={styles.uploadPlaceholder}>
               <IoImageOutline />
