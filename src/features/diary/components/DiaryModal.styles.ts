@@ -147,14 +147,21 @@ export const moodContainer = css`
 `;
 
 export const moodButton = css`
-  width: 56px;
-  height: 56px;
-  border: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border: none;
   border-radius: 10px;
   background-color: #f9fafb;
-  font-size: 36px;
   cursor: pointer;
   transition: all 0.2s;
+
+  img {
+    width: 50px;
+    height: 50px;
+  }
 
   &:hover {
     transform: scale(1.1);
