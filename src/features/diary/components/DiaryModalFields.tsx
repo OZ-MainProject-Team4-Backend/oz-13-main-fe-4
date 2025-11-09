@@ -65,7 +65,7 @@ const DiaryModalFields = ({
             <button
               key={index}
               type='button'
-              css={styles.moodButton}
+              css={[styles.moodButton, diary.satisfaction === mood && styles.moodButtonSelected]}
               onClick={() => handleMood(mood)}
             >
               {mood}

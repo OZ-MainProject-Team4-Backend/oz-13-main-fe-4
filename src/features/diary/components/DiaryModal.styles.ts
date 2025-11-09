@@ -161,6 +161,12 @@ export const moodButton = css`
   }
 `;
 
+export const moodButtonSelected = css`
+  background-color: var(--color-background);
+  color: white;
+  border: none;
+`;
+
 export const buttonWrapper = css`
   display: flex;
   justify-content: end;
