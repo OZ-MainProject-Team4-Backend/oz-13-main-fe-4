@@ -1,11 +1,11 @@
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
-import { DAYS, MONTHS } from '../../../constants/calenderConst';
 import DiaryModal from './DiaryModal';
 import * as styles from './DiaryCalendar.styles';
 import { DiaryData } from '../types/types';
 import { getCalendarDays, isToday } from '../utils/calendarUtils';
 import { useCalendarDate } from '../hooks/useCalendarDate';
 import { useDiaryState } from '../hooks/useDiaryState';
+import { DAYS, MONTHS } from '../constants/calender';
 
 const DiaryCalendar = () => {
   const { year, month, goToPrevMonth, goToNextMonth } = useCalendarDate();
