@@ -5,22 +5,15 @@ import DiaryModal from './DiaryModal';
 import * as styles from './DiaryCalendar.styles';
 import { DiaryData } from '../types/types';
 import { getCalendarDays, isToday } from '../utils/calendarUtils';
+import { useCalendarDate } from '../hooks/useCalendarDate';
 
 const DiaryCalendar = () => {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const { year, month, goToPrevMonth, goToNextMonth } = useCalendarDate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [diaries, setDiaries] = useState<DiaryData[]>([]);
   const [mode, setMode] = useState<'create' | 'edit'>('create');
   const [selectedDiary, setSelectedDiary] = useState<DiaryData | undefined>(undefined);
-
-  const today = new Date();
-  const todayYear = today.getFullYear();
-  const todayMonth = today.getMonth();
-  const todayDate = today.getDate();
-
-  const year = currentDate.getFullYear();
-  const month = currentDate.getMonth();
 
   const calendarDays = getCalendarDays(year, month);
 
@@ -28,14 +21,6 @@ const DiaryCalendar = () => {
   const getDiaryByDate = (year: number, month: number, date: number) => {
     const targetDate = `${year}년 ${String(month + 1).padStart(2, '0')}월 ${String(date).padStart(2, '0')}일`;
     return diaries.find((d) => d.date === targetDate);
-  };
-
-  const goToPrevMonth = () => {
-    setCurrentDate(new Date(year, month - 1, 1));
-  };
-
-  const goToNextMonth = () => {
-    setCurrentDate(new Date(year, month + 1, 1));
   };
 
   const handleAddDiary = (date: number) => {
