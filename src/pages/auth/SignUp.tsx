@@ -60,6 +60,7 @@ const signUpSchema = z
       message: '연령대를 선택해주세요',
     }),
     email: z.string().email('유효한 이메일 주소를 입력해주세요.'),
+    emailCode: z.string().min(1, '숫자코드6자리 입력해주세요').max(6, '숫자ㅗ드 6자리 입니다.'),
     password: z
       .string()
       .min(6, '비밀번호는 6자 이상 입력해주세요')
@@ -79,14 +80,15 @@ export default function SignUp() {
   const [isNicknameValidated, setIsNicknameValidated] = useState(false); //닉네임 중복검사 확인 상태
 
   const signUpMutation = useSignUpMutation(); //회원가입 query
-  const sendEmailCode = useSendEmailCodeMutation(); //이메일 중복 코드
-  const verityEmailCode = useVerifyEmailCodeMutation(); //이메일 코드 확인
+  const sendEmailCode = useSendEmailCodeMutation(); //이메일 중복 확인
+  const verityEmailCode = useVerifyEmailCodeMutation(); //이메일 인증 코드 확인
   const nicknameValidate = useNicknameValidateMutation(); //닉네임중복 query
   const [nicknameShowModal, setNickanameShowModal] = useState(false); //닉네임 모달창 상태
   const [emailShowModal, setEmailShowModal] = useState(false); // 이메일 모달창 상태
   const [modalMessage, setModalMessage] = useState(''); //모달메시지
   // src/pages/auth/SignUp.tsx
-  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false); //이메일 중복 상태
+  const [isEmailCodeChecked, setIsEmailCodeChecked] = useState(false); //이메일 인증코드 상태
   const navigator = useNavigate();
 
   //회원가입 버튼 클릭하면?mutation 불러서 비동기 통신해야함.
@@ -148,6 +150,31 @@ export default function SignUp() {
       }
     );
   };
+
+  const handleEmailCodeValidate = () => {
+    const code = getValues('emailCode');
+    const email = getValues('email');
+    if (!code) {
+      setModalMessage('인증코드를 입력하세요');
+      setEmailShowModal(true);
+      return;
+    }
+    verityEmailCode.mutate(
+      { code, email },
+      {
+        onSuccess: () => {
+          setModalMessage('인증이 완료되었습니다');
+          setEmailShowModal(true);
+          setIsEmailCodeChecked(true);
+        },
+        onError: (error) => {
+          setModalMessage(error.message);
+          setEmailShowModal(true);
+          setIsEmailCodeChecked(false);
+        },
+      }
+    );
+  };
   //2. react-hook-form 사용
   const {
     register,
@@ -166,6 +193,7 @@ export default function SignUp() {
       passwordConfirm: '',
       gender: 'F', //디폴트값 선택되게끔
       age: 'thirty',
+      emailCode: '',
     },
   });
 
@@ -303,8 +331,23 @@ export default function SignUp() {
         {isEmailVerified ? (
           <FormControl>
             <FormLabel htmlFor='emailCode'>이메일 인증코드</FormLabel>
-            <TextField fullWidth id='emailCode' placeholder='123456' variant='outlined' />
-            <Button variant='contained' color='success' type='button' onClick={handleEmailValidate}>
+            <TextField
+              {...register('emailCode')}
+              error={!!errors.emailCode}
+              helperText={errors.emailCode?.message}
+              fullWidth
+              id='emailCode'
+              placeholder='123456'
+              variant='outlined'
+              disabled={isEmailCodeChecked}
+            />
+            <Button
+              variant='contained'
+              color='success'
+              type='button'
+              onClick={handleEmailCodeValidate}
+              disabled={isEmailCodeChecked}
+            >
               인증코드 확인
             </Button>
           </FormControl>
