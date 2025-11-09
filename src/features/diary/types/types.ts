@@ -11,6 +11,7 @@ export interface DiaryData {
   weather: {
     condition: string;
     temperature: number;
+    icon: number;
   };
   image_url: string | null;
 }

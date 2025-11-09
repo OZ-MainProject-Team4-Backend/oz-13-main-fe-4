@@ -18,6 +18,7 @@ export const useDiaryModal = ({
     weather: {
       condition: 'cloudy',
       temperature: 18,
+      icon: 0,
     },
     image_url: null,
   });
@@ -43,6 +44,7 @@ export const useDiaryModal = ({
         weather: {
           condition: 'cloudy',
           temperature: 18,
+          icon: 0,
         },
         image_url: null,
       });
