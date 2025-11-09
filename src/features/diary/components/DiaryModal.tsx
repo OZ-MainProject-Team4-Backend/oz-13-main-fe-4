@@ -5,6 +5,7 @@ import { SiAccuweather } from 'react-icons/si';
 import { Box, Button, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { DiaryData } from '../types/types';
+import { getFormattedDate } from '../utils/calendarUtils';
 
 interface DiaryModalProps {
   isOpen: boolean;
@@ -14,14 +15,6 @@ interface DiaryModalProps {
   mode: 'create' | 'edit';
   selectedDiary: DiaryData | undefined;
 }
-
-const getFormattedDate = (selectedDate: Date | null) => {
-  if (!selectedDate) return '';
-  const year = selectedDate.getFullYear();
-  const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
-  const day = String(selectedDate.getDate()).padStart(2, '0');
-  return `${year}년 ${month}월 ${day}일`;
-};
 
 const MOODS = ['😊', '😆', '😌', '😢', '😠'];
 

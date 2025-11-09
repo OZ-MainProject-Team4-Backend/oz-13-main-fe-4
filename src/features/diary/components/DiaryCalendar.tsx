@@ -4,6 +4,7 @@ import { useState } from 'react';
 import DiaryModal from './DiaryModal';
 import * as styles from './DiaryCalendar.styles';
 import { DiaryData } from '../types/types';
+import { getCalendarDays, isToday } from '../utils/calendarUtils';
 
 const DiaryCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -21,42 +22,13 @@ const DiaryCalendar = () => {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
+  const calendarDays = getCalendarDays(year, month);
+
   // 특정 날짜의 일기를 찾는 함수
   const getDiaryByDate = (year: number, month: number, date: number) => {
     const targetDate = `${year}년 ${String(month + 1).padStart(2, '0')}월 ${String(date).padStart(2, '0')}일`;
     return diaries.find((d) => d.date === targetDate);
   };
-
-  // 이번 달 총 일수
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-  // 이번 달 1일이 무슨 요일인지
-  const firstDayOfMonth = new Date(year, month, 1).getDay();
-
-  // 지난 달 마지막 날
-  const prevMonthLastDate = new Date(year, month, 0).getDate();
-
-  // 이전 달 날짜들 ( 회색으로 표시할 날짜들 )
-  const prevMonthDays = Array.from({ length: firstDayOfMonth }, (_, i) => ({
-    date: prevMonthLastDate - firstDayOfMonth + i + 1,
-    isCurrentMonth: false,
-  }));
-
-  // 이번 달 날짜들
-  const currentMonthDays = Array.from({ length: daysInMonth }, (_, i) => ({
-    date: i + 1,
-    isCurrentMonth: true,
-  }));
-
-  // 다음 달 날짜들 (총 42칸을 채우기 위함)
-  const totalCells = 42;
-  const remainingCells = totalCells - (prevMonthDays.length + currentMonthDays.length);
-  const nextMonthDays = Array.from({ length: remainingCells }, (_, i) => ({
-    date: i + 1,
-    isCurrentMonth: false,
-  }));
-
-  const calendarDays = [...prevMonthDays, ...currentMonthDays, ...nextMonthDays];
 
   const goToPrevMonth = () => {
     setCurrentDate(new Date(year, month - 1, 1));
@@ -64,10 +36,6 @@ const DiaryCalendar = () => {
 
   const goToNextMonth = () => {
     setCurrentDate(new Date(year, month + 1, 1));
-  };
-
-  const isToday = (date: number, isCurrentMonth: boolean) => {
-    return isCurrentMonth && year === todayYear && month === todayMonth && date === todayDate;
   };
 
   const handleAddDiary = (date: number) => {
@@ -147,7 +115,9 @@ const DiaryCalendar = () => {
                   <>
                     <div
                       css={
-                        isToday(day.date, day.isCurrentMonth) ? styles.todayCircleStyle : undefined
+                        isToday(day.date, day.isCurrentMonth, year, month)
+                          ? styles.todayCircleStyle
+                          : undefined
                       }
                     >
                       <span>{day.date}</span>
