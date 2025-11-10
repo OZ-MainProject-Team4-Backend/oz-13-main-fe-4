@@ -26,8 +26,8 @@ export type ApiResponse<T = unknown, K = unknown> = {
 
 //==================== JWT 토큰 관련 ====================
 export type Tokens = {
-  accessToken: string;
-  refreshToken: string;
+  access: string;
+  refresh: string;
 };
 
 export type TokenPayload = {
@@ -69,8 +69,8 @@ export type RequestSignUpDTO = {
 
 export type ResponsetSignUpDTO = ApiResponse<{
   user: User;
-  accessToken: string;
-  refreshToken: string;
+  access: string;
+  refresh: string;
 }>;
 /* 요청 성공시 응답값은 아래처럼 받아옴
 그래서 {user}의 타입을 제네릭으로 설정해야함.
@@ -95,18 +95,18 @@ export type RequestLoginDTO = {
 
 export type ResponseLoginDTO = ApiResponse<{
   user: User;
-  accessToken: string; // 🔐로그인 요청하면 서버에서 JWT토큰값 뱉어냄
-  refreshToken: string; // 🔐로그인 요청하면 서버에서 JWT토큰값 뱉어냄
+  access: string; // 🔐로그인 요청하면 서버에서 JWT토큰값 뱉어냄
+  refresh: string; // 🔐로그인 요청하면 서버에서 JWT토큰값 뱉어냄
 }>;
 
 //==================== Token Refresh(짧은 액세스 토큰 만료 시, 리프레시 토큰을 사용하여 새로운 액세스 토큰 발급 받음+경우에따라 새 리프레시 토큰 받는 api 호출 ) ====================
 export type RequestTokenRefreshDTO = {
-  refreshToken?: string; // 🔐 리프레쉬 토큰을 담는 필드 (?옵셔널값임), 자동로그인 미체크시 body로 보내겠다.
+  refresh?: string; // 🔐 리프레쉬 토큰을 담는 필드 (?옵셔널값임), 자동로그인 미체크시 body로 보내겠다.
 };
 
 export type ResponseTokenRefreshDTO = ApiResponse<{
-  accessToken: string;
-  refreshToken?: string; // 🔐갱신된 경우에만 포함
+  access: string;
+  refresh?: string; // 🔐갱신된 경우에만 포함
 }>;
 //=========== 마이페이지 ============
 export type ResponseMeDTO = ApiResponse<User>;
