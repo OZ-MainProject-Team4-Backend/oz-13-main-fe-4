@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { DiaryData, UseDiaryModalProps } from '../types/types';
+import { DiaryData, DiaryError, UseDiaryModalProps } from '../types/types';
 import { getFormattedDate } from '../utils/calendar';
 
 export const useDiaryModal = ({
@@ -26,7 +26,7 @@ export const useDiaryModal = ({
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [errors, setErrors] = useState<DiaryError>({});
   useEffect(() => {
     if (mode === 'edit' && selectedDiary) {
       // 수정 모드
@@ -51,6 +51,8 @@ export const useDiaryModal = ({
       setPreview(null);
       setImage(null);
     }
+
+    setErrors({});
   }, [mode, selectedDiary, selectedDate]);
 
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,13 +108,13 @@ export const useDiaryModal = ({
   const handleSave = () => {
     if (!onSave) return;
 
-    if (!diary.title.trim()) {
-      alert('제목을 입력해주세요');
-      return;
-    }
+    const newErrors: DiaryError = {};
 
-    if (!diary.notes.trim()) {
-      alert('일기 내용을 입력해주세요');
+    if (!diary.title.trim()) newErrors.title = '제목을 입력해주세요';
+    if (!diary.notes.trim()) newErrors.notes = '일기 내용을 입력해주세요';
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
@@ -132,6 +134,7 @@ export const useDiaryModal = ({
     diary,
     preview,
     isLoading,
+    errors,
     handleImage,
     handleTitle,
     handleNotes,

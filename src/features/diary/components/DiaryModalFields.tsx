@@ -10,6 +10,7 @@ const DiaryModalFields = ({
   preview,
   handleTitle,
   diary,
+  errors,
   handleEmotion,
   handleNotes,
 }: DiaryModalFieldsProps) => {
@@ -46,6 +47,8 @@ const DiaryModalFields = ({
           label='제목'
           variant='standard'
           onChange={handleTitle}
+          error={!!errors?.title}
+          helperText={errors?.title || ''}
           value={diary.title}
         />
       </Box>
@@ -85,6 +88,8 @@ const DiaryModalFields = ({
           multiline
           rows={4}
           onChange={handleNotes}
+          error={!!errors?.notes}
+          helperText={errors?.notes || ''}
           value={diary.notes}
         />
       </Box>

@@ -38,6 +38,12 @@ export interface DiaryModalFieldsProps {
   preview: string | null;
   handleTitle: (e: React.ChangeEvent<HTMLInputElement>) => void;
   diary: DiaryData;
+  errors?: DiaryError;
   handleEmotion: (index: number) => void;
   handleNotes: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+export interface DiaryError {
+  title?: string;
+  notes?: string;
 }

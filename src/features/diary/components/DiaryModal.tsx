@@ -18,6 +18,7 @@ const DiaryModal = ({
     diary,
     preview,
     isLoading,
+    errors,
     handleImage,
     handleTitle,
     handleNotes,
@@ -38,6 +39,7 @@ const DiaryModal = ({
           preview={preview}
           handleTitle={handleTitle}
           diary={diary}
+          errors={errors}
           handleEmotion={handleEmotion}
           handleNotes={handleNotes}
         />
