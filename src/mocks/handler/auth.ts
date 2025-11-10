@@ -97,14 +97,17 @@ export const authHandlers = [
     //MSW임시 코드
     const saveCode = emailVerificationCodes.get(email);
     if (!saveCode || saveCode !== code) {
-      return HttpResponse.json({
-        success: false,
-        statusCode: 400,
-        error: {
-          code: 'code_invalid_or_expired',
-          message: '코드 만료 또는 불일치',
+      return HttpResponse.json(
+        {
+          success: false,
+          statusCode: 400,
+          error: {
+            code: 'code_invalid_or_expired',
+            message: '코드 만료 또는 불일치',
+          },
         },
-      });
+        { status: 400 }
+      );
     }
     //인증완료
     verifiedEmails.add(email);
@@ -151,26 +154,32 @@ export const authHandlers = [
     const user = mockUsers.find((u) => u.email === email);
 
     if (!user) {
-      return HttpResponse.json({
-        success: false,
-        statusCode: 400,
-        error: {
-          code: 'email_not_found',
-          message: '존재하지 않는 이메일입니다',
+      return HttpResponse.json(
+        {
+          success: false,
+          statusCode: 400,
+          error: {
+            code: 'email_not_found',
+            message: '존재하지 않는 이메일입니다',
+          },
         },
-      });
+        { status: 400 }
+      );
     }
 
     const savedPW = mockPasswords.get(email);
     if (savedPW !== password) {
-      return HttpResponse.json({
-        success: false,
-        statusCode: 401,
-        error: {
-          code: 'password_incorrect',
-          message: '비밀번호가 일치하지 않습니다',
+      return HttpResponse.json(
+        {
+          success: false,
+          statusCode: 401,
+          error: {
+            code: 'password_incorrect',
+            message: '비밀번호가 일치하지 않습니다',
+          },
         },
-      });
+        { status: 401 }
+      );
     }
     return HttpResponse.json<ResponseLoginDTO>(
       {
@@ -198,14 +207,17 @@ export const authHandlers = [
     //실제로는 토큰값?쿠키값?으로 사용자 식별함
     const user = mockUsers[0];
     if (!user) {
-      return HttpResponse.json({
-        success: false,
-        statusCode: 401,
-        error: {
-          code: 'unauthorized',
-          message: '인증이 필요합니다',
+      return HttpResponse.json(
+        {
+          success: false,
+          statusCode: 401,
+          error: {
+            code: 'unauthorized',
+            message: '인증이 필요합니다',
+          },
         },
-      });
+        { status: 401 }
+      );
     }
     return HttpResponse.json({
       success: true,
