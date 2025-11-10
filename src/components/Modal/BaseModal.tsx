@@ -4,8 +4,8 @@ import { useEffect } from 'react';
 interface BaseModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title: string;
-  subtitle: string;
+  title?: string;
+  subtitle?: string;
   footer?: React.ReactNode;
   children?: React.ReactNode;
 }

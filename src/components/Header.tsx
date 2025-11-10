@@ -71,7 +71,7 @@ export const Header = () => {
       <NavBar>
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
           <NavButton href='/'>Today</NavButton>
-          <NavButton href='/'>날씨 일기장</NavButton>
+          <NavButton href='/diary'>날씨 일기장</NavButton>
           {/* 날씨 일기장 처리필요 */}
 
           {userData === null ? (
