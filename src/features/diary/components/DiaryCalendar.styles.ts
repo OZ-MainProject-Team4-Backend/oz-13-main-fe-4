@@ -122,6 +122,8 @@ export const addDiaryButtonStyle = css`
 
 export const diaryTitleButtonStyle = css`
   ${buttonStyle}
+  overflow: hidden;
+  text-overflow: ellipsis;
   background-color: #1976d2;
   color: white;
   &:hover {
