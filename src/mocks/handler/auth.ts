@@ -281,8 +281,8 @@ export const authHandlers = [
         message: '로그인 성공',
         data: {
           user: user,
-          access: 'mock-access-token-' + Date.now(),
-          refresh: 'mock-refresh-token-' + Date.now(),
+          access: accessToken,
+          refresh: refreshToken,
         },
       },
       {
@@ -290,9 +290,27 @@ export const authHandlers = [
       }
     );
   }),
-  //- ==================== 로그아웃 ====================
-  http.post('/api/auth/logout', () => {
-    return new HttpResponse(null, { status: 204 });
+  //- ==================== 로그아웃(토큰삭제) ====================
+  http.post('/api/auth/logout', ({ cookies }) => {
+    //쿠키로 저장된 리프레쉬 토큰 확인
+    const refreshToken = cookies.refreshToken;
+    if (refreshToken) {
+      const userEmail = Array.from(refreshTokenStore.entries()).find(
+        ([_, token]) => token === refreshToken
+      )?.[0];
+
+      if (userEmail) {
+        refreshTokenStore.delete(userEmail);
+      }
+    }
+
+    return new HttpResponse(null, {
+      status: 204,
+      headers: {
+        //쿠키삭제
+        'Set-Cookie': 'refreshToken=; HttpOnly; Secure; SameSite=Strict; Max-Age=0; Path=/',
+      },
+    });
   }),
 
   //- ==================== 마이페이지 조회  ====================
