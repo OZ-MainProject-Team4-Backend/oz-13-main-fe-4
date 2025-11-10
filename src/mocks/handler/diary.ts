@@ -57,7 +57,7 @@ export const diaryHandlers = [
 
       const date = formData.get('date') as string;
       const title = formData.get('title') as string;
-      const satisfaction = Number(formData.get('satisfaction'));
+      const emotion = Number(formData.get('emotion'));
       const notes = formData.get('notes') as string;
       const image_url = formData.get('image_url') as string;
 
@@ -76,7 +76,7 @@ export const diaryHandlers = [
         id: mockDiaries.length + 1,
         date,
         title,
-        satisfaction,
+        emotion,
         notes,
         image_url,
         weather,
@@ -113,15 +113,14 @@ export const diaryHandlers = [
 
       const title = formData.get('title') as string | null;
       const notes = formData.get('notes') as string | null;
-      const satisfaction = formData.get('satisfaction');
+      const emotion = formData.get('emotion');
       const image_url = formData.get('image_url') as string | null;
 
       // 기존 값에 새 값 덮어쓰기
       const updatedDiary = {
         ...mockDiaries[diaryIndex],
         ...(title && { title }),
-        ...(satisfaction !== null &&
-          satisfaction !== undefined && { satisfaction: Number(satisfaction) }),
+        ...(emotion !== null && emotion !== undefined && { emotion: Number(emotion) }),
         ...(notes && { notes }),
         ...(image_url && { image_url }),
       };
