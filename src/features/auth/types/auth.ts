@@ -24,6 +24,19 @@ export type ApiResponse<T = unknown, K = unknown> = {
   data?: T;
 };
 
+//==================== JWT 토큰 관련 ====================
+export type Tokens = {
+  accessToken: string;
+  refreshToken: string;
+};
+
+export type TokenPayload = {
+  userId: number;
+  email: string;
+  exp: number; // 만료 시간 (unix timestamp)
+  iat: number; // 발급 시간
+};
+
 //=========== 닉네임 검증 ============
 export type RequestNicknameValidateDTO = {
   nickname: string;
@@ -44,7 +57,7 @@ export type RequestEmailVerifyDTO = {
 };
 export type ResponseEmailVerifyDTO = ApiResponse;
 
-//=========== 회원가입(🐝토큰으로 받음 ) ============
+//=========== 회원가입============
 export type RequestSignUpDTO = {
   email: string;
   name: string;
@@ -54,7 +67,11 @@ export type RequestSignUpDTO = {
   age: string;
 };
 
-export type ResponsetSignUpDTO = ApiResponse<{ user: User }>;
+export type ResponsetSignUpDTO = ApiResponse<{
+  user: User;
+  accessToken: string;
+  refreshToken: string;
+}>;
 /* 요청 성공시 응답값은 아래처럼 받아옴
 그래서 {user}의 타입을 제네릭으로 설정해야함.
 "data": {
@@ -73,6 +90,7 @@ export type ResponsetSignUpDTO = ApiResponse<{ user: User }>;
 export type RequestLoginDTO = {
   email: string;
   password: string;
+  isAutoLogin?: boolean; // 🔐자동로그인 옵션으로 Local에 저장예정
 };
 
 export type ResponseLoginDTO = ApiResponse<{
