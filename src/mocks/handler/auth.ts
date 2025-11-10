@@ -143,6 +143,8 @@ export const authHandlers = [
       message: '회원가입 완료',
       data: {
         user: newUser,
+        access: 'mock-access-token-' + Date.now(),
+        refresh: 'mock-refresh-token-' + Date.now(),
       },
     });
   }),
