@@ -26,6 +26,7 @@ export interface DiaryModalProps {
   onClose: () => void;
   onSave?: (diary: DiaryData, image: File | null) => void;
   onModalChange: () => void;
+  deleteDiary: (id: number) => void;
 }
 
 export interface UseDiaryModalProps {
@@ -34,6 +35,7 @@ export interface UseDiaryModalProps {
   selectedDiary: DiaryData | undefined;
   onSave?: (diary: DiaryData, image: File | null) => void;
   onClose: () => void;
+  deleteDiary: (id: number) => void;
 }
 
 export interface DiaryModalFieldsProps {

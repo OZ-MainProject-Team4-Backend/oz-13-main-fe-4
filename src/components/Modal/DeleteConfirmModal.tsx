@@ -21,7 +21,7 @@ const DeleteConfirmModal = ({ isOpen, onClose, onConfirm }: DeleteConfirmModalPr
           </Button>
 
           <Button onClick={onConfirm} variant='contained' color='primary'>
-            로그인하러 가기
+            삭제하기
           </Button>
         </>
       }

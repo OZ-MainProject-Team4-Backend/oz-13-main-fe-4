@@ -6,6 +6,7 @@ interface DiaryModalActionsProps {
   handleCancel: () => void;
   handleSave: () => void;
   handleEdit: () => void;
+  handleDelete: () => void;
   mode: string;
 }
 
@@ -14,6 +15,7 @@ const DiaryModalActions = ({
   handleCancel,
   handleSave,
   handleEdit,
+  handleDelete,
   mode,
 }: DiaryModalActionsProps) => {
   if (mode === 'view') {
@@ -21,6 +23,9 @@ const DiaryModalActions = ({
       <div css={styles.buttonWrapper}>
         <Button variant='outlined' color='primary' onClick={handleCancel}>
           닫기
+        </Button>
+        <Button variant='contained' color='success' onClick={handleDelete}>
+          삭제
         </Button>
         <Button variant='contained' color='primary' onClick={handleEdit}>
           수정

@@ -21,6 +21,7 @@ const DiaryCalendar = () => {
     openEditModal,
     closeModal,
     saveDiary,
+    deleteDiary,
   } = useDiaryState();
   const calendarDays = getCalendarDays(year, month);
 
@@ -134,6 +135,7 @@ const DiaryCalendar = () => {
         mode={mode}
         selectedDiary={selectedDiary}
         onModalChange={handleModeChange}
+        deleteDiary={deleteDiary}
       />
     </>
   );

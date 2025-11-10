@@ -61,6 +61,10 @@ export const useDiaryState = () => {
     closeModal();
   };
 
+  const deleteDiary = (id: number) => {
+    setDiaries((prev) => prev.filter((d) => d.id !== id));
+  };
+
   return {
     diaries,
     isModalOpen,
@@ -74,5 +78,6 @@ export const useDiaryState = () => {
     openViewModal,
     closeModal,
     saveDiary,
+    deleteDiary,
   };
 };
