@@ -195,3 +195,51 @@ export const ClothingIconPlaceholder = styled(Box)({
   color: '#5B9EFF',
   fontSize: '48px',
 });
+
+// Hourly Weather ------------------------------------------------
+export const HourlyWeatherCard = styled(Box)({
+  backgroundColor: '#ffffff',
+  borderRadius: '16px',
+  padding: '20px',
+  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+  gridColumn: '1 / -1',
+  minHeight: '120px',
+  overflow: 'hidden',
+});
+
+export const HourlyContainer = styled(Box)({
+  display: 'flex',
+  gap: '36px',
+  width: '100%',
+  justifyContent: 'stretch',
+});
+
+export const HourlyItem = styled(Box)({
+  backgroundColor: '#C8DDFF',
+  borderRadius: '12px',
+  height: '120px',
+  display: 'flex',
+  flex: 1,
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '4px',
+});
+
+export const HourLabel = styled(Typography)({
+  fontSize: '14px',
+  fontWeight: 500,
+  color: '#333333',
+});
+
+export const WeatherIconBox = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+});
+
+export const TemperatureLabel = styled(Typography)({
+  fontSize: '18px',
+  fontWeight: 600,
+  color: '#333333',
+});
