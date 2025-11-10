@@ -3,14 +3,14 @@ import * as styles from './DiaryModal.styles';
 import { Box, TextField } from '@mui/material';
 import { DiaryModalFieldsProps } from '../types/types';
 import { SiAccuweather } from 'react-icons/si';
-import { MOODS } from '../constants/moods';
+import { EMOTIONS } from '../constants/emotions';
 
 const DiaryModalFields = ({
   handleImage,
   preview,
   handleTitle,
   diary,
-  handleMood,
+  handleEmotion,
   handleNotes,
 }: DiaryModalFieldsProps) => {
   return (
@@ -60,17 +60,17 @@ const DiaryModalFields = ({
       </div>
 
       {/* 기분 */}
-      <div css={styles.moodSection}>
-        <div css={styles.moodTitle}>오늘의 기분</div>
-        <div css={styles.moodContainer}>
-          {MOODS.map((mood, index) => (
+      <div css={styles.emotionSection}>
+        <div css={styles.emotionTitle}>오늘의 기분</div>
+        <div css={styles.emotionContainer}>
+          {EMOTIONS.map((emotion, index) => (
             <button
               key={index}
               type='button'
-              css={[styles.moodButton, diary.satisfaction === index && styles.moodButtonSelected]}
-              onClick={() => handleMood(index)}
+              css={[styles.emotionButton, diary.emotion === index && styles.emotionButtonSelected]}
+              onClick={() => handleEmotion(index)}
             >
-              <img src={mood.icon} alt={mood.name} />
+              <img src={emotion.icon} alt={emotion.name} />
             </button>
           ))}
         </div>

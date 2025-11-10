@@ -125,14 +125,14 @@ export const weatherText = css`
   }
 `;
 
-export const moodSection = css`
+export const emotionSection = css`
   display: flex;
   flex-direction: column;
   align-items: start;
   margin: 10px 0;
 `;
 
-export const moodTitle = css`
+export const emotionTitle = css`
   padding-left: 6px;
   font-size: 14px;
   font-weight: 700;
@@ -140,13 +140,13 @@ export const moodTitle = css`
   margin-bottom: 12px;
 `;
 
-export const moodContainer = css`
+export const emotionContainer = css`
   display: flex;
   gap: 15px;
   justify-content: space-around;
 `;
 
-export const moodButton = css`
+export const emotionButton = css`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -168,7 +168,7 @@ export const moodButton = css`
   }
 `;
 
-export const moodButtonSelected = css`
+export const emotionButtonSelected = css`
   background-color: var(--color-background);
   color: white;
   border: none;

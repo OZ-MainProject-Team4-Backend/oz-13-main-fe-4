@@ -13,7 +13,7 @@ export const useDiaryModal = ({
     id: Date.now(),
     date: getFormattedDate(selectedDate),
     title: '',
-    satisfaction: 0,
+    emotion: 0,
     notes: '',
     weather: {
       condition: 'cloudy',
@@ -39,7 +39,7 @@ export const useDiaryModal = ({
         id: Date.now(),
         date: getFormattedDate(selectedDate),
         title: '',
-        satisfaction: 0,
+        emotion: 0,
         notes: '',
         weather: {
           condition: 'cloudy',
@@ -82,10 +82,10 @@ export const useDiaryModal = ({
     }));
   };
 
-  const handleMood = (index: number) => {
+  const handleEmotion = (index: number) => {
     setDiary((prev) => ({
       ...prev,
-      satisfaction: index,
+      emotion: index,
     }));
   };
 
@@ -135,7 +135,7 @@ export const useDiaryModal = ({
     handleImage,
     handleTitle,
     handleNotes,
-    handleMood,
+    handleEmotion,
     handleSave,
     handleCancel,
   };

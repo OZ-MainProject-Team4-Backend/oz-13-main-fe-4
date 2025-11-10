@@ -21,7 +21,7 @@ const DiaryModal = ({
     handleImage,
     handleTitle,
     handleNotes,
-    handleMood,
+    handleEmotion,
     handleSave,
     handleCancel,
   } = useDiaryModal({ mode, selectedDate, selectedDiary, onSave, onClose });
@@ -38,7 +38,7 @@ const DiaryModal = ({
           preview={preview}
           handleTitle={handleTitle}
           diary={diary}
-          handleMood={handleMood}
+          handleEmotion={handleEmotion}
           handleNotes={handleNotes}
         />
 

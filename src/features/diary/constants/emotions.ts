@@ -3,12 +3,12 @@ import SadIcon from '../../../assets/sad.svg';
 import SurprisedIcon from '../../../assets/surprised.svg';
 import AngryIcon from '../../../assets/bad.svg';
 
-interface Mood {
+interface Emotion {
   name: string;
   icon: string;
 }
 
-export const MOODS: Mood[] = [
+export const EMOTIONS: Emotion[] = [
   { name: 'happy', icon: HappyIcon },
   { name: 'sad', icon: SadIcon },
   { name: 'angry', icon: AngryIcon },

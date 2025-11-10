@@ -6,7 +6,7 @@ export interface DiaryData {
   id: number;
   date: string;
   title: string;
-  satisfaction: number;
+  emotion: number;
   notes: string;
   weather: {
     condition: string;
@@ -38,6 +38,6 @@ export interface DiaryModalFieldsProps {
   preview: string | null;
   handleTitle: (e: React.ChangeEvent<HTMLInputElement>) => void;
   diary: DiaryData;
-  handleMood: (index: number) => void;
+  handleEmotion: (index: number) => void;
   handleNotes: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
