@@ -8,8 +8,9 @@ export const outfitHandlers = [
     const url = new URL(request.url);
     const lat = url.searchParams.get('lat');
     const lon = url.searchParams.get('lon');
+    const location = url.searchParams.get('location');
 
-    if (!lat || !lon) {
+    if (!lat || !lon || !location) {
       return HttpResponse.json({ error: '위치 정보가 필요합니다' }, { status: 400 });
     }
 
