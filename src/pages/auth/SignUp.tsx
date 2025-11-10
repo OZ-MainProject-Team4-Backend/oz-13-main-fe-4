@@ -106,7 +106,7 @@ export default function SignUp() {
   const handleNicknameValidate = () => {
     const nickname = getValues('nickname'); // react-hook-form의 getValues 사용
     if (!nickname) {
-      setModalMessage('닉네임을 입력하세용ㅋ');
+      setModalMessage('닉네임을 입력해주세요');
       setNickanameShowModal(true);
       return;
     }
@@ -120,7 +120,7 @@ export default function SignUp() {
           setIsNicknameValidated(true);
         },
         onError(error) {
-          setModalMessage(error.message);
+          setModalMessage(`${error.message}.다시 입력해주세요`);
           setNickanameShowModal(true);
           setIsNicknameValidated(false);
         },
@@ -136,11 +136,7 @@ export default function SignUp() {
     if (!isValid) {
       return;
     }
-    if (!email) {
-      setModalMessage('이메일 입력하세용ㅋ');
-      setEmailShowModal(true);
-      return;
-    }
+
     sendEmailCode.mutate(
       { email },
       {
@@ -150,7 +146,7 @@ export default function SignUp() {
           setIsEmailVerified(true);
         },
         onError: (error) => {
-          setModalMessage(error.message);
+          setModalMessage(`${error.message}. 새로운 이메일을 입력해주세요`);
           setEmailShowModal(true);
         },
       }
@@ -376,7 +372,7 @@ export default function SignUp() {
           footer={
             <Button
               variant='contained'
-              color='inherit'
+              color='primary'
               onClick={() => {
                 setEmailShowModal(false);
               }}
