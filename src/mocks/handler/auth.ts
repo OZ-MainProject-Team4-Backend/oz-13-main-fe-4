@@ -5,13 +5,16 @@ import {
   RequestLoginDTO,
   RequestNicknameValidateDTO,
   RequestSignUpDTO,
+  RequestTokenRefreshDTO,
   ResponseLoginDTO,
+  ResponseTokenRefreshDTO,
   ResponsetSignUpDTO,
 } from '../../features/auth/types/auth';
 import {
   emailVerificationCodes,
   mockPasswords,
   mockUsers,
+  refreshTokenStore,
   usedNicknames,
   verifiedEmails,
 } from '../data/user';
@@ -142,23 +145,106 @@ export const authHandlers = [
     refreshTokenStore.set(body.email, refreshToken);
 
     //회원가입 성공 응답
-    return HttpResponse.json<ResponsetSignUpDTO>({
+    return HttpResponse.json<ResponsetSignUpDTO>(
+      {
+        success: true,
+        statusCode: 201,
+        message: '회원가입 완료',
+        data: {
+          user: newUser,
+          access: accessToken,
+          refresh: refreshToken,
+        },
+      },
+      {
+        status: 201,
+        headers: {
+          // HttpOnly 쿠키로 Refresh Token 설정 (자동로그인용)
+          /* Max-Age=${60 * 60 * 24 * 7}; 는 얼마나? 몇시간?
+          자동로그인 */
+          'Set-Cookie': `refreshToken=${refreshToken}; HttpOnly; Secure; SameSite=Strict; Max-Age=${60 * 60 * 24 * 7}; Path=/`,
+        },
+      }
+    );
+  }),
+
+  //- ==================== Token Refresh ====================
+  http.post('/api/auth/refresh', async ({ request, cookies }) => {
+    const body = (await request.json()) as RequestTokenRefreshDTO;
+
+    //1. 쿠키에서 refreshToken확인 (자동로그인 체크시)
+    let refreshToken = cookies.refreshToken;
+
+    //2. 쿠키에 없으면 body에서 찾아봄 (자동로그인 미체크인)
+    if (!refreshToken) {
+      refreshToken = body.refresh as string;
+    }
+
+    //3. 리프레쉬토큰이 아예 없다면 ?
+    if (!refreshToken) {
+      return HttpResponse.json(
+        {
+          success: false,
+          statusCode: 400,
+          error: {
+            code: 'refresh_token_required',
+            message: 'Refresh 토큰이 필요합니다',
+          },
+        },
+        { status: 400 }
+      );
+    }
+
+    //4. 리프레쉬토큰 검증(유저이메일과 매칭 - 저장소에 있는지 확인 )
+    const userEmail = Array.from(refreshTokenStore.entries()).find(
+      ([_, token]) => token === refreshToken
+    )?.[0];
+    if (!userEmail) {
+      return HttpResponse.json(
+        {
+          success: false,
+          statusCode: 401,
+          error: {
+            code: 'invalid_refresh_token',
+            message: '유효하지 않은 Refresh 토큰',
+          },
+        },
+        { status: 401 }
+      );
+    }
+
+    // 5. 새 Access Token 발급
+    const newAccessToken = 'mock-access-token-' + Date.now();
+
+    return HttpResponse.json<ResponseTokenRefreshDTO>({
       success: true,
-      statusCode: 201,
-      message: '회원가입 완료',
+      statusCode: 200,
+      message: '토큰 갱신 완료',
       data: {
-        user: newUser,
-        access: 'mock-access-token-' + Date.now(),
-        refresh: 'mock-refresh-token-' + Date.now(),
+        access: newAccessToken,
       },
     });
   }),
 
   //- ==================== 로그인 ====================
   http.post('/api/auth/login', async ({ request }) => {
-    const { email, password } = (await request.json()) as RequestLoginDTO;
+    const { email, password, isAutoLogin } = (await request.json()) as RequestLoginDTO;
     //사용자 찾기
     const user = mockUsers.find((u) => u.email === email);
+    //토큰값
+    const accessToken = 'mock-access-token-' + Date.now();
+    const refreshToken = 'mock-refresh-token-' + Date.now();
+
+    // Refresh Token 저장
+    refreshTokenStore.set(email, refreshToken);
+
+    //자동로그인 체크시 HTTPOnly쿠키 설정
+    const headers: HeadersInit = {};
+
+    if (isAutoLogin) {
+      headers['Set-Cookie'] =
+        `refreshToken=${refreshToken}; HttpOnly; Secure; SameSite=Strict; Max-Age=${60 * 60 * 24 * 7}; Path=/`;
+    }
 
     if (!user) {
       return HttpResponse.json(
