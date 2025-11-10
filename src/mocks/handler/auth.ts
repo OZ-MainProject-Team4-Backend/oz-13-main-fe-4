@@ -135,14 +135,10 @@ export const authHandlers = [
       is_verified: true,
       created_at: new Date().toISOString(),
     };
-    const accessToken = 'mock-access-token-' + Date.now(); //몫데이터 임시 설장
-    const refreshToken = 'mock-refresh-token-' + Date.now();
+
     mockUsers.push(newUser);
     mockPasswords.set(body.email, body.password); //이메일에 맞는 비밀번호로 세팅
     usedNicknames.add(body.nickname);
-
-    //사용자의 이메일과 리프레쉬토큰값을 매칭하여, 메모리상에 저장함
-    refreshTokenStore.set(body.email, refreshToken);
 
     //회원가입 성공 응답
     return HttpResponse.json<ResponsetSignUpDTO>(
@@ -152,8 +148,6 @@ export const authHandlers = [
         message: '회원가입 완료',
         data: {
           user: newUser,
-          access: accessToken,
-          refresh: refreshToken,
         },
       },
       {

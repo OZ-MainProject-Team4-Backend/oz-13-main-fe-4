@@ -69,8 +69,6 @@ export type RequestSignUpDTO = {
 
 export type ResponsetSignUpDTO = ApiResponse<{
   user: User;
-  access: string;
-  refresh: string;
 }>;
 /* 요청 성공시 응답값은 아래처럼 받아옴
 그래서 {user}의 타입을 제네릭으로 설정해야함.
