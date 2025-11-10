@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { DiaryData } from '../types/types';
+import { DiaryData, Modal } from '../types/types';
 
 export const useDiaryState = () => {
   const [diaries, setDiaries] = useState<DiaryData[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [mode, setMode] = useState<'create' | 'edit'>('create');
+  const [mode, setMode] = useState<Modal>('create');
   const [selectedDiary, setSelectedDiary] = useState<DiaryData | undefined>(undefined);
 
   // 특정 날짜의 일기를 찾는 함수
@@ -31,6 +31,13 @@ export const useDiaryState = () => {
     setIsModalOpen(true);
   };
 
+  // 상세 보기 일기 모달 열기
+  const openViewModal = (diary: DiaryData) => {
+    setMode('view');
+    setSelectedDiary(diary);
+    setIsModalOpen(true);
+  };
+
   // 모달 닫기
   const closeModal = () => {
     setIsModalOpen(false);
@@ -51,8 +58,11 @@ export const useDiaryState = () => {
         return [...prev, updatedDiary];
       }
     });
-
     closeModal();
+  };
+
+  const deleteDiary = (id: number) => {
+    setDiaries((prev) => prev.filter((d) => d.id !== id));
   };
 
   return {
@@ -60,11 +70,14 @@ export const useDiaryState = () => {
     isModalOpen,
     selectedDate,
     mode,
+    setMode,
     selectedDiary,
     getDiaryByDate,
     openCreateModal,
     openEditModal,
+    openViewModal,
     closeModal,
     saveDiary,
+    deleteDiary,
   };
 };

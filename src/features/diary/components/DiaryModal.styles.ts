@@ -180,3 +180,13 @@ export const buttonWrapper = css`
   width: 100%;
   gap: 8px;
 `;
+
+export const disabledTextField = css`
+  & .MuiInputBase-input.Mui-disabled {
+    -webkit-text-fill-color: #000000;
+  }
+
+  & .MuiInputLabel-root.Mui-disabled {
+    color: rgba(0, 0, 0, 0.6);
+  }
+`;

@@ -4,6 +4,7 @@ import { Box, TextField } from '@mui/material';
 import { DiaryModalFieldsProps } from '../types/types';
 import { SiAccuweather } from 'react-icons/si';
 import { EMOTIONS } from '../constants/emotions';
+import { useEffect, useRef } from 'react';
 
 const DiaryModalFields = ({
   handleImage,
@@ -13,7 +14,16 @@ const DiaryModalFields = ({
   errors,
   handleEmotion,
   handleNotes,
+  disabled,
 }: DiaryModalFieldsProps) => {
+  const titleRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!disabled && titleRef.current) {
+      titleRef.current.focus();
+    }
+  }, [disabled]);
+
   return (
     <>
       {/* 이미지 */}
@@ -24,6 +34,7 @@ const DiaryModalFields = ({
           id='upload-input'
           onChange={handleImage}
           css={styles.fileInput}
+          disabled={disabled}
         />
         <label htmlFor='upload-input' css={styles.imageLabel}>
           {preview ? (
@@ -50,6 +61,9 @@ const DiaryModalFields = ({
           error={!!errors?.title}
           helperText={errors?.title || ''}
           value={diary.title}
+          disabled={disabled}
+          inputRef={titleRef}
+          css={styles.disabledTextField}
         />
       </Box>
 
@@ -72,6 +86,7 @@ const DiaryModalFields = ({
               type='button'
               css={[styles.emotionButton, diary.emotion === index && styles.emotionButtonSelected]}
               onClick={() => handleEmotion(index)}
+              disabled={disabled}
             >
               <img src={emotion.icon} alt={emotion.name} />
             </button>
@@ -91,6 +106,8 @@ const DiaryModalFields = ({
           error={!!errors?.notes}
           helperText={errors?.notes || ''}
           value={diary.notes}
+          disabled={disabled}
+          css={styles.disabledTextField}
         />
       </Box>
     </>

@@ -17,18 +17,22 @@ const DiaryCalendar = () => {
     selectedDiary,
     getDiaryByDate,
     openCreateModal,
+    openViewModal,
     openEditModal,
     closeModal,
     saveDiary,
+    deleteDiary,
   } = useDiaryState();
   const calendarDays = getCalendarDays(year, month);
 
+  // 일기 작성
   const handleAddDiary = (date: number) => {
     openCreateModal(year, month, date);
   };
 
-  const handleEditDiary = (diary: DiaryData) => {
-    openEditModal(diary);
+  // 기존 일기 보기
+  const handleViewDiary = (diary: DiaryData) => {
+    openViewModal(diary);
   };
 
   const handleCloseModal = () => {
@@ -37,6 +41,13 @@ const DiaryCalendar = () => {
 
   const handleSaveDiary = (updatedDiary: DiaryData, image: File | null) => {
     saveDiary(updatedDiary, image);
+  };
+
+  // view -> edit
+  const handleModeChange = () => {
+    if (selectedDiary) {
+      openEditModal(selectedDiary);
+    }
   };
 
   console.log('다이어리 기록용', diaries);
@@ -93,7 +104,7 @@ const DiaryCalendar = () => {
                       <button
                         type='button'
                         css={styles.diaryTitleButtonStyle}
-                        onClick={() => handleEditDiary(existingDiary)}
+                        onClick={() => handleViewDiary(existingDiary)}
                       >
                         {existingDiary.title}
                       </button>
@@ -123,6 +134,8 @@ const DiaryCalendar = () => {
         onSave={handleSaveDiary}
         mode={mode}
         selectedDiary={selectedDiary}
+        onModalChange={handleModeChange}
+        deleteDiary={deleteDiary}
       />
     </>
   );

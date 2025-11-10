@@ -8,6 +8,7 @@ export const useDiaryModal = ({
   selectedDiary,
   onSave,
   onClose,
+  deleteDiary,
 }: UseDiaryModalProps) => {
   const [diary, setDiary] = useState<DiaryData>({
     id: Date.now(),
@@ -27,13 +28,19 @@ export const useDiaryModal = ({
   const [preview, setPreview] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<DiaryError>({});
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   useEffect(() => {
-    if (mode === 'edit' && selectedDiary) {
+    if (mode === 'view' && selectedDiary) {
+      // view 모드
+      setDiary(selectedDiary);
+      setPreview(selectedDiary.image_url || null);
+      setImage(null);
+    } else if (mode === 'edit' && selectedDiary) {
       // 수정 모드
       setDiary(selectedDiary);
       setPreview(selectedDiary.image_url || null);
       setImage(null);
-    } else {
+    } else if (mode === 'create') {
       // 작성 모드
       setDiary({
         id: Date.now(),
@@ -124,6 +131,39 @@ export const useDiaryModal = ({
     setIsLoading(false);
   };
 
+  const handleDelete = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    console.log(`${diary.id}번 일기 삭제`);
+    if (deleteDiary) deleteDiary(diary.id);
+
+    setDiary({
+      id: Date.now(),
+      date: getFormattedDate(selectedDate),
+      title: '',
+      emotion: 0,
+      notes: '',
+      weather: {
+        condition: 'cloudy',
+        temperature: 18,
+        icon: 0,
+      },
+      image_url: null,
+    });
+
+    setPreview(null);
+    setImage(null);
+
+    setIsDeleteModalOpen(false);
+    onClose();
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeleteModalOpen(false);
+  };
+
   useEffect(() => {
     return () => {
       if (preview && preview.startsWith('blob:')) URL.revokeObjectURL(preview);
@@ -141,5 +181,9 @@ export const useDiaryModal = ({
     handleEmotion,
     handleSave,
     handleCancel,
+    handleDelete,
+    handleConfirmDelete,
+    handleCancelDelete,
+    isDeleteModalOpen,
   };
 };
