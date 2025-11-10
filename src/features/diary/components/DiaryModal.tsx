@@ -5,6 +5,7 @@ import { useDiaryModal } from '../hooks/useDiaryModal';
 import DiaryModalHeader from './DiaryModalHeader';
 import DiaryModalActions from './DiaryModalActions';
 import DiaryModalFields from './DiaryModalFields';
+import { useDiaryState } from '../hooks/useDiaryState';
 
 const DiaryModal = ({
   isOpen,
@@ -13,6 +14,7 @@ const DiaryModal = ({
   onSave,
   mode,
   selectedDiary,
+  onModalChange,
 }: DiaryModalProps) => {
   const {
     diary,
@@ -35,6 +37,7 @@ const DiaryModal = ({
 
         {/* 입력 필드들 */}
         <DiaryModalFields
+          disabled={mode === 'view'}
           handleImage={handleImage}
           preview={preview}
           handleTitle={handleTitle}
@@ -49,6 +52,7 @@ const DiaryModal = ({
           isLoading={isLoading}
           handleCancel={handleCancel}
           handleSave={handleSave}
+          handleEdit={onModalChange}
           mode={mode}
         />
       </div>

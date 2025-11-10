@@ -1,3 +1,5 @@
+import { Mode } from 'react-hook-form';
+
 export interface DiaryCalendarProps {
   startingDate: Date;
 }
@@ -18,15 +20,16 @@ export interface DiaryData {
 
 export interface DiaryModalProps {
   isOpen: boolean;
-  onClose: () => void;
   selectedDate: Date | null;
-  onSave?: (diary: DiaryData, image: File | null) => void;
-  mode: 'create' | 'edit';
   selectedDiary: DiaryData | undefined;
+  mode: Modal;
+  onClose: () => void;
+  onSave?: (diary: DiaryData, image: File | null) => void;
+  onModalChange: () => void;
 }
 
 export interface UseDiaryModalProps {
-  mode: 'create' | 'edit';
+  mode: Modal;
   selectedDate: Date | null;
   selectedDiary: DiaryData | undefined;
   onSave?: (diary: DiaryData, image: File | null) => void;
@@ -34,16 +37,19 @@ export interface UseDiaryModalProps {
 }
 
 export interface DiaryModalFieldsProps {
-  handleImage: (e: React.ChangeEvent<HTMLInputElement>) => void;
   preview: string | null;
-  handleTitle: (e: React.ChangeEvent<HTMLInputElement>) => void;
   diary: DiaryData;
   errors?: DiaryError;
+  handleImage: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleTitle: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleEmotion: (index: number) => void;
   handleNotes: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  disabled?: boolean;
 }
 
 export interface DiaryError {
   title?: string;
   notes?: string;
 }
+
+export type Modal = 'create' | 'edit' | 'view';

@@ -5,6 +5,7 @@ interface DiaryModalActionsProps {
   isLoading: boolean;
   handleCancel: () => void;
   handleSave: () => void;
+  handleEdit: () => void;
   mode: string;
 }
 
@@ -12,8 +13,22 @@ const DiaryModalActions = ({
   isLoading,
   handleCancel,
   handleSave,
+  handleEdit,
   mode,
 }: DiaryModalActionsProps) => {
+  if (mode === 'view') {
+    return (
+      <div css={styles.buttonWrapper}>
+        <Button variant='outlined' color='primary' onClick={handleCancel}>
+          닫기
+        </Button>
+        <Button variant='contained' color='primary' onClick={handleEdit}>
+          수정
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div css={styles.buttonWrapper}>
       <Button variant='outlined' color='primary' disabled={isLoading} onClick={handleCancel}>

@@ -28,12 +28,17 @@ export const useDiaryModal = ({
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<DiaryError>({});
   useEffect(() => {
-    if (mode === 'edit' && selectedDiary) {
+    if (mode === 'view' && selectedDiary) {
+      // view 모드
+      setDiary(selectedDiary);
+      setPreview(selectedDiary.image_url || null);
+      setImage(null);
+    } else if (mode === 'edit' && selectedDiary) {
       // 수정 모드
       setDiary(selectedDiary);
       setPreview(selectedDiary.image_url || null);
       setImage(null);
-    } else {
+    } else if (mode === 'create') {
       // 작성 모드
       setDiary({
         id: Date.now(),

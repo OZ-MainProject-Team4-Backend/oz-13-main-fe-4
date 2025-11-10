@@ -13,6 +13,7 @@ const DiaryModalFields = ({
   errors,
   handleEmotion,
   handleNotes,
+  disabled,
 }: DiaryModalFieldsProps) => {
   return (
     <>
@@ -24,6 +25,7 @@ const DiaryModalFields = ({
           id='upload-input'
           onChange={handleImage}
           css={styles.fileInput}
+          disabled={disabled}
         />
         <label htmlFor='upload-input' css={styles.imageLabel}>
           {preview ? (
@@ -50,6 +52,7 @@ const DiaryModalFields = ({
           error={!!errors?.title}
           helperText={errors?.title || ''}
           value={diary.title}
+          disabled={disabled}
         />
       </Box>
 
@@ -72,6 +75,7 @@ const DiaryModalFields = ({
               type='button'
               css={[styles.emotionButton, diary.emotion === index && styles.emotionButtonSelected]}
               onClick={() => handleEmotion(index)}
+              disabled={disabled}
             >
               <img src={emotion.icon} alt={emotion.name} />
             </button>
@@ -91,6 +95,7 @@ const DiaryModalFields = ({
           error={!!errors?.notes}
           helperText={errors?.notes || ''}
           value={diary.notes}
+          disabled={disabled}
         />
       </Box>
     </>
