@@ -27,3 +27,6 @@ export const usedNicknames = new Set(['동번서번']);
 
 // 이메일 인증 완료 여부
 export const verifiedEmails = new Set(['test@example.com']);
+
+//리프레쉬 토큰 저장(메모리)
+export const refreshTokenStore = new Map<string, string>();
