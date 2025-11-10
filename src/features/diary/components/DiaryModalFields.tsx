@@ -4,6 +4,7 @@ import { Box, TextField } from '@mui/material';
 import { DiaryModalFieldsProps } from '../types/types';
 import { SiAccuweather } from 'react-icons/si';
 import { EMOTIONS } from '../constants/emotions';
+import { useEffect, useRef } from 'react';
 
 const DiaryModalFields = ({
   handleImage,
@@ -15,6 +16,14 @@ const DiaryModalFields = ({
   handleNotes,
   disabled,
 }: DiaryModalFieldsProps) => {
+  const titleRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!disabled && titleRef.current) {
+      titleRef.current.focus();
+    }
+  }, [disabled]);
+
   return (
     <>
       {/* 이미지 */}
@@ -53,6 +62,7 @@ const DiaryModalFields = ({
           helperText={errors?.title || ''}
           value={diary.title}
           disabled={disabled}
+          inputRef={titleRef}
           css={styles.disabledTextField}
         />
       </Box>
