@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
-import DiaryCalendar from '../components/DiaryCalendar';
+import DiaryCalendar from '../../features/diary/components/DiaryCalendar';
 
-const DiaryPage = () => {
+const Diary = () => {
   const DiaryPageCss = css`
     margin: 20px 0;
   `;
@@ -12,4 +12,4 @@ const DiaryPage = () => {
   );
 };
 
-export default DiaryPage;
+export default Diary;
