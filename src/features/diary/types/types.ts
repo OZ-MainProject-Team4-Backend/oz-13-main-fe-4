@@ -1,5 +1,3 @@
-import { Mode } from 'react-hook-form';
-
 export interface DiaryCalendarProps {
   startingDate: Date;
 }
@@ -26,15 +24,6 @@ export interface DiaryModalProps {
   onClose: () => void;
   onSave?: (diary: DiaryData, image: File | null) => void;
   onModalChange: () => void;
-  deleteDiary: (id: number) => void;
-}
-
-export interface UseDiaryModalProps {
-  mode: Modal;
-  selectedDate: Date | null;
-  selectedDiary: DiaryData | undefined;
-  onSave?: (diary: DiaryData, image: File | null) => void;
-  onClose: () => void;
   deleteDiary: (id: number) => void;
 }
 
