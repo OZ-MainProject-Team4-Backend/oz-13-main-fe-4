@@ -188,14 +188,14 @@ export const authHandlers = [
         success: true,
         statusCode: 200,
         message: '로그인 성공',
-        data: { user },
+        data: {
+          user: user,
+          access: 'mock-access-token-' + Date.now(),
+          refresh: 'mock-refresh-token-' + Date.now(),
+        },
       },
-      //쿠키처럼 흉내내기 !!!!! 육안으로 확인 필요
       {
         status: 200,
-        headers: {
-          'Set-Cookie': 'access_token=mockToken; HttpOnly; Path=/;',
-        },
       }
     );
   }),
