@@ -53,6 +53,7 @@ const DiaryModalFields = ({
           helperText={errors?.title || ''}
           value={diary.title}
           disabled={disabled}
+          css={styles.disabledTextField}
         />
       </Box>
 
@@ -96,6 +97,7 @@ const DiaryModalFields = ({
           helperText={errors?.notes || ''}
           value={diary.notes}
           disabled={disabled}
+          css={styles.disabledTextField}
         />
       </Box>
     </>
