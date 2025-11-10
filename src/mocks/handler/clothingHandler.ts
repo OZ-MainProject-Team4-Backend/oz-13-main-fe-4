@@ -4,7 +4,7 @@ import { getOutfitRecommendation } from '../data/clothing';
 
 export const outfitHandlers = [
   // 의상 추천 API
-  http.get('/api/outfit/recommend', ({ request }) => {
+  http.get('/api/recommend/outfit', ({ request }) => {
     const url = new URL(request.url);
     const lat = url.searchParams.get('lat');
     const lon = url.searchParams.get('lon');
