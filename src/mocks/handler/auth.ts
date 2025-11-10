@@ -141,7 +141,7 @@ export const authHandlers = [
     mockPasswords.set(body.email, body.password); //이메일에 맞는 비밀번호로 세팅
     usedNicknames.add(body.nickname);
 
-    //리프레쉬토큰에 사용자의 이메일과 리프레쉬토큰값 저장
+    //사용자의 이메일과 리프레쉬토큰값을 매칭하여, 메모리상에 저장함
     refreshTokenStore.set(body.email, refreshToken);
 
     //회원가입 성공 응답
@@ -158,12 +158,6 @@ export const authHandlers = [
       },
       {
         status: 201,
-        headers: {
-          // HttpOnly 쿠키로 Refresh Token 설정 (자동로그인용)
-          /* Max-Age=${60 * 60 * 24 * 7}; 는 얼마나? 몇시간?
-          자동로그인 */
-          'Set-Cookie': `refreshToken=${refreshToken}; HttpOnly; Secure; SameSite=Strict; Max-Age=${60 * 60 * 24 * 7}; Path=/`,
-        },
       }
     );
   }),
@@ -241,9 +235,16 @@ export const authHandlers = [
     //자동로그인 체크시 HTTPOnly쿠키 설정
     const headers: HeadersInit = {};
 
+    //자동로그인 체크한 경우
+    // headers['Set-Cookie']  왜 해야한????
+    //Max-Age=${60 * 60 * 24 * 7}; 는 7일
     if (isAutoLogin) {
       headers['Set-Cookie'] =
         `refreshToken=${refreshToken}; HttpOnly; Secure; SameSite=Strict; Max-Age=${60 * 60 * 24 * 7}; Path=/`;
+    } else {
+      // 자동로그인 X: 세션 쿠키 (브라우저 종료 시 삭제)
+      headers['Set-Cookie'] =
+        `refreshToken=${refreshToken}; HttpOnly; Secure; SameSite=Strict; Path=/`;
     }
 
     if (!user) {
