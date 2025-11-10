@@ -214,7 +214,7 @@ export const authHandlers = [
     });
   }),
 
-  //- ==================== 로그인 ====================
+  //- ==================== 로그인(할때마다 리프레쉬토큰 발급)====================
   http.post('/api/auth/login', async ({ request }) => {
     const { email, password, isAutoLogin } = (await request.json()) as RequestLoginDTO;
     //사용자 찾기
@@ -229,7 +229,7 @@ export const authHandlers = [
     //자동로그인 체크시 HTTPOnly쿠키 설정
     const headers: HeadersInit = {};
 
-    //자동로그인 체크한 경우
+    // 자동로그인 체크한 경우
     // headers['Set-Cookie']  왜 해야한????
     //Max-Age=${60 * 60 * 24 * 7}; 는 7일
     if (isAutoLogin) {
