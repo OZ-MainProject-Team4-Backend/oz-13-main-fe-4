@@ -14,24 +14,12 @@ import {
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import z from 'zod';
 import { GoogleButton, KakaoButton, NaverButton } from '../../components/Button';
 import ForgotPassword from '../../components/Modal/ForgotPassword';
 import { useLogInMutation } from '../../features/auth/hooks/useLogInMutation';
-import { Card } from './SignUp';
-
-//1. ZOD스키마 정의
-const logInSchema = z.object({
-  email: z.string().email('유효한 이메일 주소를 입력해주세요.'),
-  password: z
-    .string()
-    .min(6, '비밀번호는 6자 이상 입력해주세요')
-    .max(20, '비밀번호는 20자 이하로 입력해주세요')
-    .regex(/^(?=.*[a-z])(?=.*[0-9])[a-z0-9]+$/, '영문 소문자와 숫자 조합으로 입력해주세요'),
-});
-
-//1-1. 타입정의 (조드로 유추하기 )
-type FormField = z.infer<typeof logInSchema>;
+import { FormFieldLogin, logInSchema } from '../../features/auth/types/zodTypes';
+import AppTheme from '../../styles/AppTheme';
+import { CardMui, ContainerMui } from '../../styles/AuthStyle';
 
 export default function LogIn() {
   const navigator = useNavigate();
@@ -43,7 +31,7 @@ export default function LogIn() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormField>({
+  } = useForm<FormFieldLogin>({
     resolver: zodResolver(logInSchema), // ⭐ 조드의 타입 스키마 받아옴 이게 핵심!
     mode: 'onBlur', //🎃onBlur추가
     defaultValues: {
@@ -52,7 +40,7 @@ export default function LogIn() {
     },
   });
   //로그인 버튼 클릭시! mutation(비동기처리되어있음)으로 고고
-  const onSubmit: SubmitHandler<FormField> = (data) => {
+  const onSubmit: SubmitHandler<FormFieldLogin> = (data) => {
     logInMutation.mutate(data, {
       onSuccess: (data) => {
         alert(`안녕하세요, ${data.data?.user.name} 님!`);
@@ -69,107 +57,112 @@ export default function LogIn() {
   };
 
   return (
-    <Card variant='outlined'>
-      <Typography
-        component='h1'
-        variant='h4'
-        sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', mb: 5 }}
-      >
-        로그인
-      </Typography>
-      {/* 로그인 실패!  */}
-      {logInMutation.error && <Typography color='error'>로그인에 실패했습니다.</Typography>}
-      <Box
-        component='form'
-        onSubmit={handleSubmit(onSubmit)}
-        noValidate
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '100%',
-          gap: 2,
-        }}
-      >
-        <FormControl>
-          <FormLabel htmlFor='email' sx={{ textAlign: 'left', mb: 3 }}>
-            이메일(아이디)
-          </FormLabel>
-          <TextField
-            {...register('email')}
-            error={!!errors.email}
-            helperText={errors.email?.message}
-            color={errors.email ? 'error' : 'primary'}
-            id='email'
-            type='email'
-            name='email'
-            placeholder='your@email.com'
-            autoComplete='email'
-            autoFocus
-            required
-            fullWidth
-            variant='outlined'
-          />
-        </FormControl>
-        <FormControl>
-          <FormLabel htmlFor='password' sx={{ textAlign: 'left', mb: 3 }}>
-            비밀번호
-          </FormLabel>
-          <TextField
-            {...register('password')}
-            error={!!errors.password}
-            helperText={errors.password?.message}
-            name='password'
-            placeholder='••••••'
-            type='password'
-            id='password'
-            autoComplete='current-password'
-            autoFocus
-            required
-            fullWidth
-            variant='outlined'
-            color={errors.password ? 'error' : 'primary'}
-          />
-        </FormControl>
-        <FormControlLabel
-          control={<Checkbox value='remember' color='primary' />}
-          label='로그인 정보 저장'
-        />
-        <ForgotPassword open={open} handleClose={handleClose} />
-        <Button
-          type='submit' // ⭐ 'button' → 'submit'
-          fullWidth
-          variant='contained'
-        >
-          로그인
-        </Button>
-        <Link
-          component='button'
-          type='button'
-          onClick={handleClickOpen}
-          variant='body2'
-          sx={{ alignSelf: 'center' }}
-        >
-          비밀번호를 잊으셨나요?
-        </Link>
-      </Box>
-      <Divider sx={{ my: 3 }}>or</Divider>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <GoogleButton fullWidth onClick={() => alert('Sign in with Google')}>
-          구글 로그인
-        </GoogleButton>
-        <KakaoButton fullWidth onClick={() => alert('Sign in with 카카오')}>
-          카카오 로그인
-        </KakaoButton>
-        <NaverButton fullWidth onClick={() => alert('Sign in with 네이버')}>
-          네이버 로그인
-        </NaverButton>
-        <Typography sx={{ textAlign: 'center' }}>
-          계정이 없으신가요?{' '}
-          <Link href='/signup' variant='body2' sx={{ alignSelf: 'center' }}>
-            회원가입
-          </Link>
-        </Typography>
-      </Box>
-    </Card>
+    <AppTheme>
+      <ContainerMui direction='column' justifyContent='space-between'>
+        <CardMui variant='outlined'>
+          <Typography
+            component='h1'
+            variant='h4'
+            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)', mb: 5 }}
+          >
+            로그인
+          </Typography>
+          {/* 로그인 실패!  */}
+          {logInMutation.error && <Typography color='error'>로그인에 실패했습니다.</Typography>}
+          <Box
+            component='form'
+            onSubmit={handleSubmit(onSubmit)}
+            noValidate
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+              gap: 2,
+            }}
+          >
+            <FormControl>
+              <FormLabel htmlFor='email' sx={{ textAlign: 'left', mb: 3 }}>
+                이메일(아이디)
+              </FormLabel>
+              <TextField
+                {...register('email')}
+                error={!!errors.email}
+                helperText={errors.email?.message}
+                color={errors.email ? 'error' : 'primary'}
+                id='email'
+                type='email'
+                name='email'
+                placeholder='your@email.com'
+                autoComplete='email'
+                autoFocus
+                required
+                fullWidth
+                variant='outlined'
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel htmlFor='password' sx={{ textAlign: 'left', mb: 3 }}>
+                비밀번호
+              </FormLabel>
+              <TextField
+                {...register('password')}
+                error={!!errors.password}
+                helperText={errors.password?.message}
+                name='password'
+                placeholder='••••••'
+                type='password'
+                id='password'
+                autoComplete='current-password'
+                autoFocus
+                required
+                fullWidth
+                variant='outlined'
+                color={errors.password ? 'error' : 'primary'}
+              />
+            </FormControl>
+            <FormControlLabel
+              control={<Checkbox value='remember' color='primary' />}
+              label='로그인 정보 저장'
+            />
+            <ForgotPassword open={open} handleClose={handleClose} />
+            <Button
+              type='submit' // ⭐ 'button' → 'submit'
+              fullWidth
+              variant='contained'
+              color='info'
+            >
+              로그인
+            </Button>
+            <Link
+              component='button'
+              type='button'
+              onClick={handleClickOpen}
+              variant='body2'
+              sx={{ alignSelf: 'center' }}
+            >
+              비밀번호를 잊으셨나요?
+            </Link>
+          </Box>
+          <Divider sx={{ my: 3 }}>or</Divider>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <GoogleButton fullWidth onClick={() => alert('Sign in with Google')}>
+              구글 로그인
+            </GoogleButton>
+            <KakaoButton fullWidth onClick={() => alert('Sign in with 카카오')}>
+              카카오 로그인
+            </KakaoButton>
+            <NaverButton fullWidth onClick={() => alert('Sign in with 네이버')}>
+              네이버 로그인
+            </NaverButton>
+            <Typography sx={{ textAlign: 'center' }}>
+              계정이 없으신가요?{' '}
+              <Link href='/signup' variant='body2' sx={{ alignSelf: 'center' }}>
+                회원가입
+              </Link>
+            </Typography>
+          </Box>
+        </CardMui>
+      </ContainerMui>
+    </AppTheme>
   );
 }

@@ -33,6 +33,7 @@ export const authHandlers = [
           statusCode: 400,
           error: {
             code: 'nickname_already_in_use',
+            //json 키값으로 하고 value는 닉네임 중복 --> 이걸 토대로 title값으로 넘겨
             message: '이미 사용 중인 닉네임입니다',
           },
         },
