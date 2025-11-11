@@ -94,8 +94,6 @@ export default function LogIn() {
                 name='email'
                 placeholder='your@email.com'
                 autoComplete='email'
-                autoFocus
-                required
                 fullWidth
                 variant='outlined'
               />
@@ -113,8 +111,6 @@ export default function LogIn() {
                 type='password'
                 id='password'
                 autoComplete='current-password'
-                autoFocus
-                required
                 fullWidth
                 variant='outlined'
                 color={errors.password ? 'error' : 'primary'}
@@ -125,12 +121,7 @@ export default function LogIn() {
               label='로그인 정보 저장'
             />
             <ForgotPassword open={open} handleClose={handleClose} />
-            <Button
-              type='submit' // ⭐ 'button' → 'submit'
-              fullWidth
-              variant='contained'
-              color='info'
-            >
+            <Button type='submit' fullWidth variant='contained' color='info'>
               로그인
             </Button>
             <Link
