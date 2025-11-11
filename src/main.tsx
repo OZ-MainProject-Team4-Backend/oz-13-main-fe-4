@@ -4,7 +4,6 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.tsx';
-import { restoreAuth } from './features/auth/store/authRestore.ts';
 import './index.css';
 
 async function enableMocking() {
@@ -23,9 +22,7 @@ const queryClient = new QueryClient({
     },
   },
 });
-enableMocking().then(async () => {
-  //자동로그인 감지(앱시작시)
-  await restoreAuth();
+enableMocking().then(() => {
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
