@@ -44,7 +44,7 @@ export default function LogIn() {
   //로그인 버튼 클릭시! mutation(비동기처리되어있음)으로 고고
   const onSubmit: SubmitHandler<FormFieldLogin> = (data) => {
     logInMutation.mutate(
-      { ...data, isAutoLogin },
+      { ...data },
       {
         onSuccess: (data) => {
           alert(`안녕하세요, ${data.data?.user.name} 님!`);
