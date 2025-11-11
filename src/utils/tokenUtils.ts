@@ -2,6 +2,8 @@ import { TokenPayload } from '../features/auth/types/auth';
 
 /**
  * JWT 디코딩 (Base64)
+ * @returns 사용자 정보 (userId, email, username 등 - 서버가 포함시킨 정보), 해당 액세스 토큰의 만료 시간 (exp claim)
+토큰 발급 시간 (iat claim)
  */
 export function decodeToken(token: string): TokenPayload | null {
   try {
@@ -22,6 +24,6 @@ export function isTokenExpired(token: string): boolean {
   const decoded = decodeToken(token);
   if (!decoded) return true;
 
-  const now = Date.now() / 1000; // 현재 시간 (초 단위)
+  const now = Date.now() / 1000;
   return decoded.exp < now;
 }
