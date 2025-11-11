@@ -49,7 +49,7 @@ export const getWeatherDescriptionKorean = (description: string): string => {
 
     // Drizzle
     'light intensity drizzle': '약한 이슬비',
-    drizzle: '이슬비',
+    'drizzle': '이슬비',
     'heavy intensity drizzle': '강한 이슬비',
     'light intensity drizzle rain': '약한 이슬비',
     'drizzle rain': '이슬비',
@@ -63,7 +63,7 @@ export const getWeatherDescriptionKorean = (description: string): string => {
     'thunderstorm with rain': '비를 동반한 천둥번개',
     'thunderstorm with heavy rain': '강한 비를 동반한 천둥번개',
     'light thunderstorm': '약한 천둥번개',
-    thunderstorm: '천둥번개',
+    'thunderstorm': '천둥번개',
     'heavy thunderstorm': '강한 천둥번개',
     'ragged thunderstorm': '불규칙한 천둥번개',
     'thunderstorm with light drizzle': '약한 이슬비를 동반한 천둥번개',
@@ -72,9 +72,9 @@ export const getWeatherDescriptionKorean = (description: string): string => {
 
     // Snow
     'light snow': '약한 눈',
-    snow: '눈',
+    'snow': '눈',
     'heavy snow': '강한 눈',
-    sleet: '진눈깨비',
+    'sleet': '진눈깨비',
     'light shower sleet': '약한 진눈깨비 소나기',
     'shower sleet': '진눈깨비 소나기',
     'light rain and snow': '약한 비와 눈',
@@ -84,16 +84,16 @@ export const getWeatherDescriptionKorean = (description: string): string => {
     'heavy shower snow': '강한 눈 소나기',
 
     // Atmosphere
-    mist: '안개',
-    smoke: '연기',
-    haze: '실안개',
+    'mist': '안개',
+    'smoke': '연기',
+    'haze': '실안개',
     'sand/dust whirls': '모래/먼지 소용돌이',
-    fog: '안개',
-    sand: '모래',
-    dust: '먼지',
+    'fog': '안개',
+    'sand': '모래',
+    'dust': '먼지',
     'volcanic ash': '화산재',
-    squalls: '돌풍',
-    tornado: '토네이도',
+    'squalls': '돌풍',
+    'tornado': '토네이도',
   };
 
   const normalizedDescription = description.toLowerCase().trim();
