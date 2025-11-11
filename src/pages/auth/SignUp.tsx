@@ -7,8 +7,10 @@ import {
   FormControlLabel,
   FormLabel,
   Link,
+  MenuItem,
   Radio,
   RadioGroup,
+  Select,
   Stack,
   TextField,
   Typography,
@@ -209,7 +211,6 @@ export default function SignUp() {
                   {...register('nickname')}
                   error={!!errors.nickname}
                   helperText={errors.nickname?.message}
-                  autoComplete='nickname'
                   fullWidth
                   id='nickname'
                   placeholder='동해번쩍 서해번쩍'
@@ -230,44 +231,44 @@ export default function SignUp() {
             </FormControl>
 
             <Stack
-              direction='row'
+              direction={{ xs: 'column', sm: 'row' }}
               spacing={2}
               sx={{
-                justifyContent: 'space-around',
-                alignItems: 'center',
+                width: '100%',
               }}
             >
-              <FormControl fullWidth>
+              <FormControl sx={{ flex: 1 }}>
                 <FormLabel htmlFor='gender'>성별</FormLabel>
                 <Controller
                   name='gender'
                   control={control}
                   render={({ field }) => (
-                    <RadioGroup {...field} row>
+                    <RadioGroup {...field} row css={{ justifyContent: 'space-around' }}>
                       <FormControlLabel value='M' control={<Radio />} label='남자' />
                       <FormControlLabel value='F' control={<Radio />} label='여자' />
                     </RadioGroup>
                   )}
                 />
               </FormControl>
+              <FormControl sx={{ flex: 1 }}>
+                <FormLabel htmlFor='named-select'>연령대</FormLabel>
+                <Controller
+                  name='age'
+                  control={control}
+                  render={({ field }) => (
+                    <Select {...field} id='named-select'>
+                      <MenuItem value={'ten'}>10대</MenuItem>
+                      <MenuItem value={'twenty'}>20대</MenuItem>
+                      <MenuItem value={'thirty'}>30대</MenuItem>
+                      <MenuItem value={'fourthy'}>40대</MenuItem>
+                      <MenuItem value={'fifth'}>50대</MenuItem>
+                      <MenuItem value={'sixth'}>60대</MenuItem>
+                    </Select>
+                  )}
+                />
+              </FormControl>
             </Stack>
-            <FormControl>
-              <FormLabel htmlFor='age'>연령대</FormLabel>
-              <Controller
-                name='age'
-                control={control}
-                render={({ field }) => (
-                  <RadioGroup {...field} row>
-                    <FormControlLabel value='ten' control={<Radio />} label='10대' />
-                    <FormControlLabel value='twenty' control={<Radio />} label='20대' />
-                    <FormControlLabel value='thirty' control={<Radio />} label='30대' />
-                    <FormControlLabel value='fourthy' control={<Radio />} label='40대' />
-                    <FormControlLabel value='fifth' control={<Radio />} label='50대' />
-                    <FormControlLabel value='sixth' control={<Radio />} label='60대' />
-                  </RadioGroup>
-                )}
-              />
-            </FormControl>
+
             <FormControl>
               <FormLabel htmlFor='email'>이메일</FormLabel>
               <TextField
