@@ -1,33 +1,35 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { Tokens, User } from '../types/auth';
 
-//- JWT token에서 액세스만 추가함(액세스와 자동로그인 처리만 전역메모리로 저장이 된다)
+//- JWT 인증 상태 관리 (자동 로그인 기능 없음)
 type AuthState = {
-  user: User | null; //유저의 타입 설정함
-  access: string | null;
-  isAutoLogin: boolean; //자동로그인 분기처리 localStorage저장
-  setAuth: (user: User, token: Tokens, isAutoLogin: boolean) => void; // 로그인 시 user, tokens, 자동로그인 여부 저장
+  user: User | null; //유저 정보
+  access: string | null; //액세스 토큰
+  setAuth: (user: User, token: Tokens) => void; // 로그인 시 user, tokens 저장
   setAccessToken: (token: string) => void; //새로 발급받은 액세스토큰 업데이트
   clearAuth: () => void; //로그아웃 시 호출
-  getAccessToken: () => string | null; //새로 액세스 토큰을 발급해줌
+  getAccessToken: () => string | null; //액세스 토큰 반환
 };
 
-//- Zustand 스토어 (JWT 유저정보와 로그인여부만 로컬에 저장)
+//- Zustand 스토어 (sessionStorage에 저장)
+/* 동작 방식:
+- 새로고침: ✅ 로그인 유지 (같은 탭)
+- 새 탭: ❌ 로그아웃 (새 세션)
+- 브라우저 닫고 재접속: ❌ 로그아웃
+*/
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
       //초기 전역 상태
       user: null,
       access: null,
-      isAutoLogin: false,
 
       //로그인시 호출
-      setAuth: (user, tokens, isAutoLogin) =>
+      setAuth: (user, tokens) =>
         set({
           user,
-          access: tokens.access, //새로고침하면 null초기화
-          isAutoLogin,
+          access: tokens.access,
         }),
 
       //액세스 토큰 갱신 시 사용됨
@@ -36,7 +38,7 @@ export const useAuthStore = create<AuthState>()(
           access: token,
         }),
 
-      // 리프레쉬토큰으로 새로운 액세스 토큰 발급 받기
+      // 액세스 토큰 반환
       getAccessToken: () => get().access,
 
       //로그아웃시 토큰클리어
@@ -44,17 +46,11 @@ export const useAuthStore = create<AuthState>()(
         set({
           user: null,
           access: null,
-          isAutoLogin: false,
         }),
     }),
     {
       name: 'auth-storage',
-      //로컬에는 유저정보와 자동로그인 체크 여부만 저장함
-      //선택적으로 저장이 되어야 하는 것
-      partialize: (state) => ({
-        user: state.user,
-        isAutoLogin: state.isAutoLogin,
-      }),
+      storage: createJSONStorage(() => sessionStorage), // sessionStorage 사용
     }
   )
 );
