@@ -24,6 +24,8 @@ import { CardMui, ContainerMui } from '../../styles/AuthStyle';
 export default function LogIn() {
   const navigator = useNavigate();
   const [open, setOpen] = useState(false);
+  const [isAutoLogin, setIsAutoLogin] = useState(false); // ✅ 자동로그인 상태
+
   const logInMutation = useLogInMutation();
 
   //2. react-hook-form 사용
@@ -41,12 +43,15 @@ export default function LogIn() {
   });
   //로그인 버튼 클릭시! mutation(비동기처리되어있음)으로 고고
   const onSubmit: SubmitHandler<FormFieldLogin> = (data) => {
-    logInMutation.mutate(data, {
-      onSuccess: (data) => {
-        alert(`안녕하세요, ${data.data?.user.name} 님!`);
-        navigator('/');
-      },
-    });
+    logInMutation.mutate(
+      { ...data, isAutoLogin },
+      {
+        onSuccess: (data) => {
+          alert(`안녕하세요, ${data.data?.user.name} 님!`);
+          navigator('/');
+        },
+      }
+    );
   };
 
   const handleClickOpen = () => {
@@ -117,7 +122,14 @@ export default function LogIn() {
               />
             </FormControl>
             <FormControlLabel
-              control={<Checkbox value='remember' color='primary' />}
+              control={
+                <Checkbox
+                  value='remember'
+                  color='primary'
+                  checked={isAutoLogin}
+                  onChange={(e) => setIsAutoLogin(e.target.checked)}
+                />
+              }
               label='로그인 정보 저장'
             />
             <ForgotPassword open={open} handleClose={handleClose} />

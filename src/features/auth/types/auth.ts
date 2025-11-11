@@ -95,6 +95,7 @@ export type ResponseLoginDTO = ApiResponse<{
   user: User;
   access: string; // 🔐로그인 요청하면 서버에서 JWT토큰값 뱉어냄
   refresh: string; // 🔐로그인 요청하면 서버에서 JWT토큰값 뱉어냄
+  isAutoLogin?: boolean;
 }>;
 
 //==================== Token Refresh(짧은 액세스 토큰 만료 시, 리프레시 토큰을 사용하여 새로운 액세스 토큰 발급 받음+경우에따라 새 리프레시 토큰 받는 api 호출 ) ====================
