@@ -1,5 +1,3 @@
-// utils/weatherIcon.ts
-
 /**
  * OpenWeatherMap 아이콘 코드를 이미지 URL로 변환
  * @param iconCode - 날씨 아이콘 코드 (ex: '01d', '02n', '10d')
