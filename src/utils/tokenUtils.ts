@@ -27,3 +27,16 @@ export function isTokenExpired(token: string): boolean {
   const now = Date.now() / 1000;
   return decoded.exp < now;
 }
+
+/*
+Token 만료 임박 체크 (5분전)
+@returns true = 갱신 필요, false = 아직 괜찮음
+ */
+export function shouldRefreshToken(token: string): boolean {
+  const decoded = decodeToken(token);
+  if (!decoded) return true;
+
+  const now = Date.now() / 1000;
+  const fiveMinutes = 5 * 60;
+  return decoded.exp - now < fiveMinutes;
+}
