@@ -24,6 +24,19 @@ export type ApiResponse<T = unknown, K = unknown> = {
   data?: T;
 };
 
+//==================== JWT 토큰 관련 ====================
+export type Tokens = {
+  access: string;
+  refresh: string;
+};
+
+export type TokenPayload = {
+  userId: number;
+  email: string;
+  exp: number; // 만료 시간 (unix timestamp)
+  iat: number; // 발급 시간
+};
+
 //=========== 닉네임 검증 ============
 export type RequestNicknameValidateDTO = {
   nickname: string;
@@ -44,7 +57,7 @@ export type RequestEmailVerifyDTO = {
 };
 export type ResponseEmailVerifyDTO = ApiResponse;
 
-//=========== 회원가입(🐝토큰으로 받음 ) ============
+//=========== 회원가입============
 export type RequestSignUpDTO = {
   email: string;
   name: string;
@@ -54,7 +67,9 @@ export type RequestSignUpDTO = {
   age: string;
 };
 
-export type ResponsetSignUpDTO = ApiResponse<{ user: User }>;
+export type ResponsetSignUpDTO = ApiResponse<{
+  user: User;
+}>;
 /* 요청 성공시 응답값은 아래처럼 받아옴
 그래서 {user}의 타입을 제네릭으로 설정해야함.
 "data": {
@@ -73,10 +88,24 @@ export type ResponsetSignUpDTO = ApiResponse<{ user: User }>;
 export type RequestLoginDTO = {
   email: string;
   password: string;
+  isAutoLogin?: boolean; // 🔐자동로그인 옵션으로 Local에 저장예정
 };
 
-export type ResponseLoginDTO = ApiResponse<{ user: User }>;
+export type ResponseLoginDTO = ApiResponse<{
+  user: User;
+  access: string; // 🔐로그인 요청하면 서버에서 JWT토큰값 뱉어냄
+  refresh: string; // 🔐로그인 요청하면 서버에서 JWT토큰값 뱉어냄
+}>;
 
+//==================== Token Refresh(짧은 액세스 토큰 만료 시, 리프레시 토큰을 사용하여 새로운 액세스 토큰 발급 받음+경우에따라 새 리프레시 토큰 받는 api 호출 ) ====================
+export type RequestTokenRefreshDTO = {
+  refresh?: string; // 🔐 리프레쉬 토큰을 담는 필드 (?옵셔널값임), 자동로그인 미체크시 body로 보내겠다.
+};
+
+export type ResponseTokenRefreshDTO = ApiResponse<{
+  access: string;
+  refresh?: string; // 🔐갱신된 경우에만 포함
+}>;
 //=========== 마이페이지 ============
 export type ResponseMeDTO = ApiResponse<User>;
 

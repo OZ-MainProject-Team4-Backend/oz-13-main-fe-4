@@ -22,6 +22,10 @@ import { useNavigate } from 'react-router-dom';
 import * as z from 'zod';
 import { GoogleButton, KakaoButton, NaverButton } from '../../components/Button';
 import BaseModal from '../../components/Modal/BaseModal';
+import {
+  useSendEmailCodeMutation,
+  useVerifyEmailCodeMutation,
+} from '../../features/auth/hooks/useEmailVerificationMutation';
 import { useNicknameValidateMutation } from '../../features/auth/hooks/useNicknameValidateMutation';
 import { useSignUpMutation } from '../../features/auth/hooks/useSignUpMutation';
 
@@ -56,6 +60,7 @@ const signUpSchema = z
       message: '연령대를 선택해주세요',
     }),
     email: z.string().email('유효한 이메일 주소를 입력해주세요.'),
+    emailCode: z.string().min(6, '숫자코드6자리 입력해주세요').max(6, '숫자코드 6자리 입니다.'),
     password: z
       .string()
       .min(6, '비밀번호는 6자 이상 입력해주세요')
@@ -73,10 +78,17 @@ type FormField = z.infer<typeof signUpSchema>;
 
 export default function SignUp() {
   const [isNicknameValidated, setIsNicknameValidated] = useState(false); //닉네임 중복검사 확인 상태
+
   const signUpMutation = useSignUpMutation(); //회원가입 query
+  const sendEmailCode = useSendEmailCodeMutation(); //이메일 중복 확인
+  const verityEmailCode = useVerifyEmailCodeMutation(); //이메일 인증 코드 확인
   const nicknameValidate = useNicknameValidateMutation(); //닉네임중복 query
-  const [showModal, setShowModal] = useState(false); //모달창 상태
+  const [nicknameShowModal, setNickanameShowModal] = useState(false); //닉네임 모달창 상태
+  const [emailShowModal, setEmailShowModal] = useState(false); // 이메일 모달창 상태
   const [modalMessage, setModalMessage] = useState(''); //모달메시지
+  // src/pages/auth/SignUp.tsx
+  const [isEmailVerified, setIsEmailVerified] = useState(false); //이메일 중복 상태
+  const [isEmailCodeChecked, setIsEmailCodeChecked] = useState(false); //이메일 인증코드 상태
   const navigator = useNavigate();
 
   //회원가입 버튼 클릭하면?mutation 불러서 비동기 통신해야함.
@@ -94,8 +106,8 @@ export default function SignUp() {
   const handleNicknameValidate = () => {
     const nickname = getValues('nickname'); // react-hook-form의 getValues 사용
     if (!nickname) {
-      setModalMessage('닉네임을 입력하세용ㅋ');
-      setShowModal(true);
+      setModalMessage('닉네임을 입력해주세요');
+      setNickanameShowModal(true);
       return;
     }
 
@@ -104,13 +116,69 @@ export default function SignUp() {
       {
         onSuccess: (data) => {
           setModalMessage(data.message ?? '닉네임 확인완료');
-          setShowModal(true);
+          setNickanameShowModal(true);
           setIsNicknameValidated(true);
         },
         onError(error) {
-          setModalMessage(error.message);
-          setShowModal(true);
+          setModalMessage(`${error.message}.다시 입력해주세요`);
+          setNickanameShowModal(true);
           setIsNicknameValidated(false);
+        },
+      }
+    );
+  };
+
+  const handleEmailValidate = async () => {
+    const email = getValues('email');
+    // 이메일 필드만 검증
+    const isValid = await trigger('email');
+
+    if (!isValid) {
+      return;
+    }
+
+    sendEmailCode.mutate(
+      { email },
+      {
+        onSuccess: () => {
+          setModalMessage('인증 메일이 발송되었습니다!');
+          setEmailShowModal(true);
+          setIsEmailVerified(true);
+        },
+        onError: (error) => {
+          setModalMessage(`${error.message}. 새로운 이메일을 입력해주세요`);
+          setEmailShowModal(true);
+        },
+      }
+    );
+  };
+
+  const handleEmailCodeValidate = async () => {
+    const code = getValues('emailCode');
+    const email = getValues('email');
+    // 인증코드 필드만 검증(리액트훅폼 제공)
+    const isValid = await trigger('emailCode');
+
+    if (!isValid) {
+      return;
+    }
+    if (!code) {
+      setModalMessage('인증코드를 입력하세요');
+      setEmailShowModal(true);
+      return;
+    }
+    verityEmailCode.mutate(
+      { code, email },
+      {
+        onSuccess: () => {
+          setModalMessage('인증이 완료되었습니다');
+          setEmailShowModal(true);
+          setIsEmailCodeChecked(true);
+        },
+        onError: (error) => {
+          setModalMessage(error.message);
+          setEmailShowModal(true);
+          setIsEmailCodeChecked(false);
         },
       }
     );
@@ -119,6 +187,7 @@ export default function SignUp() {
   const {
     register,
     control,
+    trigger,
     handleSubmit,
     getValues,
     formState: { errors },
@@ -133,6 +202,7 @@ export default function SignUp() {
       passwordConfirm: '',
       gender: 'F', //디폴트값 선택되게끔
       age: 'thirty',
+      emailCode: '',
     },
   });
 
@@ -142,12 +212,12 @@ export default function SignUp() {
       {signUpMutation.error && <p>에러 발생!</p>}
       {/* 모달창 */}
       <BaseModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
+        isOpen={nicknameShowModal}
+        onClose={() => setNickanameShowModal(false)}
         title='닉네임 중복 확인'
         subtitle={modalMessage}
         footer={
-          <Button onClick={() => setShowModal(false)} variant='contained'>
+          <Button onClick={() => setNickanameShowModal(false)} variant='contained'>
             확인
           </Button>
         }
@@ -246,6 +316,7 @@ export default function SignUp() {
           <FormLabel htmlFor='email'>이메일</FormLabel>
           <TextField
             {...register('email')}
+            disabled={isEmailVerified}
             fullWidth
             id='email'
             placeholder='your@email.com'
@@ -255,15 +326,62 @@ export default function SignUp() {
             helperText={errors.email?.message}
             color={errors.email ? 'error' : 'primary'}
           />
+          <Button
+            variant='contained'
+            color='success'
+            type='button'
+            onClick={handleEmailValidate}
+            disabled={isEmailVerified}
+          >
+            인증코드 보내기
+          </Button>
         </FormControl>
-        <Button
-          variant='contained'
-          color='success'
-          type='button'
-          onClick={() => console.log('이메일 인증 링크')}
-        >
-          이메일 인증
-        </Button>
+
+        {isEmailVerified ? (
+          <FormControl>
+            <FormLabel htmlFor='emailCode'>이메일 인증코드</FormLabel>
+            <TextField
+              {...register('emailCode')}
+              error={!!errors.emailCode}
+              helperText={errors.emailCode?.message}
+              fullWidth
+              id='emailCode'
+              placeholder='123456'
+              variant='outlined'
+              disabled={isEmailCodeChecked}
+            />
+            <Button
+              variant='contained'
+              color='success'
+              type='button'
+              onClick={handleEmailCodeValidate}
+              disabled={isEmailCodeChecked}
+            >
+              인증코드 확인
+            </Button>
+          </FormControl>
+        ) : (
+          // eslint-disable-next-line react/jsx-no-useless-fragment
+          <></>
+        )}
+        <BaseModal
+          isOpen={emailShowModal}
+          onClose={() => setEmailShowModal(false)}
+          title='이메일 인증코드'
+          subtitle={modalMessage}
+          footer={
+            <Button
+              variant='contained'
+              color='primary'
+              onClick={() => {
+                setEmailShowModal(false);
+              }}
+            >
+              확인
+            </Button>
+          }
+        />
+
         <FormControl>
           <FormLabel htmlFor='password'>비밀번호</FormLabel>
           <TextField
@@ -297,11 +415,7 @@ export default function SignUp() {
           />
         </FormControl>
 
-        <Button
-          type='submit' // ⭐ 'button' → 'submit'
-          fullWidth
-          variant='contained'
-        >
+        <Button type='submit' fullWidth variant='contained' disabled={!isEmailCodeChecked}>
           회원가입
         </Button>
       </Box>
