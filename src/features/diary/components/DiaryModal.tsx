@@ -8,6 +8,7 @@ import DeleteConfirmModal from '../../../components/Modal/DeleteConfirmModal';
 import { useEffect, useState } from 'react';
 import { getFormattedDate } from '../utils/calendar';
 import { EMOTIONS } from '../constants/emotions';
+import { useCreateDiary } from '../hooks/useDiaryQueries';
 
 const DiaryModal = ({
   isOpen,
@@ -38,6 +39,8 @@ const DiaryModal = ({
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<DiaryError>({});
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const createDiary = useCreateDiary();
 
   // 모드별 초기화
   useEffect(() => {
@@ -145,8 +148,18 @@ const DiaryModal = ({
 
     setIsLoading(true);
 
-    onSave(diary, image);
-    setIsLoading(false);
+    createDiary.mutate(
+      { diary, image },
+      {
+        onSuccess: () => {
+          setIsLoading(false);
+          onClose();
+        },
+        onError: () => {
+          setIsLoading(false);
+        },
+      }
+    );
   };
 
   // 삭제 버튼: 삭제 확인 모달 열기

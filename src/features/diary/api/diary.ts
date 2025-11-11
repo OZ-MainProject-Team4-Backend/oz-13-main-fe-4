@@ -1,36 +1,28 @@
 import { DiaryData } from '../types/types';
 
-export const getDiariesForCalendar = async (year: number, month: number) => {
-  const res = await fetch(`/api/diary?year=${year}&month=${month}`);
-  return res.json();
-};
+export const postDiaryApi = async (diary: DiaryData, image: File | null) => {
+  const formData = new FormData();
 
-export const getDiariesForDetail = async () => {
-  const res = await fetch('/api/diary');
-  return res.json();
-};
+  formData.append('date', diary.date);
+  formData.append('title', diary.title);
+  formData.append('emotion', diary.emotion);
+  formData.append('notes', diary.notes);
 
-export const postDiaryApi = async (diary: DiaryData) => {
+  if (image) {
+    formData.append('image', image);
+  }
+
   const res = await fetch('/api/diary', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(diary),
+    headers: {
+      Authorization: `Bearer ${import.meta.env.VITE_MOCK_TOKEN}`,
+    },
+    body: formData,
   });
-  if (!res.ok) throw new Error(' 실패');
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.error || '일기 작성 실패');
+  }
   return res.json();
-};
-
-export const patchDiaryApi = async (diary: DiaryData, id: number) => {
-  const res = await fetch(`/api/diary/${id}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(diary),
-  });
-  if (!res.ok) throw new Error('수정 실패');
-};
-
-export const deleteDiaryApi = async (id: number) => {
-  await fetch(`/api/diary/${id}`, {
-    method: 'DELETE',
-  });
 };
