@@ -7,9 +7,17 @@ export const useLogInMutation = () => {
   return useMutation({
     mutationFn: logIn,
     onSuccess: (response) => {
-      //api통신 성공하면, MSW응답한 data의  store에 저장해줘야함
-      //- 서버가 쿠키로 인증 처리해주어서, 프론트에선 단순히 사용자 정보만 저장해주면 끝!!!
-      if (response.data?.user) useAuthStore.getState().setAuth(response.data.user);
+      if (response.data?.user && response.data?.access && response.data?.refresh) {
+        // ✅ Tokens 객체로 전달
+        useAuthStore.getState().setAuth(
+          response.data.user,
+          {
+            access: response.data.access,
+            refresh: response.data.refresh,
+          },
+          response.data.isAutoLogin || false // ✅ 자동로그인 여부
+        );
+      }
     },
   });
 };
