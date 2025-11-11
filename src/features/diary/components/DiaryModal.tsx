@@ -1,12 +1,13 @@
 import BaseModal from '../../../components/Modal/BaseModal';
 import * as styles from './DiaryModal.styles';
-import { DiaryData, DiaryError, DiaryModalProps } from '../types/types';
+import { DiaryData, DiaryError, DiaryModalProps, Emotion } from '../types/types';
 import DiaryModalHeader from './DiaryModalHeader';
 import DiaryModalActions from './DiaryModalActions';
 import DiaryModalFields from './DiaryModalFields';
 import DeleteConfirmModal from '../../../components/Modal/DeleteConfirmModal';
 import { useEffect, useState } from 'react';
 import { getFormattedDate } from '../utils/calendar';
+import { EMOTIONS } from '../constants/emotions';
 
 const DiaryModal = ({
   isOpen,
@@ -22,7 +23,7 @@ const DiaryModal = ({
     id: Date.now(),
     date: getFormattedDate(selectedDate),
     title: '',
-    emotion: 0,
+    emotion: 'happy',
     notes: '',
     weather: {
       condition: 'cloudy',
@@ -56,7 +57,7 @@ const DiaryModal = ({
         id: Date.now(),
         date: getFormattedDate(selectedDate),
         title: '',
-        emotion: 0,
+        emotion: 'happy',
         notes: '',
         weather: {
           condition: 'cloudy',
@@ -105,9 +106,11 @@ const DiaryModal = ({
 
   // 감정 선택
   const handleEmotion = (index: number) => {
+    const emotionName = EMOTIONS[index].name as Emotion;
+
     setDiary((prev) => ({
       ...prev,
-      emotion: index,
+      emotion: emotionName,
     }));
   };
 
@@ -160,7 +163,7 @@ const DiaryModal = ({
       id: Date.now(),
       date: getFormattedDate(selectedDate),
       title: '',
-      emotion: 0,
+      emotion: 'happy',
       notes: '',
       weather: {
         condition: 'cloudy',

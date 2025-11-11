@@ -6,7 +6,7 @@ export interface DiaryData {
   id: number;
   date: string;
   title: string;
-  emotion: number;
+  emotion: Emotion;
   notes: string;
   weather: {
     condition: string;
@@ -44,3 +44,5 @@ export interface DiaryError {
 }
 
 export type Modal = 'create' | 'edit' | 'view';
+
+export type Emotion = 'happy' | 'sad' | 'angry' | 'excited';
