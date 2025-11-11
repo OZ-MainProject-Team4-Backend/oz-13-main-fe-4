@@ -9,7 +9,7 @@ export const postDiaryApi = async (diary: DiaryData, image: File | null) => {
   formData.append('notes', diary.notes);
 
   if (image) {
-    formData.append('image', image);
+    formData.append('image_url', image);
   }
 
   const res = await fetch('/api/diary', {
