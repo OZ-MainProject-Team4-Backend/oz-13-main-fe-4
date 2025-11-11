@@ -1,5 +1,7 @@
 import { DiaryData } from '../types/types';
 
+// const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 export const postDiaryApi = async (diary: DiaryData, image: File | null) => {
   const formData = new FormData();
 
@@ -12,11 +14,9 @@ export const postDiaryApi = async (diary: DiaryData, image: File | null) => {
     formData.append('image_url', image);
   }
 
-  const res = await fetch('/api/diary', {
+  const res = await fetch(`http://localhost:5173/api/diary`, {
     method: 'POST',
-    headers: {
-      Authorization: `Bearer ${import.meta.env.VITE_MOCK_TOKEN}`,
-    },
+    credentials: 'include',
     body: formData,
   });
 
@@ -25,4 +25,21 @@ export const postDiaryApi = async (diary: DiaryData, image: File | null) => {
     throw new Error(error.error || '일기 작성 실패');
   }
   return res.json();
+};
+
+export const getDiariesForCalendar = async (year: number, month: number): Promise<DiaryData[]> => {
+  console.log('getDiariesForCalendar 실행됨', year, month);
+
+  const res = await fetch(`http://localhost:5173/api/diary?year=${year}&month=${month}`, {
+    credentials: 'include',
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.error || '일기 목록 조회 실패');
+  }
+
+  const data = await res.json();
+  console.log('서버 응답 데이터 : ', data);
+  return data;
 };

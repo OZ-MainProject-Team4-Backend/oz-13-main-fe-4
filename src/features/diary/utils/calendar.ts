@@ -54,5 +54,5 @@ export const getFormattedDate = (selectedDate: Date | null): string => {
   const year = selectedDate.getFullYear();
   const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
   const day = String(selectedDate.getDate()).padStart(2, '0');
-  return `${year}년 ${month}월 ${day}일`;
+  return `${year}년 ${month}월 ${day}일`; // 공백 존재
 };

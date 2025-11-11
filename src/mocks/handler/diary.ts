@@ -1,57 +1,9 @@
 import { http, HttpResponse } from 'msw';
-import { mockDiaries } from '../data/mockDiaries';
+import { mockDiaries, mockDiariesforCalendar } from '../data/mockDiaries';
 
 export const diaryHandlers = [
-  // 일기 제목 조회
-  // http.get('/api/diary/', ({ request }) => {
-  //   const token = request.headers.get('Authorization');
-
-  //   if (!token) {
-  //     return HttpResponse.json({ error: '토큰 필요' }, { status: 401 });
-  //   }
-
-  //   const url = new URL(request.url);
-  //   const year = url.searchParams.get('year');
-  //   const month = url.searchParams.get('month');
-
-  //   if (!year || !month) {
-  //     return HttpResponse.json({ error: 'year와 month는 필수입니다' }, { status: 400 });
-  //   }
-
-  //   const paddedMonth = month.padStart(2, '0');
-  //   const diaries = mockDiaries
-  //     .filter((d) => d.date.startsWith(`${year}-${paddedMonth}`))
-  //     .map(({ id, date, title }) => ({ id, date, title }));
-
-  //   return HttpResponse.json(diaries, { status: 200 });
-  // }),
-
-  // 일기 상세 조회
-  // http.get('/api/diary/:id', ({ params, request }) => {
-  //   const token = request.headers.get('Authorization');
-
-  //   if (!token) {
-  //     return HttpResponse.json({ error: '토큰 필요' }, { status: 401 });
-  //   }
-
-  //   const { id } = params;
-  //   const diary = mockDiaries.find((d) => d.id === Number(id));
-
-  //   if (!diary) {
-  //     return HttpResponse.json({ error: '존재하지 않습니다' }, { status: 404 });
-  //   }
-
-  //   return HttpResponse.json(diary, { status: 200 });
-  // }),
-
   // 일기 작성
   http.post('/api/diary', async ({ request }) => {
-    const token = request.headers.get('Authorization');
-
-    if (!token) {
-      return HttpResponse.json({ error: '토큰 필요' }, { status: 401 });
-    }
-
     try {
       const formData = await request.formData();
 
@@ -83,15 +35,62 @@ export const diaryHandlers = [
       };
 
       mockDiaries.push(newDiary);
+      mockDiariesforCalendar.push({
+        id: newDiary.id,
+        date: newDiary.date,
+        title: newDiary.title,
+      });
 
       return HttpResponse.json(
-        { diary_id: newDiary.id, message: '일기 작성 완료' },
+        { diary_id: newDiary.id, message: '일기 작성 완료', mockDiaries },
         { status: 201 }
       );
     } catch (error) {
       return HttpResponse.json({ error: '작성 실패' }, { status: 400 });
     }
   }),
+
+  // 일기 제목 조회
+  http.get('/api/diary', ({ request }) => {
+    const url = new URL(request.url);
+    const year = url.searchParams.get('year');
+    const month = url.searchParams.get('month');
+
+    console.log(`handler year, month : ${year}/${month}`);
+
+    if (!year || !month) {
+      return HttpResponse.json({ error: 'year와 month는 필수입니다' }, { status: 400 });
+    }
+
+    const targetYearMonth = `${year}년 ${String(Number(month) + 1).padStart(2, '0')}월`;
+    console.log(targetYearMonth);
+
+    const diaries = mockDiaries
+      .filter((d) => d.date.startsWith(targetYearMonth))
+      .map(({ id, date, title }) => ({ id, date, title }));
+
+    console.log('캘린더용 일기 : ', diaries);
+
+    return HttpResponse.json(diaries, { status: 200 });
+  }),
+
+  // 일기 상세 조회
+  // http.get('/api/diary/:id', ({ params, request }) => {
+  //   const token = request.headers.get('Authorization');
+
+  //   if (!token) {
+  //     return HttpResponse.json({ error: '토큰 필요' }, { status: 401 });
+  //   }
+
+  //   const { id } = params;
+  //   const diary = mockDiaries.find((d) => d.id === Number(id));
+
+  //   if (!diary) {
+  //     return HttpResponse.json({ error: '존재하지 않습니다' }, { status: 404 });
+  //   }
+
+  //   return HttpResponse.json(diary, { status: 200 });
+  // }),
 
   // 일기 수정
   // http.patch('/api/diary/:id', async ({ params, request }) => {

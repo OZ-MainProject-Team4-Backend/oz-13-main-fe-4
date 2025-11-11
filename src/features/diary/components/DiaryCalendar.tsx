@@ -6,20 +6,23 @@ import { getCalendarDays, isToday } from '../utils/calendar';
 import { useCalendarDate } from '../hooks/useCalendarDate';
 import { DAYS, MONTHS } from '../constants/calender';
 import { useState } from 'react';
+import { useDiariesForCalendar } from '../hooks/useDiaryQueries';
 
 const DiaryCalendar = () => {
   const { year, month, goToPrevMonth, goToNextMonth } = useCalendarDate();
   const calendarDays = getCalendarDays(year, month);
-  const [diaries, setDiaries] = useState<DiaryData[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [mode, setMode] = useState<Modal>('create');
   const [selectedDiary, setSelectedDiary] = useState<DiaryData | undefined>(undefined);
 
+  const { data: diaries = [] } = useDiariesForCalendar(year, month);
+
   // 특정 날짜의 일기를 찾는 함수
   const getDiaryByDate = (year: number, month: number, date: number) => {
-    const targetDate = `${year}년 ${String(month + 1).padStart(2, '0')}월 ${String(date).padStart(2, '0')}일`;
-
+    const padMonth = String(month + 1).padStart(2, '0');
+    const padDate = String(date).padStart(2, '0');
+    const targetDate = `${year}년 ${padMonth}월 ${padDate}일`;
     return diaries.find((d) => d.date === targetDate);
   };
 
@@ -45,18 +48,7 @@ const DiaryCalendar = () => {
     setSelectedDate(null);
   };
 
-  const handleSaveDiary = (updatedDiary: DiaryData, image: File | null) => {
-    setDiaries((prev) => {
-      const existingIndex = prev.findIndex((d) => d.id === updatedDiary.id);
-      if (existingIndex !== -1) {
-        //수정
-        const newDiaries = [...prev];
-        newDiaries[existingIndex] = updatedDiary;
-        return newDiaries;
-      } else {
-        return [...prev, updatedDiary];
-      }
-    });
+  const handleSaveDiary = () => {
     handleCloseModal();
   };
 
@@ -66,7 +58,7 @@ const DiaryCalendar = () => {
   };
 
   const deleteDiary = (id: number) => {
-    setDiaries((prev) => prev.filter((d) => d.id !== id));
+    // deleteDiary구현할 예정
   };
 
   console.log('다이어리 기록용', diaries);
