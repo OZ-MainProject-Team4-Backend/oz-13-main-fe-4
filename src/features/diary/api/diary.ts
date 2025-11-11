@@ -43,3 +43,14 @@ export const getDiariesForCalendar = async (year: number, month: number): Promis
   console.log('서버 응답 데이터 : ', data);
   return data;
 };
+
+export const getDiaryForDetail = async (id: number) => {
+  const res = await fetch(`/api/diary/${id}`);
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.error || '일기 목록 조회 실패');
+  }
+
+  return res.json();
+};

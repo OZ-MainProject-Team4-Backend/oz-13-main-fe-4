@@ -39,8 +39,11 @@ const DiaryModal = ({
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<DiaryError>({});
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
   const createDiary = useCreateDiary();
+  // const { location, fetchLocation } = useCurrentLocation();
+
+  // const BASE_URL = 'https://openweathermap.org/img/wn';
+  // const iconUrl = `${BASE_URL}/${diary.weather.icon}@2x.png`;
 
   // 모드별 초기화
   useEffect(() => {
@@ -122,7 +125,9 @@ const DiaryModal = ({
     const hasChanges =
       mode === 'create'
         ? diary.title || diary.notes || image
-        : JSON.stringify(diary) !== JSON.stringify(selectedDiary) || image;
+        : mode === 'edit'
+          ? JSON.stringify(diary) !== JSON.stringify(selectedDiary) || image
+          : false;
 
     if (hasChanges) {
       const confirmClose = window.confirm('작성 중인 내용이 있습니다. 정말 닫으시겠습니까?');

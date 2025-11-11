@@ -16,6 +16,16 @@ export interface DiaryData {
   image_url: string | null;
 }
 
+export interface DiaryDataReq {
+  date: string;
+  title: string;
+  emotion: string;
+  notes: string;
+  lon: string;
+  lat: string;
+  image_url: File | null;
+}
+
 export interface DiaryModalProps {
   isOpen: boolean;
   selectedDate: Date | null;

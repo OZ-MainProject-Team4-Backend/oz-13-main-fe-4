@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getDiariesForCalendar, postDiaryApi } from '../api/diary';
+import { getDiariesForCalendar, getDiaryForDetail, postDiaryApi } from '../api/diary';
 import { DiaryData } from '../types/types';
 
 // 일기 생성
@@ -11,7 +11,7 @@ export const useCreateDiary = () => {
       postDiaryApi(diary, image),
     onSuccess: (data) => {
       console.log('일기 작성 성공 : ', data);
-      queryClient.invalidateQueries({ queryKey: ['calendarDiary'], exact: false });
+      queryClient.invalidateQueries({ queryKey: ['diary'], exact: false });
     },
     onError: (error: Error) => {
       console.log('일기 작성 실패 : ', error.message);
@@ -23,10 +23,19 @@ export const useCreateDiary = () => {
 // 캘린더용 일기 조회
 export const useDiariesForCalendar = (year: number, month: number) => {
   const { data, isLoading, error } = useQuery<DiaryData[], Error>({
-    queryKey: ['calendarDiary', year, month],
+    queryKey: ['diary', year, month],
     queryFn: () => getDiariesForCalendar(year, month),
     enabled: year !== undefined && month !== undefined,
   });
   console.log('fetching diaries for:', year, month);
   return { data, isLoading, error };
+};
+
+// 일기 상세 조회
+export const useDiaryDetail = (id?: number) => {
+  return useQuery<DiaryData, Error>({
+    queryKey: ['diary', id],
+    queryFn: () => getDiaryForDetail(id!),
+    enabled: id !== undefined,
+  });
 };

@@ -5,18 +5,19 @@ import { DiaryData, Modal } from '../types/types';
 import { getCalendarDays, isToday } from '../utils/calendar';
 import { useCalendarDate } from '../hooks/useCalendarDate';
 import { DAYS, MONTHS } from '../constants/calender';
-import { useState } from 'react';
-import { useDiariesForCalendar } from '../hooks/useDiaryQueries';
+import { useEffect, useState } from 'react';
+import { useDiaryDetail, useDiariesForCalendar } from '../hooks/useDiaryQueries';
 
 const DiaryCalendar = () => {
   const { year, month, goToPrevMonth, goToNextMonth } = useCalendarDate();
   const calendarDays = getCalendarDays(year, month);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null); // 새 일기 작성용
   const [mode, setMode] = useState<Modal>('create');
   const [selectedDiary, setSelectedDiary] = useState<DiaryData | undefined>(undefined);
-
+  const [selectedDiaryId, setSelectedDiaryId] = useState<number | undefined>(undefined); // 상세 조회용
   const { data: diaries = [] } = useDiariesForCalendar(year, month);
+  const { data: diaryDetail } = useDiaryDetail(selectedDiaryId ?? undefined);
 
   // 특정 날짜의 일기를 찾는 함수
   const getDiaryByDate = (year: number, month: number, date: number) => {
@@ -36,8 +37,8 @@ const DiaryCalendar = () => {
   };
 
   // 기존 일기 보기
-  const handleViewDiary = (diary: DiaryData) => {
-    setSelectedDiary(diary);
+  const handleViewDiary = (diaryDetail: DiaryData) => {
+    setSelectedDiaryId(diaryDetail.id);
     setMode('view');
     setIsModalOpen(true);
   };
@@ -60,6 +61,12 @@ const DiaryCalendar = () => {
   const deleteDiary = (id: number) => {
     // deleteDiary구현할 예정
   };
+
+  useEffect(() => {
+    if (diaryDetail) {
+      setSelectedDiary(diaryDetail);
+    }
+  }, [diaryDetail]);
 
   console.log('다이어리 기록용', diaries);
 

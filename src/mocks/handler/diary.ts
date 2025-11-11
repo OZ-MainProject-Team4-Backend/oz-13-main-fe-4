@@ -75,22 +75,16 @@ export const diaryHandlers = [
   }),
 
   // 일기 상세 조회
-  // http.get('/api/diary/:id', ({ params, request }) => {
-  //   const token = request.headers.get('Authorization');
+  http.get('/api/diary/:id', ({ params }) => {
+    const { id } = params;
+    const diary = mockDiaries.find((d) => d.id === Number(id));
 
-  //   if (!token) {
-  //     return HttpResponse.json({ error: '토큰 필요' }, { status: 401 });
-  //   }
+    if (!diary) {
+      return HttpResponse.json({ error: '존재하지 않습니다' }, { status: 404 });
+    }
 
-  //   const { id } = params;
-  //   const diary = mockDiaries.find((d) => d.id === Number(id));
-
-  //   if (!diary) {
-  //     return HttpResponse.json({ error: '존재하지 않습니다' }, { status: 404 });
-  //   }
-
-  //   return HttpResponse.json(diary, { status: 200 });
-  // }),
+    return HttpResponse.json(diary, { status: 200 });
+  }),
 
   // 일기 수정
   // http.patch('/api/diary/:id', async ({ params, request }) => {
