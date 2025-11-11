@@ -45,8 +45,8 @@ export default [
       'no-duplicate-imports': 'error',
       semi: ['error', 'always'],
       indent: ['error', 2],
-      'no-console': 'warn',
       'no-debugger': 'error',
+      'import/prefer-default-export': 'off',
 
       // TypeScript 규칙
       '@typescript-eslint/no-explicit-any': 'warn',
