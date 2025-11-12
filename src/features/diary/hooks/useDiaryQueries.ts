@@ -27,7 +27,7 @@ export const useCreateDiary = () => {
 // 캘린더용 일기 조회
 export const useDiariesForCalendar = (year: number, month: number) => {
   const { data, isLoading, error } = useQuery<DiaryData[], Error>({
-    queryKey: ['diary', year, month],
+    queryKey: ['diary', 'calendar', year, month],
     queryFn: () => getDiariesForCalendar(year, month),
     enabled: year !== undefined && month !== undefined,
   });
@@ -38,9 +38,10 @@ export const useDiariesForCalendar = (year: number, month: number) => {
 // 일기 상세 조회
 export const useDiaryDetail = (id?: number) => {
   return useQuery<DiaryData, Error>({
-    queryKey: ['diary', id],
+    queryKey: ['diary', 'detail', id],
     queryFn: () => getDiaryForDetail(id!),
     enabled: id !== undefined,
+    staleTime: 5 * 60 * 1000, // 5분간 캐시 유지
   });
 };
 
@@ -52,8 +53,16 @@ export const useEditDiary = () => {
     mutationFn: ({ id, diary, image }: { id: number; diary: DiaryData; image: File | null }) =>
       patchDiaryApi(diary, id, image),
     onSuccess: (updatedDiary: DiaryData) => {
-      queryClient.invalidateQueries({ queryKey: ['diary', updatedDiary.id] });
-      queryClient.invalidateQueries({ queryKey: ['diaries'] });
+      console.log('일기 수정 성공 : ', updatedDiary);
+
+      // calendar 데이터를 optimistic update
+      queryClient.setQueriesData<DiaryData[]>({ queryKey: ['diary', 'calendar'] }, (oldData) => {
+        if (!oldData) return oldData;
+        return oldData.map((diary) => (diary.id === updatedDiary.id ? updatedDiary : diary));
+      });
+
+      // detail은 서버에서 정확한 데이터 다시 조회
+      queryClient.invalidateQueries({ queryKey: ['diary', 'detail', updatedDiary.id] });
     },
     onError: (error: Error) => {
       console.log('일기 수정 실패 : ', error.message);
