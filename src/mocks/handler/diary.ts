@@ -140,23 +140,22 @@ export const diaryHandlers = [
   }),
 
   // 일기 삭제
-  //   http.delete('/api/diary/:id', ({ params, request }) => {
-  //     const token = request.headers.get('Authorization');
+  http.delete('/api/diary/:id', ({ params, request }) => {
+    const token = request.headers.get('Authorization');
 
-  //     if (!token) {
-  //       return HttpResponse.json({ error: '토큰 필요' }, { status: 401 });
-  //     }
+    if (!token) {
+      return HttpResponse.json({ error: '토큰 필요' }, { status: 401 });
+    }
 
-  //     const { id } = params;
-  //     const diaryIndex = mockDiaries.findIndex((d) => d.id === Number(id));
+    const { id } = params;
+    const diaryIndex = mockDiaries.findIndex((d) => d.id === Number(id));
 
-  //     if (diaryIndex === -1) {
-  //       return HttpResponse.json({ error: '삭제 실패' }, { status: 400 });
-  //     }
+    if (diaryIndex === -1) {
+      return HttpResponse.json({ error: '삭제 실패' }, { status: 400 });
+    }
 
-  //     // Soft Delete 구현
-  //     mockDiaries.splice(diaryIndex, 1);
+    mockDiaries.splice(diaryIndex, 1);
 
-  //     return new HttpResponse(null, { status: 204 });
-  //   }),
+    return new HttpResponse(null, { status: 204 });
+  }),
 ];

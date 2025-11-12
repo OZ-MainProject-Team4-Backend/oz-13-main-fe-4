@@ -39,6 +39,7 @@ const DiaryCalendar = () => {
   // 기존 일기 보기
   const handleViewDiary = (diaryDetail: DiaryData) => {
     setSelectedDiaryId(diaryDetail.id);
+    setSelectedDiary(undefined);
     setMode('view');
     setIsModalOpen(true);
   };
@@ -46,6 +47,7 @@ const DiaryCalendar = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedDiary(undefined);
+    setSelectedDiaryId(undefined);
     setSelectedDate(null);
   };
 
@@ -61,10 +63,6 @@ const DiaryCalendar = () => {
       // edit → view
       setMode('view');
     }
-  };
-
-  const deleteDiary = (id: number) => {
-    // deleteDiary구현할 예정
   };
 
   useEffect(() => {
@@ -159,7 +157,6 @@ const DiaryCalendar = () => {
         mode={mode}
         selectedDiary={selectedDiary}
         onModalChange={handleModeChange}
-        deleteDiary={deleteDiary}
       />
     </>
   );

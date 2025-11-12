@@ -17,7 +17,7 @@ export interface DairyCalendar {
   title: string;
 }
 
-export let mockDiaries: DiaryData[] = [
+export const mockDiaries: DiaryData[] = [
   {
     id: 14,
     date: '2025년 11월 07일',
@@ -29,7 +29,7 @@ export let mockDiaries: DiaryData[] = [
   },
 ];
 
-export let mockDiariesforCalendar: DairyCalendar[] = mockDiaries.map((d) => ({
+export const mockDiariesforCalendar: DairyCalendar[] = mockDiaries.map((d) => ({
   id: d.id,
   date: d.date,
   title: d.title,

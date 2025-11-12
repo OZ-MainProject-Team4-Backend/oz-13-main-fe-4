@@ -8,7 +8,7 @@ import DeleteConfirmModal from '../../../components/Modal/DeleteConfirmModal';
 import { useEffect, useState } from 'react';
 import { getFormattedDate } from '../utils/calendar';
 import { EMOTIONS } from '../constants/emotions';
-import { useCreateDiary, useEditDiary } from '../hooks/useDiaryQueries';
+import { useCreateDiary, useDeleteDiary, useEditDiary } from '../hooks/useDiaryQueries';
 
 const DiaryModal = ({
   isOpen,
@@ -18,7 +18,6 @@ const DiaryModal = ({
   mode,
   selectedDiary,
   onModalChange,
-  deleteDiary,
 }: DiaryModalProps) => {
   const [diary, setDiary] = useState<DiaryData>({
     id: Date.now(),
@@ -40,7 +39,8 @@ const DiaryModal = ({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const createDiary = useCreateDiary();
   const editDiary = useEditDiary();
-  const isLoading = createDiary.isPending || editDiary.isPending;
+  const deleteDiary = useDeleteDiary();
+  const isLoading = createDiary.isPending || editDiary.isPending || deleteDiary.isPending;
   // const { location, fetchLocation } = useCurrentLocation();
 
   // const BASE_URL = 'https://openweathermap.org/img/wn';
@@ -180,28 +180,14 @@ const DiaryModal = ({
 
   // 삭제 확인: 실제 삭제 수행
   const handleConfirmDelete = () => {
-    console.log(`${diary.id}번 일기 삭제`);
-    if (deleteDiary) deleteDiary(diary.id);
+    if (!diary.id) return;
 
-    setDiary({
-      id: Date.now(),
-      date: getFormattedDate(selectedDate),
-      title: '',
-      emotion: 'happy',
-      notes: '',
-      weather: {
-        condition: 'cloudy',
-        temperature: 18,
-        icon: 0,
+    deleteDiary.mutate(diary.id, {
+      onSuccess: () => {
+        setIsDeleteModalOpen(false);
+        onClose();
       },
-      image_url: null,
     });
-
-    setPreview(null);
-    setImage(null);
-
-    setIsDeleteModalOpen(false);
-    onClose();
   };
 
   // 삭제 취소
@@ -249,6 +235,7 @@ const DiaryModal = ({
         isOpen={isDeleteModalOpen}
         onClose={handleCancelDelete}
         onConfirm={handleConfirmDelete}
+        isLoading={deleteDiary.isPending}
       />
     </>
   );

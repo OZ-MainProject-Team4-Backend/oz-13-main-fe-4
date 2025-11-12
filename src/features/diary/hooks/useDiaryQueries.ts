@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  deleteDiaryApi,
   getDiariesForCalendar,
   getDiaryForDetail,
   patchDiaryApi,
@@ -53,9 +54,7 @@ export const useEditDiary = () => {
     mutationFn: ({ id, diary, image }: { id: number; diary: DiaryData; image: File | null }) =>
       patchDiaryApi(diary, id, image),
     onSuccess: (updatedDiary: DiaryData) => {
-      console.log('일기 수정 성공 : ', updatedDiary);
-
-      // calendar 데이터를 optimistic update
+      // calendar 데이터 즉시 업데이트 -> 네트워크 요청 없음
       queryClient.setQueriesData<DiaryData[]>({ queryKey: ['diary', 'calendar'] }, (oldData) => {
         if (!oldData) return oldData;
         return oldData.map((diary) => (diary.id === updatedDiary.id ? updatedDiary : diary));
@@ -66,6 +65,29 @@ export const useEditDiary = () => {
     },
     onError: (error: Error) => {
       console.log('일기 수정 실패 : ', error.message);
+    },
+  });
+};
+
+// 일기 삭제
+export const useDeleteDiary = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => deleteDiaryApi(id),
+    onSuccess: (id) => {
+      console.log('일기 삭제 성공 : ', id);
+
+      // calendar 데이터에서 삭제된 일기 제거
+      queryClient.setQueriesData<DiaryData[]>({ queryKey: ['diary', 'calendar'] }, (oldData) => {
+        if (!oldData) return oldData;
+        return oldData.filter((diary) => diary.id !== id);
+      });
+
+      // detail 캐시 제거
+      queryClient.removeQueries({ queryKey: ['diary', 'detail', id] });
+    },
+    onError: (error: Error) => {
+      console.log('일기 삭제 실패 : ', error.message);
     },
   });
 };

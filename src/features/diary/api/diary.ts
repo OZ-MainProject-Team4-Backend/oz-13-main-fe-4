@@ -78,3 +78,21 @@ export const patchDiaryApi = async (diary: DiaryData, id: number, image: File | 
 
   return res.json();
 };
+
+export const deleteDiaryApi = async (id: number) => {
+  const res = await fetch(`/api/diary/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.error || '일기 삭제 실패');
+  }
+
+  if (res.status === 204) {
+    return id;
+  }
+
+  return res.json();
+};
