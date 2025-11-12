@@ -21,12 +21,14 @@ export const useAuthStore = create<AuthState>()(
       //초기 전역 상태
       user: null,
       access: null,
+      isAutoLogin: false,
 
       //로그인시 호출
-      setAuth: (user, accesstoken) => {
+      setAuth: (user, accesstoken, isAutoLogin) => {
         set({
           user,
           access: accesstoken,
+          isAutoLogin,
         });
         // 인터셉터와 동기화를 위해 localStorage에도 직접 저장
         localStorage.setItem('jwt', accesstoken);
