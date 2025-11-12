@@ -6,7 +6,8 @@ import { User } from '../types/auth';
 type AuthState = {
   user: User | null; //유저 정보
   access: string | null; //액세스 토큰
-  setAuth: (user: User, accesstoken: string) => void; // 로그인 시 user, tokens 저장
+  isAutoLogin: boolean; //자동 로그인 여부
+  setAuth: (user: User, accesstoken: string, isAutoLogin: boolean) => void; // 로그인 시 user, tokens, 자동로그인 여부 저장
   setAccessToken: (accesstoken: string) => void; //새로 발급받은 액세스토큰 업데이트
   clearAuth: () => void; //로그아웃 시 호출
   getAccessToken: () => string | null; //액세스 토큰 반환
