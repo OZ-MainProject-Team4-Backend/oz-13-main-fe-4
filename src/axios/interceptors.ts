@@ -1,7 +1,7 @@
-import axios from 'axios';
+import { instance } from './instance';
 
-//- 요청인터셉터(전역에서 동작)
-axios.interceptors.request.use((config) => {
+//- 요청인터셉터(우리가 생성한 instance기반으로 동작)
+instance.interceptors.request.use((config) => {
   // localStorage에서 JWT 토큰을 가져옴
   const token = localStorage.getItem('jwt');
 
