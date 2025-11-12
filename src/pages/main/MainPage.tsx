@@ -1,3 +1,4 @@
+import { AIRecommendation } from './components/AIRecommendation';
 import { CurrentWeather } from './components/CurrentWeather';
 import { HourlyWeather } from './components/HourlyWeather';
 import { TodayOutfitRecommendation } from './components/TodayOutfitRecommendation';
@@ -25,7 +26,7 @@ export const Mainpage = () => {
 
         <HourlyWeather />
 
-        <FullWidthCard>AI 추천 문구</FullWidthCard>
+        <AIRecommendation temperature={15} condition={'clear'} location={'seoul'} />
 
         <RecommendCard>즐겨 찾는 지역</RecommendCard>
 
