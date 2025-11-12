@@ -1,7 +1,6 @@
+import axios from 'axios';
 import { DiaryData } from '../types/types';
-
-// const baseUrl = import.meta.env.VITE_API_BASE_URL;
-const accessToken = 'test-token';
+import { diaryInstance } from '../../../axios/instance';
 
 export const postDiaryApi = async (diary: DiaryData, image: File | null) => {
   const formData = new FormData();
@@ -15,47 +14,25 @@ export const postDiaryApi = async (diary: DiaryData, image: File | null) => {
     formData.append('image_url', image);
   }
 
-  const res = await fetch(`http://localhost:5173/api/diary`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${accessToken}` },
-    body: formData,
-  });
-
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error || '일기 작성 실패');
-  }
-  return res.json();
+  const { data } = await diaryInstance.post('/diary', formData);
+  return data;
 };
 
 export const getDiariesForCalendar = async (year: number, month: number): Promise<DiaryData[]> => {
   console.log('getDiariesForCalendar 실행됨', year, month);
 
-  const res = await fetch(`http://localhost:5173/api/diary?year=${year}&month=${month}`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
+  // JavaScript Date는 month를 0~11로 사용하지만, 서버는 1~12를 받음
+  const { data } = await diaryInstance.get<DiaryData[]>('/diary', {
+    params: { year, month: month + 1 },
   });
 
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error || '일기 목록 조회 실패');
-  }
-
-  const data = await res.json();
   console.log('서버 응답 데이터 : ', data);
   return data;
 };
 
 export const getDiaryForDetail = async (id: number) => {
-  const res = await fetch(`/api/diary/${id}`, {
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
-
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error || '일기 목록 조회 실패');
-  }
-
-  return res.json();
+  const { data } = await diaryInstance.get<DiaryData>(`/diary/${id}`);
+  return data;
 };
 
 export const patchDiaryApi = async (diary: DiaryData, id: number, image: File | null) => {
@@ -68,31 +45,16 @@ export const patchDiaryApi = async (diary: DiaryData, id: number, image: File | 
     formData.append('image_url', image);
   }
 
-  const res = await fetch(`/api/diary/${id}`, {
-    method: 'PATCH',
-    headers: { Authorization: `Bearer ${accessToken}` },
-    body: formData,
-  });
-
-  if (!res.ok) throw new Error('수정 실패');
-
-  return res.json();
+  const { data } = await diaryInstance.patch<DiaryData>(`/diary/${id}`, formData);
+  return data;
 };
 
 export const deleteDiaryApi = async (id: number) => {
-  const res = await fetch(`/api/diary/${id}`, {
-    method: 'DELETE',
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
+  const response = await diaryInstance.delete(`/diary/${id}`);
 
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.error || '일기 삭제 실패');
-  }
-
-  if (res.status === 204) {
+  if (response.status === 204) {
     return id;
   }
 
-  return res.json();
+  return response.data;
 };
