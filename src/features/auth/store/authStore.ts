@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { createJSONStorage, persist, StateStorage } from 'zustand/middleware';
 import { User } from '../types/auth';
 
 //- JWT 인증 상태 관리
@@ -13,7 +13,36 @@ type AuthState = {
   getAccessToken: () => string | null; //액세스 토큰 반환
 };
 
-//- Zustand 스토어
+//- Zustand 동적 스토어(StateStorage미들웨어?!)
+const dynamicStorage: StateStorage = {
+  getItem: (name: string) => {
+    // 두 저장소 모두 확인 (우선순위: localStorage -> sessionStorage)
+    const localValue = localStorage.getItem(name);
+    const sessionValue = sessionStorage.getItem(name);
+    return localValue || sessionValue;
+  },
+  setItem: (name: string, value: string) => {
+    try {
+      const state = JSON.parse(value);
+      // isAutoLogin 값에 따라 저장소 선택
+      if (state.state?.isAutoLogin) {
+        localStorage.setItem(name, value);
+        sessionStorage.removeItem(name);
+      } else {
+        sessionStorage.setItem(name, value);
+        localStorage.removeItem(name);
+      }
+    } catch (error) {
+      // JSON 파싱 실패 시 기본적으로 sessionStorage 사용
+      sessionStorage.setItem(name, value);
+    }
+  },
+  removeItem: (name: string) => {
+    localStorage.removeItem(name);
+    sessionStorage.removeItem(name);
+  },
+};
+//- Zustand 기본 스토어
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -67,7 +96,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'auth-storage',
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => dynamicStorage),
     }
   )
 );
