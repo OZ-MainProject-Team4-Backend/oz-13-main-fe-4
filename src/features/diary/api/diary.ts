@@ -1,6 +1,7 @@
 import { DiaryData } from '../types/types';
 
 // const baseUrl = import.meta.env.VITE_API_BASE_URL;
+const accessToken = 'test-token';
 
 export const postDiaryApi = async (diary: DiaryData, image: File | null) => {
   const formData = new FormData();
@@ -16,7 +17,7 @@ export const postDiaryApi = async (diary: DiaryData, image: File | null) => {
 
   const res = await fetch(`http://localhost:5173/api/diary`, {
     method: 'POST',
-    credentials: 'include',
+    headers: { Authorization: `Bearer ${accessToken}` },
     body: formData,
   });
 
@@ -31,7 +32,7 @@ export const getDiariesForCalendar = async (year: number, month: number): Promis
   console.log('getDiariesForCalendar 실행됨', year, month);
 
   const res = await fetch(`http://localhost:5173/api/diary?year=${year}&month=${month}`, {
-    credentials: 'include',
+    headers: { Authorization: `Bearer ${accessToken}` },
   });
 
   if (!res.ok) {
@@ -45,7 +46,9 @@ export const getDiariesForCalendar = async (year: number, month: number): Promis
 };
 
 export const getDiaryForDetail = async (id: number) => {
-  const res = await fetch(`/api/diary/${id}`);
+  const res = await fetch(`/api/diary/${id}`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
 
   if (!res.ok) {
     const error = await res.json();
@@ -67,7 +70,7 @@ export const patchDiaryApi = async (diary: DiaryData, id: number, image: File | 
 
   const res = await fetch(`/api/diary/${id}`, {
     method: 'PATCH',
-    credentials: 'include',
+    headers: { Authorization: `Bearer ${accessToken}` },
     body: formData,
   });
 
