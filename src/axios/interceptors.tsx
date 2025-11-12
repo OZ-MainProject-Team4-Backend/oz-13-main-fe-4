@@ -1,4 +1,5 @@
 import { refreshToken } from '../features/auth/api/auth';
+import { useAuthStore } from '../features/auth/store/authStore';
 import { instance } from './instance';
 
 // 토큰 갱신 중인지 확인하는 플래그 (무한 루프 방지)
@@ -48,7 +49,7 @@ instance.interceptors.response.use(
       // refresh API 자체가 실패한 경우 무한 루프 방지
       if (originalRequest.url?.includes('/api/auth/refresh')) {
         // Refresh Token이 만료됨 - 로그인 페이지로 리다이렉션
-        localStorage.removeItem('jwt');
+        useAuthStore.getState().clearAuth(); // Zustand store 클리어 (localStorage도 자동 클리어)
         window.location.href = '/login';
         return Promise.reject(error);
       }
@@ -80,8 +81,8 @@ instance.interceptors.response.use(
           throw new Error('Access token not found in response');
         }
 
-        // 새로 발급받은 JWT access 토큰을 localStorage에 저장
-        localStorage.setItem('jwt', newAccessToken);
+        // 새로 발급받은 JWT access 토큰을 Zustand store에 저장 (localStorage도 자동 동기화)
+        useAuthStore.getState().setAccessToken(newAccessToken);
 
         // 원래 요청의 Authorization 헤더를 새 토큰으로 갱신
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
@@ -94,7 +95,7 @@ instance.interceptors.response.use(
       } catch (refreshError) {
         // Refresh Token이 만료되었거나, 발급 실패 시
         processQueue(refreshError, null);
-        localStorage.removeItem('jwt');
+        useAuthStore.getState().clearAuth(); // Zustand store 클리어 (localStorage도 자동 클리어)
         window.location.href = '/login';
         return Promise.reject(refreshError);
       } finally {
