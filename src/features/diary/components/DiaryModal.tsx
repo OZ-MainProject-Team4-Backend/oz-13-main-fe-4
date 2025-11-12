@@ -36,11 +36,11 @@ const DiaryModal = ({
 
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<DiaryError>({});
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const createDiary = useCreateDiary();
   const editDiary = useEditDiary();
+  const isLoading = createDiary.isPending || editDiary.isPending;
   // const { location, fetchLocation } = useCurrentLocation();
 
   // const BASE_URL = 'https://openweathermap.org/img/wn';
@@ -147,18 +147,12 @@ const DiaryModal = ({
       return;
     }
 
-    setIsLoading(true);
-
     if (mode === 'create') {
       createDiary.mutate(
         { diary, image },
         {
           onSuccess: () => {
-            setIsLoading(false);
             onClose();
-          },
-          onError: () => {
-            setIsLoading(false);
           },
         }
       );
@@ -171,12 +165,8 @@ const DiaryModal = ({
         },
         {
           onSuccess: () => {
-            setIsLoading(false);
             onModalChange();
             onClose();
-          },
-          onError: () => {
-            setIsLoading(false);
           },
         }
       );
