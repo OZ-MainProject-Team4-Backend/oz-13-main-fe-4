@@ -6,7 +6,7 @@ import DiaryModalActions from './DiaryModalActions';
 import DiaryModalFields from './DiaryModalFields';
 import DeleteConfirmModal from '../../../components/Modal/DeleteConfirmModal';
 import { useEffect, useState } from 'react';
-import { getISODate, formatDateForDisplay } from '../utils/calendar';
+import { getISODate } from '../utils/calendar';
 import { EMOTIONS } from '../constants/emotions';
 import { useCreateDiary, useDeleteDiary, useEditDiary } from '../hooks/useDiaryQueries';
 
@@ -20,7 +20,7 @@ const DiaryModal = ({
   onModalChange,
 }: DiaryModalProps) => {
   const [diary, setDiary] = useState<DiaryData>({
-    id: Date.now(),
+    // id는 서버에서 생성하므로 초기값 없음
     date: getISODate(selectedDate), // ISO 형식으로 DB에 저장
     title: '',
     emotion: 'happy',
@@ -56,7 +56,6 @@ const DiaryModal = ({
     } else if (mode === 'create') {
       // create
       setDiary({
-        id: Date.now(),
         date: getISODate(selectedDate),
         title: '',
         emotion: 'happy',
@@ -156,7 +155,7 @@ const DiaryModal = ({
           },
         }
       );
-    } else if (mode === 'edit' && selectedDiary) {
+    } else if (mode === 'edit' && selectedDiary && selectedDiary.id) {
       editDiary.mutate(
         {
           id: selectedDiary.id,

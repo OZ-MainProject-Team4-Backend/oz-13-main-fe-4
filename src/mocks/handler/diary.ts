@@ -56,10 +56,7 @@ export const diaryHandlers = [
         title: newDiary.title,
       });
 
-      return HttpResponse.json(
-        { diary_id: newDiary.id, message: '일기 작성 완료', mockDiaries },
-        { status: 201 }
-      );
+      return HttpResponse.json({ diary_id: newDiary.id }, { status: 201 });
     } catch (error) {
       return HttpResponse.json({ error: '작성 실패' }, { status: 400 });
     }

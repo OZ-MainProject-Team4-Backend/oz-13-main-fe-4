@@ -3,7 +3,7 @@ export interface DiaryCalendarProps {
 }
 
 export interface DiaryData {
-  id: number;
+  id?: number; // 서버에서 생성되므로 optional
   date: string;
   title: string;
   emotion: Emotion;

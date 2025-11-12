@@ -15,8 +15,28 @@ export const useCreateDiary = () => {
   return useMutation({
     mutationFn: ({ diary, image }: { diary: DiaryData; image: File | null }) =>
       postDiaryApi(diary, image),
-    onSuccess: (data) => {
-      console.log('일기 작성 성공 : ', data);
+    onSuccess: (response, variables) => {
+      console.log('일기 작성 성공 : ', response);
+
+      const diaryId = response.diary_id || response.id;
+
+      queryClient.setQueriesData<DiaryData[]>({ queryKey: ['diary', 'calendar'] }, (oldData) => {
+        if (!oldData) return oldData;
+
+        const newDiary: DiaryData = {
+          id: diaryId,
+          date: variables.diary.date,
+          title: variables.diary.title,
+          emotion: variables.diary.emotion,
+          notes: variables.diary.notes,
+          weather: variables.diary.weather,
+          image_url: null,
+        };
+
+        return [...oldData, newDiary];
+      });
+
+      // 전체 재조회 (서버에서 정확한 데이터 가져옴)
       queryClient.invalidateQueries({ queryKey: ['diary'], exact: false });
     },
     onError: (error: Error) => {
