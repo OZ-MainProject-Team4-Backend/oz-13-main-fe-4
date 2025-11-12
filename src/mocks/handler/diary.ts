@@ -1,6 +1,15 @@
 import { http, HttpResponse } from 'msw';
 import { mockDiaries, mockDiariesforCalendar } from '../data/mockDiaries';
 
+const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+};
+
 export const diaryHandlers = [
   // 일기 작성
   http.post('/api/diary', async ({ request }) => {
@@ -12,7 +21,13 @@ export const diaryHandlers = [
       const emotion = formData.get('emotion') as 'happy' | 'sad' | 'angry' | 'excited';
       const notes = formData.get('notes') as string;
       const image = formData.get('image_url') as File | null;
-      const image_url = image ? URL.createObjectURL(image) : null;
+
+      let image_url = null;
+      if (image) {
+        image_url = await fileToBase64(image);
+        console.log('base64 이미지 생성됨');
+      }
+
       if (!date || !title || !notes) {
         return HttpResponse.json({ error: '작성 실패' }, { status: 400 });
       }
@@ -87,44 +102,42 @@ export const diaryHandlers = [
   }),
 
   // 일기 수정
-  // http.patch('/api/diary/:id', async ({ params, request }) => {
-  //   const token = request.headers.get('Authorization');
+  http.patch('/api/diary/:id', async ({ params, request }) => {
+    const { id } = params;
+    const diaryIndex = mockDiaries.findIndex((d) => d.id === Number(id));
 
-  //   if (!token) {
-  //     return HttpResponse.json({ error: '토큰 필요' }, { status: 401 });
-  //   }
+    if (diaryIndex === -1) {
+      return HttpResponse.json({ error: '수정 실패' }, { status: 400 });
+    }
 
-  //   const { id } = params;
-  //   const diaryIndex = mockDiaries.findIndex((d) => d.id === Number(id));
+    try {
+      const formData = await request.formData();
 
-  //   if (diaryIndex === -1) {
-  //     return HttpResponse.json({ error: '수정 실패' }, { status: 400 });
-  //   }
+      const title = formData.get('title') as string | null;
+      const notes = formData.get('notes') as string | null;
+      const emotion = formData.get('emotion') as string | null;
+      const image = formData.get('image_url') as File | null;
+      const image_url = image ? URL.createObjectURL(image) : null;
 
-  //   try {
-  //     const formData = await request.formData();
+      // 기존 값에 새 값 덮어쓰기
+      const updatedDiary = {
+        ...mockDiaries[diaryIndex],
+        title: title ?? mockDiaries[diaryIndex].title,
+        ...(emotion &&
+          ['happy', 'sad', 'angry', 'excited'].includes(emotion as string) && {
+            emotion: emotion as 'happy' | 'sad' | 'angry' | 'excited',
+          }),
+        notes: notes ?? mockDiaries[diaryIndex].notes,
+        image_url: image_url ?? mockDiaries[diaryIndex].image_url,
+      };
 
-  //     const title = formData.get('title') as string | null;
-  //     const notes = formData.get('notes') as string | null;
-  //     const emotion = formData.get('emotion');
-  //     const image_url = formData.get('image_url') as string | null;
+      mockDiaries[diaryIndex] = updatedDiary;
 
-  //     // 기존 값에 새 값 덮어쓰기
-  //     const updatedDiary = {
-  //       ...mockDiaries[diaryIndex],
-  //       ...(title && { title }),
-  //       ...(emotion !== null && emotion !== undefined && { emotion: Number(emotion) }),
-  //       ...(notes && { notes }),
-  //       ...(image_url && { image_url }),
-  //     };
-
-  //     mockDiaries[diaryIndex] = updatedDiary;
-
-  //     return HttpResponse.json(updatedDiary, { status: 200 });
-  //   } catch (error) {
-  //     return HttpResponse.json({ error: '수정 실패' }, { status: 400 });
-  //   }
-  // }),
+      return HttpResponse.json(updatedDiary, { status: 200 });
+    } catch (error) {
+      return HttpResponse.json({ error: '수정 실패' }, { status: 400 });
+    }
+  }),
 
   // 일기 삭제
   //   http.delete('/api/diary/:id', ({ params, request }) => {

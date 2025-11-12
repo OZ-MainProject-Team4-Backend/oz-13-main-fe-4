@@ -54,3 +54,24 @@ export const getDiaryForDetail = async (id: number) => {
 
   return res.json();
 };
+
+export const patchDiaryApi = async (diary: DiaryData, id: number, image: File | null) => {
+  const formData = new FormData();
+  formData.append('title', diary.title);
+  formData.append('notes', diary.notes);
+  formData.append('emotion', diary.emotion);
+
+  if (image) {
+    formData.append('image_url', image);
+  }
+
+  const res = await fetch(`/api/diary/${id}`, {
+    method: 'PATCH',
+    credentials: 'include',
+    body: formData,
+  });
+
+  if (!res.ok) throw new Error('수정 실패');
+
+  return res.json();
+};

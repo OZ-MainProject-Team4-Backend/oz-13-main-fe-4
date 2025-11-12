@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getDiariesForCalendar, getDiaryForDetail, postDiaryApi } from '../api/diary';
+import {
+  getDiariesForCalendar,
+  getDiaryForDetail,
+  patchDiaryApi,
+  postDiaryApi,
+} from '../api/diary';
 import { DiaryData } from '../types/types';
 
 // 일기 생성
@@ -15,7 +20,6 @@ export const useCreateDiary = () => {
     },
     onError: (error: Error) => {
       console.log('일기 작성 실패 : ', error.message);
-      alert(error.message);
     },
   });
 };
@@ -37,5 +41,22 @@ export const useDiaryDetail = (id?: number) => {
     queryKey: ['diary', id],
     queryFn: () => getDiaryForDetail(id!),
     enabled: id !== undefined,
+  });
+};
+
+// 일기 수정
+export const useEditDiary = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, diary, image }: { id: number; diary: DiaryData; image: File | null }) =>
+      patchDiaryApi(diary, id, image),
+    onSuccess: (updatedDiary: DiaryData) => {
+      queryClient.invalidateQueries({ queryKey: ['diary', updatedDiary.id] });
+      queryClient.invalidateQueries({ queryKey: ['diaries'] });
+    },
+    onError: (error: Error) => {
+      console.log('일기 수정 실패 : ', error.message);
+    },
   });
 };

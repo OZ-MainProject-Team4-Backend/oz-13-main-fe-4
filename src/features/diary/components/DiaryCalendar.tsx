@@ -53,9 +53,14 @@ const DiaryCalendar = () => {
     handleCloseModal();
   };
 
-  // view -> edit
   const handleModeChange = () => {
-    setMode('edit');
+    if (mode === 'view') {
+      // view → edit
+      setMode('edit');
+    } else if (mode === 'edit') {
+      // edit → view
+      setMode('view');
+    }
   };
 
   const deleteDiary = (id: number) => {
@@ -69,6 +74,7 @@ const DiaryCalendar = () => {
   }, [diaryDetail]);
 
   console.log('다이어리 기록용', diaries);
+  console.log('상세보기', diaryDetail);
 
   return (
     <>

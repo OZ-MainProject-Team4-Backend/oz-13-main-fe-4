@@ -8,7 +8,7 @@ import DeleteConfirmModal from '../../../components/Modal/DeleteConfirmModal';
 import { useEffect, useState } from 'react';
 import { getFormattedDate } from '../utils/calendar';
 import { EMOTIONS } from '../constants/emotions';
-import { useCreateDiary } from '../hooks/useDiaryQueries';
+import { useCreateDiary, useEditDiary } from '../hooks/useDiaryQueries';
 
 const DiaryModal = ({
   isOpen,
@@ -40,6 +40,7 @@ const DiaryModal = ({
   const [errors, setErrors] = useState<DiaryError>({});
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const createDiary = useCreateDiary();
+  const editDiary = useEditDiary();
   // const { location, fetchLocation } = useCurrentLocation();
 
   // const BASE_URL = 'https://openweathermap.org/img/wn';
@@ -47,18 +48,13 @@ const DiaryModal = ({
 
   // 모드별 초기화
   useEffect(() => {
-    if (mode === 'view' && selectedDiary) {
-      // view 모드
-      setDiary(selectedDiary);
-      setPreview(selectedDiary.image_url || null);
-      setImage(null);
-    } else if (mode === 'edit' && selectedDiary) {
-      // 수정 모드
+    // view , edit
+    if ((mode === 'view' || mode === 'edit') && selectedDiary) {
       setDiary(selectedDiary);
       setPreview(selectedDiary.image_url || null);
       setImage(null);
     } else if (mode === 'create') {
-      // 작성 모드
+      // create
       setDiary({
         id: Date.now(),
         date: getFormattedDate(selectedDate),
@@ -153,18 +149,38 @@ const DiaryModal = ({
 
     setIsLoading(true);
 
-    createDiary.mutate(
-      { diary, image },
-      {
-        onSuccess: () => {
-          setIsLoading(false);
-          onClose();
+    if (mode === 'create') {
+      createDiary.mutate(
+        { diary, image },
+        {
+          onSuccess: () => {
+            setIsLoading(false);
+            onClose();
+          },
+          onError: () => {
+            setIsLoading(false);
+          },
+        }
+      );
+    } else if (mode === 'edit' && selectedDiary) {
+      editDiary.mutate(
+        {
+          id: selectedDiary.id,
+          diary,
+          image,
         },
-        onError: () => {
-          setIsLoading(false);
-        },
-      }
-    );
+        {
+          onSuccess: () => {
+            setIsLoading(false);
+            onModalChange();
+            onClose();
+          },
+          onError: () => {
+            setIsLoading(false);
+          },
+        }
+      );
+    }
   };
 
   // 삭제 버튼: 삭제 확인 모달 열기
