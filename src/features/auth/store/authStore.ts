@@ -1,23 +1,19 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import { Tokens, User } from '../types/auth';
+import { createJSONStorage, persist } from 'zustand/middleware';
+import { User } from '../types/auth';
 
-//- JWT 인증 상태 관리 (자동 로그인 기능 없음)
+//- JWT 인증 상태 관리
 type AuthState = {
   user: User | null; //유저 정보
   access: string | null; //액세스 토큰
-  setAuth: (user: User, token: Tokens) => void; // 로그인 시 user, tokens 저장
-  setAccessToken: (token: string) => void; //새로 발급받은 액세스토큰 업데이트
+  setAuth: (user: User, accesstoken: string) => void; // 로그인 시 user, tokens 저장
+  setAccessToken: (accesstoken: string) => void; //새로 발급받은 액세스토큰 업데이트
   clearAuth: () => void; //로그아웃 시 호출
   getAccessToken: () => string | null; //액세스 토큰 반환
 };
 
-//- Zustand 스토어 (sessionStorage에 저장)
-/* 동작 방식:
-- 새로고침: ✅ 로그인 유지 (같은 탭)
-- 새 탭: ❌ 로그아웃 (새 세션)
-- 브라우저 닫고 재접속: ❌ 로그아웃
-*/
+//- Zustand 스토어
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
@@ -26,31 +22,40 @@ export const useAuthStore = create<AuthState>()(
       access: null,
 
       //로그인시 호출
-      setAuth: (user, tokens) =>
+      setAuth: (user, accesstoken) => {
         set({
           user,
-          access: tokens.access,
-        }),
+          access: accesstoken,
+        });
+        // 인터셉터와 동기화를 위해 localStorage에도 직접 저장
+        localStorage.setItem('jwt', accesstoken);
+      },
 
       //액세스 토큰 갱신 시 사용됨
-      setAccessToken: (token) =>
+      setAccessToken: (accesstoken) => {
         set({
-          access: token,
-        }),
+          access: accesstoken,
+        });
+        // 인터셉터와 동기화를 위해 localStorage에도 직접 저장
+        localStorage.setItem('jwt', accesstoken);
+      },
 
       // 액세스 토큰 반환
       getAccessToken: () => get().access,
 
       //로그아웃시 토큰클리어
-      clearAuth: () =>
+      clearAuth: () => {
         set({
           user: null,
           access: null,
-        }),
+        });
+        // localStorage의 jwt 키도 함께 제거
+        localStorage.removeItem('jwt');
+      },
     }),
     {
       name: 'auth-storage',
-      storage: createJSONStorage(() => sessionStorage), // sessionStorage 사용
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );
