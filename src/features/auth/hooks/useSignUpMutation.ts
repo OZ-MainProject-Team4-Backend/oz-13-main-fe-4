@@ -14,6 +14,7 @@ export const useSignUpMutation = () => {
       loginMutation.mutate({
         email: variables.email,
         password: variables.password,
+        is_auto_login: false, // 회원가입 후 자동로그인은 자동로그인 체크 안함
       });
     },
   });
