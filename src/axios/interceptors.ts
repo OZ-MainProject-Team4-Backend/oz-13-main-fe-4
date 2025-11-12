@@ -1,17 +1,15 @@
 import axios from 'axios';
+import { diaryInstance, instance } from './instance';
 
 //- 요청인터셉터(전역에서 동작)
-axios.interceptors.request.use((config) => {
-  // localStorage에서 JWT 토큰을 가져옴
-  const token = localStorage.getItem('jwt');
-
-  if (token) {
-    // 토큰이 존재하면 Authorization 헤더에 추가
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  // 수정된 요청 설정 반환
-  return config;
+[instance, diaryInstance].forEach((inst) => {
+  inst.interceptors.request.use((config) => {
+    const token = localStorage.getItem('jwt') || 'test-token';
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  });
 });
 
 //- 응답인터셉터(전역에서동작)
