@@ -20,7 +20,7 @@ export interface DairyCalendar {
 export const mockDiaries: DiaryData[] = [
   {
     id: 14,
-    date: '2025년 11월 07일',
+    date: '2025-11-07',
     title: '친구와 서울 여행',
     emotion: 'happy',
     notes: '날씨도 좋고 사진도 잘 나왔다!',

@@ -6,7 +6,7 @@ import DiaryModalActions from './DiaryModalActions';
 import DiaryModalFields from './DiaryModalFields';
 import DeleteConfirmModal from '../../../components/Modal/DeleteConfirmModal';
 import { useEffect, useState } from 'react';
-import { getFormattedDate } from '../utils/calendar';
+import { getISODate, formatDateForDisplay } from '../utils/calendar';
 import { EMOTIONS } from '../constants/emotions';
 import { useCreateDiary, useDeleteDiary, useEditDiary } from '../hooks/useDiaryQueries';
 
@@ -21,7 +21,7 @@ const DiaryModal = ({
 }: DiaryModalProps) => {
   const [diary, setDiary] = useState<DiaryData>({
     id: Date.now(),
-    date: getFormattedDate(selectedDate),
+    date: getISODate(selectedDate), // ISO 형식으로 DB에 저장
     title: '',
     emotion: 'happy',
     notes: '',
@@ -57,7 +57,7 @@ const DiaryModal = ({
       // create
       setDiary({
         id: Date.now(),
-        date: getFormattedDate(selectedDate),
+        date: getISODate(selectedDate),
         title: '',
         emotion: 'happy',
         notes: '',

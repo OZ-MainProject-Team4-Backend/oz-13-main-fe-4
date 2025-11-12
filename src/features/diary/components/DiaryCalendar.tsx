@@ -23,13 +23,13 @@ const DiaryCalendar = () => {
   const getDiaryByDate = (year: number, month: number, date: number) => {
     const padMonth = String(month + 1).padStart(2, '0');
     const padDate = String(date).padStart(2, '0');
-    const targetDate = `${year}년 ${padMonth}월 ${padDate}일`;
+    const targetDate = `${year}-${padMonth}-${padDate}`;
     return diaries.find((d) => d.date === targetDate);
   };
 
   // 일기 작성
   const handleAddDiary = (date: number) => {
-    const selected = new Date(year, month, date);
+    const selected = new Date(year, month, date); // 여기는 Month 1~12로 넘어옴
     setSelectedDate(selected);
     setMode('create');
     setSelectedDiary(undefined);

@@ -77,7 +77,7 @@ export const diaryHandlers = [
       return HttpResponse.json({ error: 'year와 month는 필수입니다' }, { status: 400 });
     }
 
-    const targetYearMonth = `${year}년 ${String(Number(month) + 1).padStart(2, '0')}월`;
+    const targetYearMonth = `${year}-${String(Number(month)).padStart(2, '0')}`; // ISO 형식
     console.log(targetYearMonth);
 
     const diaries = mockDiaries
