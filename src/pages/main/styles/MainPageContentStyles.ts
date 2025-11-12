@@ -1,4 +1,4 @@
-import { Box, Container, styled, Typography } from '@mui/material';
+import { Box, Container, IconButton, styled, Typography } from '@mui/material';
 
 // MainPage Styles--------------------------------------
 export const MainContainer = styled(Container)({
@@ -196,50 +196,37 @@ export const ClothingIconPlaceholder = styled(Box)({
   fontSize: '48px',
 });
 
-// Hourly Weather ------------------------------------------------
-export const HourlyWeatherCard = styled(Box)({
-  backgroundColor: '#ffffff',
-  borderRadius: '16px',
-  padding: '20px',
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-  gridColumn: '1 / -1',
-  minHeight: '120px',
-  overflow: 'hidden',
-});
-
-export const HourlyContainer = styled(Box)({
+export const OutfitGridContainer = styled(Box)({
   display: 'flex',
-  gap: '36px',
-  width: '100%',
-  justifyContent: 'stretch',
-});
-
-export const HourlyItem = styled(Box)({
-  backgroundColor: '#C8DDFF',
-  borderRadius: '12px',
-  height: '120px',
-  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '16px',
   flex: 1,
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '4px',
+  position: 'relative',
 });
 
-export const HourLabel = styled(Typography)({
-  fontSize: '14px',
-  fontWeight: 500,
-  color: '#333333',
+export const NavigationButton = styled(IconButton)({
+  backgroundColor: '#F5F5F5',
+  color: '#5B9EFF',
+  width: '48px',
+  height: '48px',
+  flexShrink: 0,
+  '&:hover': {
+    backgroundColor: '#E0E0E0',
+    color: '#4A8EEE',
+  },
+  '&:active': {
+    backgroundColor: '#D0D0D0',
+  },
+  '@media (max-width: 768px)': {
+    width: '36px',
+    height: '36px',
+  },
 });
 
-export const WeatherIconBox = styled(Box)({
+export const IndicatorContainer = styled(Box)({
   display: 'flex',
-  alignItems: 'center',
+  gap: '8px',
   justifyContent: 'center',
-});
-
-export const TemperatureLabel = styled(Typography)({
-  fontSize: '18px',
-  fontWeight: 600,
-  color: '#333333',
+  marginTop: '8px',
 });
