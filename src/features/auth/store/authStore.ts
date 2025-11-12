@@ -51,6 +51,7 @@ export const useAuthStore = create<AuthState>()(
         set({
           user: null,
           access: null,
+          isAutoLogin: false,
         });
         // localStorage의 jwt 키도 함께 제거
         localStorage.removeItem('jwt');
