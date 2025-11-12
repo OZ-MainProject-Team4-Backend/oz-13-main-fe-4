@@ -9,6 +9,10 @@ import Diary from './pages/diary/diary';
 
 function App() {
   return (
+    /*
+    createTheme. 으로 프리텐타드로 섷ㄹ정하기
+     */
+
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<Mainpage />} />
