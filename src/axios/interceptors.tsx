@@ -24,9 +24,7 @@ const processQueue = (error: unknown, token: string | null = null) => {
 
 //- 요청인터셉터(우리가 생성한 instance기반으로 동작)
 instance.interceptors.request.use((config) => {
-  // localStorage 또는 sessionStorage에서 JWT 토큰을 가져옴
-  // 자동 로그인 ON: localStorage, 자동 로그인 OFF: sessionStorage
-  const token = localStorage.getItem('jwt') || sessionStorage.getItem('jwt');
+  const token = useAuthStore.getState().access;
 
   if (token) {
     // 토큰이 존재하면 Authorization 헤더에 추가
