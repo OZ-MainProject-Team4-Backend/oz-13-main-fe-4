@@ -59,12 +59,14 @@ export const useAuthStore = create<AuthState>()(
           access: accesstoken,
           isAutoLogin,
         });
+        // 자동 로그인 여부에 따라 저장소 선택
         if (isAutoLogin) {
           localStorage.setItem('jwt', accesstoken);
-          sessionStorage.removeItem('jwt'); // sessionStorage에 있으면 제거
+          sessionStorage.removeItem('jwt');
+        } else {
+          sessionStorage.setItem('jwt', accesstoken);
+          localStorage.removeItem('jwt');
         }
-        sessionStorage.setItem('jwt', accesstoken);
-        localStorage.removeItem('jwt'); // sessionStorage에 있으면 제거
       },
 
       //액세스 토큰 갱신 시 사용됨
@@ -72,11 +74,13 @@ export const useAuthStore = create<AuthState>()(
         set({
           access: accesstoken,
         });
+        // 현재 isAutoLogin 상태에 따라 저장소 선택
         const currentIsAutoLogin = get().isAutoLogin;
         if (currentIsAutoLogin) {
           localStorage.setItem('jwt', accesstoken);
+        } else {
+          sessionStorage.setItem('jwt', accesstoken);
         }
-        sessionStorage.setItem('jwt', accesstoken);
       },
 
       // 액세스 토큰 반환
