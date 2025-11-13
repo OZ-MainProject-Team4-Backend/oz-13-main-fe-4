@@ -1,7 +1,10 @@
-import { Box, Icon, Typography } from '@mui/material';
-import ThumbUp from '@mui/icons-material/ThumbUp';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ThumbUp from '@mui/icons-material/ThumbUp';
+import { Box } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { outfitAPI } from '../../../features/recommendation/api/clothingAPI';
+import { parseOutfitString } from '../../../utils/clothingParser';
 import {
   NavigationButton,
   OutfitCard,
@@ -14,9 +17,6 @@ import {
   TemperatureInfo,
 } from '../styles/MainPageContentStyles';
 import { OutfitItemIcon } from './OutfitItemIcon';
-import { useEffect, useState } from 'react';
-import { outfitAPI } from '../../../features/recommendation/api/clothingAPI';
-import { parseOutfitString } from '../../../utils/clothingParser';
 
 interface TodayOutfitRecommendationProps {
   temperature: number;

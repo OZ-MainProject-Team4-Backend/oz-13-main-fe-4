@@ -1,9 +1,9 @@
 import CloudOutlinedIcon from '@mui/icons-material/CloudOutlined';
 import {
   HourLabel,
-  HourlyWeatherCard,
-  HourlyItem,
   HourlyContainer,
+  HourlyItem,
+  HourlyWeatherCard,
   TemperatureLabel,
   WeatherIconBox,
 } from '../styles/MainPageContentStyles';
