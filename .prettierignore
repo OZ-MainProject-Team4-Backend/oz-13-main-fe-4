@@ -1,0 +1,3 @@
+# .prettierignore
+src/constants/icons/clothingIcon.ts
+src/utils/weatherIcon.ts

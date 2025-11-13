@@ -1,4 +1,4 @@
-import { Box, Button, Container, styled, Typography } from '@mui/material';
+import { Box, Container, IconButton, styled, Typography } from '@mui/material';
 
 // MainPage Styles--------------------------------------
 export const MainContainer = styled(Container)({
@@ -246,22 +246,37 @@ export const HourlyItem = styled(Box)({
     width: 'auto', // 넓은 화면에서는 auto
     maxWidth: '150px',
   },
-});
-
-export const HourLabel = styled(Typography)({
-  fontSize: '14px',
-  fontWeight: 500,
-  color: '#333333',
-});
-
-export const WeatherIconBox = styled(Box)({
+export const OutfitGridContainer = styled(Box)({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  gap: '16px',
+  flex: 1,
+  position: 'relative',
 });
 
-export const TemperatureLabel = styled(Typography)({
-  fontSize: '18px',
-  fontWeight: 600,
-  color: '#333333',
+export const NavigationButton = styled(IconButton)({
+  backgroundColor: '#F5F5F5',
+  color: '#5B9EFF',
+  width: '48px',
+  height: '48px',
+  flexShrink: 0,
+  '&:hover': {
+    backgroundColor: '#E0E0E0',
+    color: '#4A8EEE',
+  },
+  '&:active': {
+    backgroundColor: '#D0D0D0',
+  },
+  '@media (max-width: 768px)': {
+    width: '36px',
+    height: '36px',
+  },
+});
+
+export const IndicatorContainer = styled(Box)({
+  display: 'flex',
+  gap: '8px',
+  justifyContent: 'center',
+  marginTop: '8px',
 });

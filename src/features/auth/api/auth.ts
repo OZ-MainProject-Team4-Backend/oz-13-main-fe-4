@@ -1,39 +1,108 @@
 // src/features/auth/api/authApi.ts
 
-import { RequestLoginDTO, RequestSignUpDTO, ResponseLoginDTO } from '../types/auth';
+import axios from 'axios';
+import { instance } from '../../../axios/instance';
+import {
+  RequestEmailSendDTO,
+  RequestEmailVerifyDTO,
+  RequestLoginDTO,
+  RequestNicknameValidateDTO,
+  RequestSignUpDTO,
+  ResponseEmailSendDTO,
+  ResponseEmailVerifyDTO,
+  ResponseLoginDTO,
+  ResponseNicknameValidateDTO,
+  ResponseRefreshToken,
+} from '../types/auth';
 
-//MSW와 통신하는 API로직
-//* (fetch 사용 )
-//! 비동기 함수 호출은 꼭 반환타입도 명시하기.
-export async function signUp(data: RequestSignUpDTO): Promise<{ message: string }> {
-  const res = await fetch('/api/auth/signup', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!res.ok) {
-    throw new Error('회원가입 실패');
+//- ==================== 닉네임 검증 ====================
+export async function validateNickname(
+  data: RequestNicknameValidateDTO
+): Promise<ResponseNicknameValidateDTO> {
+  try {
+    const res = await instance.post('/api/auth/nickname/validate', data);
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw new Error('닉네임 검증 중 오류가 발생했습니다');
   }
-
-  return res.json();
 }
 
-//! 반환타입 로그인 (토큰 + 유저 정보 받음)
-export async function logIn(data: RequestLoginDTO): Promise<ResponseLoginDTO> {
-  const res = await fetch('/api/auth/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!res.ok) {
-    throw new Error('로그인실패!');
+//- ==================== 이메일 검증 ====================
+export async function sendEmailCode(data: RequestEmailSendDTO): Promise<ResponseEmailSendDTO> {
+  try {
+    const res = await instance.post('/api/auth/email/send', data);
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw new Error('이메일 검증 오류');
   }
+}
 
-  return res.json();
+//- ==================== 이메일 코드 검증 ====================
+export async function verifyEmailCode(
+  data: RequestEmailVerifyDTO
+): Promise<ResponseEmailVerifyDTO> {
+  try {
+    const res = await instance.post('/api/auth/email/verify', data);
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw new Error('이메일 인증 코드 검증 실패');
+  }
+}
+
+//- ==================== 회원가입 ====================
+export async function signUp(data: RequestSignUpDTO): Promise<{ message: string }> {
+  try {
+    const res = await instance.post('/api/auth/signup', data);
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw new Error('회원가입 실패');
+  }
+}
+//- ==================== 로그인 ====================
+export async function logIn(data: RequestLoginDTO): Promise<ResponseLoginDTO> {
+  try {
+    const res = await instance.post('/api/auth/login', data);
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw new Error('로그인 실패');
+  }
+}
+//- ==================== 리프레쉬토큰 ====================
+export async function refreshToken(): Promise<ResponseRefreshToken> {
+  try {
+    const res = await instance.post('/api/auth/refresh');
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw new Error('리프레쉬토큰으로 액세스토큰발급 실패');
+  }
+}
+
+//- ==================== 로그아웃 ====================
+export async function logOut(): Promise<void> {
+  try {
+    await instance.post('/api/auth/logout');
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw new Error('로그아웃 실패');
+  }
 }
