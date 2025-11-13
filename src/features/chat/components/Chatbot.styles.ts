@@ -20,6 +20,9 @@ export const header = css`
   padding: 15px;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export const headerContent = css`
@@ -230,4 +233,46 @@ export const welcomeMessage = css`
   color: #64748b;
   font-size: 14px;
   line-height: 1.6;
+`;
+
+export const toggleButton = css`
+  position: fixed;
+  bottom: 5%;
+  right: 5%;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  background: #2c4a8f;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 50px;
+  box-shadow: 0 4px 12px rgba(44, 74, 143, 0.4);
+  transition: all 0.3s ease;
+  z-index: 20;
+  color: white;
+
+  &:hover {
+    background: #233b73;
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(72, 107, 188, 0.5);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+`;
+
+export const closeButton = css`
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

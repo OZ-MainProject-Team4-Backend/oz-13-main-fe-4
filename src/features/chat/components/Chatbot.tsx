@@ -1,7 +1,8 @@
 import * as styles from './Chatbot.styles';
 import { CgBot } from 'react-icons/cg';
-import { IoSend } from 'react-icons/io5';
+import { IoSend, IoClose } from 'react-icons/io5';
 import { useState, useEffect, useRef } from 'react';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 interface Message {
   id: number;
@@ -22,6 +23,7 @@ const Chatbot = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   useEffect(() => {
     // 초기 환영 메시지
@@ -86,7 +88,7 @@ const Chatbot = () => {
     }, 300);
   };
 
-  return (
+  return isChatOpen ? (
     <div css={styles.chatContainer}>
       {/* 챗봇 상단 */}
       <div css={styles.header}>
@@ -102,6 +104,9 @@ const Chatbot = () => {
             </p>
           </div>
         </div>
+        <button type='button' onClick={() => setIsChatOpen(false)} css={styles.closeButton}>
+          <IoClose />
+        </button>
       </div>
 
       {/* 메시지 영역 */}
@@ -162,6 +167,10 @@ const Chatbot = () => {
         </form>
       </div>
     </div>
+  ) : (
+    <button type='button' css={styles.toggleButton} onClick={() => setIsChatOpen(true)}>
+      <KeyboardArrowDownIcon sx={{ fontSize: 40 }} />
+    </button>
   );
 };
 
