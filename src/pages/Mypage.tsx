@@ -1,7 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import CancelIcon from '@mui/icons-material/Cancel';
 import {
+  Avatar,
   Box,
   Button,
+  Card,
+  CardHeader,
   CssBaseline,
   Divider,
   FormControl,
@@ -12,6 +16,8 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import CardActions from '@mui/material/CardActions';
+import { red } from '@mui/material/colors';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import Grid from '@mui/material/Grid';
@@ -21,7 +27,6 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { FormFieldMypage, mypageSchema } from '../features/auth/types/zodTypes';
 import AppTheme from '../styles/AppTheme';
 import { CardMui, ContainerMui } from '../styles/AuthStyle';
-
 const FormGrid = styled(Grid)(() => ({
   display: 'flex',
   flexDirection: 'column',
@@ -282,6 +287,68 @@ export default function Mypage() {
                   />
                 </FormGrid>
               </Stack>
+            </Stack>
+            <Stack>
+              <Divider>
+                <Typography
+                  variant='h6'
+                  sx={{ width: '100%', fontSize: 'clamp(1rem, 10vw, 1.15rem)' }}
+                >
+                  즐겨찾는 지역 수정
+                </Typography>
+              </Divider>
+              {/* 도전 */}
+              <Box sx={{ flexGrow: 1, p: 2 }}>
+                <Grid
+                  spacing={2}
+                  container
+                  sx={{
+                    '--Grid-borderWidth': '1px',
+                    borderColor: 'divider',
+                    '& > div': {
+                      borderColor: 'divider',
+                    },
+                  }}
+                >
+                  {[...Array(3)].map((_, index) => (
+                    <Grid
+                      key={index}
+                      size={{
+                        xs: 12,
+                        md: 4,
+                      }}
+                    >
+                      <Card>
+                        <CardHeader
+                          avatar={
+                            <Avatar sx={{ bgcolor: red[500] }} aria-label='recipe'>
+                              Icon
+                            </Avatar>
+                          }
+                          sx={{ textAlign: 'left' }}
+                          action={<CancelIcon aria-label='close' />}
+                          title='수원시 장안구'
+                          subheader='KT위즈파크'
+                        />
+                        <CardActions sx={{ justifyContent: 'flex-end' }}>
+                          <Button
+                            variant='contained'
+                            color='secondary'
+                            type='button'
+                            size='small'
+                            sx={{
+                              minWidth: 'fit-content',
+                              whiteSpace: 'nowrap',
+                            }}
+                          >
+                            수정
+                          </Button>{' '}
+                        </CardActions>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
             </Stack>
           </Stack>
         </CardMui>
