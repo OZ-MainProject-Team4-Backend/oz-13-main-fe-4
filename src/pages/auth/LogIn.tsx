@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Checkbox,
+  CssBaseline,
   Divider,
   FormControl,
   FormControlLabel,
@@ -64,6 +65,8 @@ export default function LogIn() {
 
   return (
     <AppTheme>
+      <CssBaseline enableColorScheme />
+
       <ContainerMui direction='column' justifyContent='space-between'>
         <CardMui variant='outlined'>
           <Typography

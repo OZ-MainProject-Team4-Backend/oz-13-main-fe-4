@@ -215,7 +215,116 @@ export const ClothingIconPlaceholder = styled(Box)({
   fontSize: '48px',
 });
 
-export const NavigationButton = styled(Box)({
+// Hourly Weather ------------------------------------------------
+export const HourlyWeatherCard = styled(Box)({
+  backgroundColor: '#ffffff',
+  borderRadius: '16px',
+  padding: '20px',
+  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+  gridColumn: '1 / -1',
+  minHeight: '120px',
+  overflow: 'hidden',
+});
+
+export const HourlyContainer = styled(Box)({
+  display: 'flex',
+  gap: '36px',
+  width: '100%',
+  justifyContent: 'stretch',
+});
+
+export const HourlyItem = styled(Box)({
+  backgroundColor: '#C8DDFF',
+  borderRadius: '12px',
+  height: '120px',
+  display: 'flex',
+  flex: 1,
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '4px',
+});
+
+export const HourLabel = styled(Typography)({
+  fontSize: '14px',
+  fontWeight: 500,
+  color: '#333333',
+});
+
+export const WeatherIconBox = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+});
+
+export const TemperatureLabel = styled(Typography)({
+  fontSize: '18px',
+  fontWeight: 600,
+  color: '#333333',
+});
+
+// AI Recommendation ----------------------------------------------------
+
+export const RecommendationCard = styled(Box)({
+  backgroundColor: '#ffffff',
+  borderRadius: '16px',
+  padding: '32px 40px',
+  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+  gridColumn: '1 / -1',
+  minHeight: '100px',
+  display: 'flex',
+  justifyContent: 'center',
+  gap: '24px',
+  alignItems: 'flex-start',
+  '@media (max-width: 768px)': {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+});
+
+export const IconBox = styled(Box)({
+  width: '80px',
+  height: '80px',
+  backgroundColor: '#BFDBFE',
+  borderRadius: '16px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexShrink: 0,
+});
+
+export const ContentSection = styled(Box)({
+  flex: 1,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '12px',
+  justifyContent: 'center',
+});
+
+export const HeaderText = styled(Typography)({
+  fontSize: '16px',
+  fontWeight: 500,
+  color: '#666666',
+  textAlign: 'left',
+});
+
+export const MainRecommendation = styled(Typography)({
+  fontSize: '22px',
+  fontWeight: 700,
+  color: '#333333',
+  textAlign: 'left',
+  lineHeight: 1.5,
+  wordBreak: 'keep-all',
+});
+
+export const LoadingText = styled(Typography)({
+  fontSize: '18px',
+  fontWeight: 500,
+  color: '#999999',
+  textAlign: 'left',
+});
+
+export const NavigationButton = styled(IconButton)({
   backgroundColor: '#F5F5F5',
   color: '#5B9EFF',
   width: '48px',
@@ -247,6 +356,13 @@ export const IndicatorContainer = styled(Box)({
   marginTop: '8px',
 });
 
+export const OutfitGridContainer = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '16px',
+  flex: 1,
+  position: 'relative',
 // ============================================
 // HourlyForecast 컴포넌트 스타일
 // ============================================
