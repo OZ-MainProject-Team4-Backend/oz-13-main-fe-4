@@ -256,7 +256,7 @@ export const RecommendationCard = styled(Box)({
   display: 'flex',
   justifyContent: 'center',
   gap: '24px',
-  alignItems: 'flex-start',
+  alignItems: 'center',
   '@media (max-width: 768px)': {
     flexDirection: 'column',
     alignItems: 'center',
