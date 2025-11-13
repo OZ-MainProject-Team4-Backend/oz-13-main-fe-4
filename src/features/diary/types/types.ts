@@ -1,14 +1,12 @@
-import { Mode } from 'react-hook-form';
-
 export interface DiaryCalendarProps {
   startingDate: Date;
 }
 
 export interface DiaryData {
-  id: number;
+  id?: number; // 서버에서 생성되므로 optional
   date: string;
   title: string;
-  emotion: number;
+  emotion: Emotion;
   notes: string;
   weather: {
     condition: string;
@@ -16,6 +14,16 @@ export interface DiaryData {
     icon: number;
   };
   image_url: string | null;
+}
+
+export interface DiaryDataReq {
+  date: string;
+  title: string;
+  emotion: string;
+  notes: string;
+  lon: string;
+  lat: string;
+  image_url: File | null;
 }
 
 export interface DiaryModalProps {
@@ -26,16 +34,6 @@ export interface DiaryModalProps {
   onClose: () => void;
   onSave?: (diary: DiaryData, image: File | null) => void;
   onModalChange: () => void;
-  deleteDiary: (id: number) => void;
-}
-
-export interface UseDiaryModalProps {
-  mode: Modal;
-  selectedDate: Date | null;
-  selectedDiary: DiaryData | undefined;
-  onSave?: (diary: DiaryData, image: File | null) => void;
-  onClose: () => void;
-  deleteDiary: (id: number) => void;
 }
 
 export interface DiaryModalFieldsProps {
@@ -55,3 +53,5 @@ export interface DiaryError {
 }
 
 export type Modal = 'create' | 'edit' | 'view';
+
+export type Emotion = 'happy' | 'sad' | 'angry' | 'excited';

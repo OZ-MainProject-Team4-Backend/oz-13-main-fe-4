@@ -24,19 +24,6 @@ export type ApiResponse<T = unknown, K = unknown> = {
   data?: T;
 };
 
-//==================== JWT 토큰 관련 ====================
-export type Tokens = {
-  access: string;
-  refresh: string;
-};
-
-export type TokenPayload = {
-  userId: number;
-  email: string;
-  exp: number; // 만료 시간 (unix timestamp)
-  iat: number; // 발급 시간
-};
-
 //=========== 닉네임 검증 ============
 export type RequestNicknameValidateDTO = {
   nickname: string;
@@ -88,12 +75,21 @@ export type ResponsetSignUpDTO = ApiResponse<{
 export type RequestLoginDTO = {
   email: string;
   password: string;
+  is_auto_login: boolean;
 };
 
 export type ResponseLoginDTO = ApiResponse<{
   user: User;
-  access: string; // 🔐로그인 요청하면 서버에서 JWT토큰값 뱉어냄
-  refresh: string; // 🔐로그인 요청하면 서버에서 JWT토큰값 뱉어냄
+  access: string;
+  access_expires_at: string; // 🔐로그인 요청하면 서버에서 JWT토큰값 뱉어냄
+  is_auto_login: boolean;
+}>;
+
+//=========== RefreshToken ============
+export type RequestRefreshToken = null;
+
+export type ResponseRefreshToken = ApiResponse<{
+  access: string;
 }>;
 //=========== 마이페이지 ============
 export type ResponseMeDTO = ApiResponse<User>;

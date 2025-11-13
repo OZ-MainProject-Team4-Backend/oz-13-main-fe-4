@@ -42,13 +42,14 @@ export default function LogIn() {
       password: '',
     },
   });
-  //로그인 버튼 클릭시! mutation(비동기처리되어있음)으로 고고
+  //로그인 버튼 클릭시! SubmitHandler는 (data) 하나만 받는다.
+  //isAutoLogin 상태값은 state에서 가져와야한다.
   const onSubmit: SubmitHandler<FormFieldLogin> = (data) => {
     logInMutation.mutate(
-      { ...data },
+      { ...data, is_auto_login: isAutoLogin },
       {
-        onSuccess: (data) => {
-          alert(`안녕하세요, ${data.data?.user.name} 님!`);
+        onSuccess: (response) => {
+          alert(`안녕하세요, ${response.data?.user.name} 님!`);
           navigator('/');
         },
       }

@@ -6,7 +6,9 @@ import {
   HourlyWeatherCard,
   TemperatureLabel,
   WeatherIconBox,
+  HourlyScrollContainer,
 } from '../styles/MainPageContentStyles';
+import { useDragScroll } from '../../../hooks/useDragScroll';
 
 interface HourlyWeatherData {
   time: string;
@@ -20,31 +22,43 @@ interface HourlyWeatherProps {
 }
 
 export const HourlyWeather = ({ hourlyData = [] }: HourlyWeatherProps) => {
-  // 기본 8개 시간대 생성 (데이터 없을 시)
-  const displayData =
-    hourlyData.length > 0
-      ? hourlyData
-      : Array(8)
-          .fill(null)
-          .map((_, index) => ({
-            time: `${index * 3}시`,
-            temperature: 18,
-            icon: '000',
-          }));
+  const { scrollRef, handlers } = useDragScroll({
+    direction: 'horizontal',
+    sensitivity: 2,
+    wheelSensitivity: 1,
+  });
+
+  const getCurrentHourlyData = () => {
+    const now = new Date();
+    const currentHour = now.getHours();
+
+    return Array(20)
+      .fill(null)
+      .map((_, index) => {
+        const hour = (currentHour + index) % 24;
+        return {
+          time: `${hour}시`,
+          temperature: 18,
+          icon: '000',
+        };
+      });
+  };
+
+  const displayData = hourlyData.length > 0 ? hourlyData : getCurrentHourlyData();
 
   return (
     <HourlyWeatherCard>
-      <HourlyContainer>
+      <HourlyScrollContainer ref={scrollRef} {...handlers}>
         {displayData.map((data, index) => (
           <HourlyItem key={index}>
             <HourLabel>{data.time}</HourLabel>
             <WeatherIconBox>
-              <CloudOutlinedIcon sx={{ fontSize: 48, color: '#5B9EFF' }} />
+              <CloudOutlinedIcon sx={{ fontSize: 32, color: '#5B9EFF' }} />
             </WeatherIconBox>
             <TemperatureLabel>{data.temperature} °C</TemperatureLabel>
           </HourlyItem>
         ))}
-      </HourlyContainer>
+      </HourlyScrollContainer>
     </HourlyWeatherCard>
   );
 };
