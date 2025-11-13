@@ -84,7 +84,10 @@ const DiaryModalFields = ({
             <button
               key={index}
               type='button'
-              css={[styles.emotionButton, diary.emotion === index && styles.emotionButtonSelected]}
+              css={[
+                styles.emotionButton,
+                diary.emotion === emotion.name && styles.emotionButtonSelected,
+              ]}
               onClick={() => handleEmotion(index)}
               disabled={disabled}
             >

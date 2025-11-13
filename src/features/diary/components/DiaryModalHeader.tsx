@@ -1,4 +1,5 @@
 import * as styles from './DiaryModal.styles';
+import { formatDateForDisplay } from '../utils/calendar';
 
 interface DiaryModalHeaderProps {
   date: string;
@@ -7,7 +8,7 @@ interface DiaryModalHeaderProps {
 const DiaryModalHeader = ({ date }: DiaryModalHeaderProps) => {
   return (
     <div css={styles.header}>
-      <h3 css={styles.dateTitle}>{date}</h3>
+      <h3 css={styles.dateTitle}>{formatDateForDisplay(date)}</h3>
     </div>
   );
 };

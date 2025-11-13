@@ -1,56 +1,78 @@
 import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
 import DiaryModal from './DiaryModal';
 import * as styles from './DiaryCalendar.styles';
-import { DiaryData } from '../types/types';
+import { DiaryData, Modal } from '../types/types';
 import { getCalendarDays, isToday } from '../utils/calendar';
 import { useCalendarDate } from '../hooks/useCalendarDate';
-import { useDiaryState } from '../hooks/useDiaryState';
 import { DAYS, MONTHS } from '../constants/calender';
+import { useEffect, useState } from 'react';
+import { useDiaryDetail, useDiariesForCalendar } from '../hooks/useDiaryQueries';
 
 const DiaryCalendar = () => {
   const { year, month, goToPrevMonth, goToNextMonth } = useCalendarDate();
-  const {
-    diaries,
-    isModalOpen,
-    selectedDate,
-    mode,
-    selectedDiary,
-    getDiaryByDate,
-    openCreateModal,
-    openViewModal,
-    openEditModal,
-    closeModal,
-    saveDiary,
-    deleteDiary,
-  } = useDiaryState();
   const calendarDays = getCalendarDays(year, month);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null); // 새 일기 작성용
+  const [mode, setMode] = useState<Modal>('create');
+  const [selectedDiary, setSelectedDiary] = useState<DiaryData | undefined>(undefined);
+  const [selectedDiaryId, setSelectedDiaryId] = useState<number | undefined>(undefined); // 상세 조회용
+  const { data: diaries = [] } = useDiariesForCalendar(year, month);
+  const { data: diaryDetail } = useDiaryDetail(selectedDiaryId ?? undefined);
+
+  // 특정 날짜의 일기를 찾는 함수
+  const getDiaryByDate = (year: number, month: number, date: number) => {
+    const padMonth = String(month + 1).padStart(2, '0');
+    const padDate = String(date).padStart(2, '0');
+    const targetDate = `${year}-${padMonth}-${padDate}`;
+    return diaries.find((d) => d.date === targetDate);
+  };
 
   // 일기 작성
   const handleAddDiary = (date: number) => {
-    openCreateModal(year, month, date);
+    const selected = new Date(year, month, date); // 여기는 Month 1~12로 넘어옴
+    setSelectedDate(selected);
+    setMode('create');
+    setSelectedDiary(undefined);
+    setIsModalOpen(true);
   };
 
   // 기존 일기 보기
-  const handleViewDiary = (diary: DiaryData) => {
-    openViewModal(diary);
+  const handleViewDiary = (diaryDetail: DiaryData) => {
+    setSelectedDiaryId(diaryDetail.id);
+    setSelectedDiary(undefined);
+    setMode('view');
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    closeModal();
+    setIsModalOpen(false);
+    setSelectedDiary(undefined);
+    setSelectedDiaryId(undefined);
+    setSelectedDate(null);
   };
 
-  const handleSaveDiary = (updatedDiary: DiaryData, image: File | null) => {
-    saveDiary(updatedDiary, image);
+  const handleSaveDiary = () => {
+    handleCloseModal();
   };
 
-  // view -> edit
   const handleModeChange = () => {
-    if (selectedDiary) {
-      openEditModal(selectedDiary);
+    if (mode === 'view') {
+      // view → edit
+      setMode('edit');
+    } else if (mode === 'edit') {
+      // edit → view
+      setMode('view');
     }
   };
 
+  useEffect(() => {
+    if (diaryDetail) {
+      setSelectedDiary(diaryDetail);
+    }
+  }, [diaryDetail]);
+
   console.log('다이어리 기록용', diaries);
+  console.log('상세보기', diaryDetail);
 
   return (
     <>
@@ -135,7 +157,6 @@ const DiaryCalendar = () => {
         mode={mode}
         selectedDiary={selectedDiary}
         onModalChange={handleModeChange}
-        deleteDiary={deleteDiary}
       />
     </>
   );

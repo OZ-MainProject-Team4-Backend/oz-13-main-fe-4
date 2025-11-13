@@ -21,11 +21,11 @@ const DiaryModalActions = ({
   if (mode === 'view') {
     return (
       <div css={styles.buttonWrapper}>
+        <Button variant='contained' color='error' onClick={handleDelete}>
+          삭제
+        </Button>
         <Button variant='outlined' color='primary' onClick={handleCancel}>
           닫기
-        </Button>
-        <Button variant='contained' color='success' onClick={handleDelete}>
-          삭제
         </Button>
         <Button variant='contained' color='primary' onClick={handleEdit}>
           수정

@@ -4,15 +4,15 @@ import { getOutfitRecommendation } from '../data/clothing';
 
 export const outfitHandlers = [
   // 의상 추천 API
-  http.get('/api/outfit/recommend', ({ request }) => {
+  http.get('/api/recommend/outfit', ({ request }) => {
     const url = new URL(request.url);
     const lat = url.searchParams.get('lat');
     const lon = url.searchParams.get('lon');
     const location = url.searchParams.get('location');
 
-    if (!lat || !lon || !location) {
-      return HttpResponse.json({ error: '위치 정보가 필요합니다' }, { status: 400 });
-    }
+    // if (!lat || !lon) {
+    //   return HttpResponse.json({ error: '위치 정보가 필요합니다' }, { status: 400 });
+    // }
 
     const temperature = mockCurrentWeather.temperature;
     const condition = mockCurrentWeather.condition;
@@ -24,7 +24,7 @@ export const outfitHandlers = [
   }),
 
   // 특정 온도/날씨 조건으로 추천 받기 (테스트용)
-  http.post('/api/outfit/recommend', async ({ request }) => {
+  http.post('/api/recommend/outfit', async ({ request }) => {
     const body = (await request.json()) as { temperature: number; condition?: string };
 
     if (typeof body.temperature !== 'number') {

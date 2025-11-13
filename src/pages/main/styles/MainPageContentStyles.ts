@@ -1,4 +1,4 @@
-import { Box, Container, styled, Typography } from '@mui/material';
+import { Box, Container, IconButton, styled, Typography } from '@mui/material';
 
 // MainPage Styles--------------------------------------
 export const MainContainer = styled(Container)({
@@ -195,51 +195,103 @@ export const ClothingIconPlaceholder = styled(Box)({
   color: '#5B9EFF',
   fontSize: '48px',
 });
+export const OutfitGridContainer = styled(Box)({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '16px',
+  flex: 1,
+  position: 'relative',
+});
 
+export const NavigationButton = styled(IconButton)({
+  backgroundColor: '#F5F5F5',
+  color: '#5B9EFF',
+  width: '48px',
+  height: '48px',
+  flexShrink: 0,
+  '&:hover': {
+    backgroundColor: '#E0E0E0',
+    color: '#4A8EEE',
+  },
+  '&:active': {
+    backgroundColor: '#D0D0D0',
+  },
+  '@media (max-width: 768px)': {
+    width: '36px',
+    height: '36px',
+  },
+});
+
+export const IndicatorContainer = styled(Box)({
+  display: 'flex',
+  gap: '8px',
+  justifyContent: 'center',
+  marginTop: '8px',
+});
 // Hourly Weather ------------------------------------------------
 export const HourlyWeatherCard = styled(Box)({
   backgroundColor: '#ffffff',
   borderRadius: '16px',
-  padding: '20px',
+  padding: '32px 24px',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
   gridColumn: '1 / -1',
-  minHeight: '120px',
   overflow: 'hidden',
 });
 
-export const HourlyContainer = styled(Box)({
+export const HourlyScrollContainer = styled(Box)({
   display: 'flex',
-  gap: '36px',
-  width: '100%',
-  justifyContent: 'stretch',
+  gap: '24px',
+  overflowX: 'auto',
+  overflowY: 'hidden',
+  paddingBottom: '16px',
+  cursor: 'grab',
+  userSelect: 'none',
+  '&:active': {
+    cursor: 'grabbing',
+  },
+  '&::-webkit-scrollbar': {
+    height: '8px',
+  },
+  '&::-webkit-scrollbar-track': {
+    background: '#f1f1f1',
+    borderRadius: '4px',
+  },
+  '&::-webkit-scrollbar-thumb': {
+    background: '#c1c1c1',
+    borderRadius: '4px',
+    '&:hover': {
+      background: '#a8a8a8',
+    },
+  },
 });
 
 export const HourlyItem = styled(Box)({
-  backgroundColor: '#C8DDFF',
-  borderRadius: '12px',
-  height: '120px',
   display: 'flex',
-  flex: 1,
   flexDirection: 'column',
   alignItems: 'center',
-  justifyContent: 'center',
-  gap: '4px',
+  gap: '12px',
+  minWidth: '80px',
+  flexShrink: 0,
 });
 
 export const HourLabel = styled(Typography)({
   fontSize: '14px',
   fontWeight: 500,
-  color: '#333333',
+  color: '#666666',
 });
 
 export const WeatherIconBox = styled(Box)({
+  width: '48px',
+  height: '48px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
+  fontSize: '32px',
 });
 
 export const TemperatureLabel = styled(Typography)({
-  fontSize: '18px',
+  fontSize: '16px',
   fontWeight: 600,
   color: '#333333',
 });
