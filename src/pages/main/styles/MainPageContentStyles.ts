@@ -1,68 +1,52 @@
-import { Box, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Box, Container, IconButton, styled, Typography } from '@mui/material';
 
-// ============================================
-// 공통 스타일
-// ============================================
-
-export const MainContainer = styled(Box)({
-  width: '100%',
-  maxWidth: '1440px',
-  margin: '0 auto',
-  padding: '40px 24px',
-  '@media (max-width: 768px)': {
-    padding: '24px 16px',
-  },
+// MainPage Styles--------------------------------------
+export const MainContainer = styled(Container)({
+  paddingTop: '24px',
+  paddingBottom: '24px',
+  minWidth: '90vw',
 });
 
 export const ComponentsGrid = styled(Box)({
   display: 'grid',
   gridTemplateColumns: 'repeat(2, 1fr)',
-  gap: '24px',
-  '@media (max-width: 1024px)': {
+  gap: '20px',
+  '@media (max-width: 768px)': {
     gridTemplateColumns: '1fr',
   },
 });
-
 export const PlaceholderCard = styled(Box)({
-  backgroundColor: '#f5f5f5',
+  backgroundColor: '#ffffff',
   borderRadius: '16px',
-  padding: '40px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  padding: '20px',
+  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
   minHeight: '200px',
-  color: '#999999',
-  fontSize: '18px',
-  fontWeight: 500,
-});
-
-export const FullWidthCard = styled(Box)({
-  backgroundColor: '#f5f5f5',
-  borderRadius: '16px',
-  padding: '40px',
-  gridColumn: '1 / -1',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  minHeight: '150px',
-  color: '#999999',
-  fontSize: '18px',
-  fontWeight: 500,
+  color: '#CCCCCC',
+  fontSize: '14px',
+});
+export const FullWidthCard = styled(PlaceholderCard)({
+  gridColumn: '1 / -1',
+  minHeight: '120px',
 });
 
-// ============================================
-// CurrentWeather 컴포넌트 스타일
-// ============================================
+export const RecommendCard = styled(PlaceholderCard)({
+  minHeight: '350px',
+  gridColumn: '1 / -1',
+});
 
+// CurrentWeather Section Styles---------------------------------------
 export const WeatherCard = styled(Box)({
   backgroundColor: '#ffffff',
   borderRadius: '16px',
-  padding: '32px 40px',
+  minHeight: '350px',
+  padding: '20px',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
   display: 'flex',
   flexDirection: 'column',
-  gap: '24px',
+  gap: '16px',
 });
 
 export const CurrentWeatherCardHeader = styled(Box)({
@@ -72,15 +56,20 @@ export const CurrentWeatherCardHeader = styled(Box)({
 });
 
 export const LocationText = styled(Typography)({
-  fontSize: '24px',
-  fontWeight: 700,
+  fontSize: '16px',
+  fontWeight: 600,
   color: '#333333',
 });
 
 export const TemperatureSection = styled(Box)({
   display: 'flex',
   alignItems: 'center',
-  gap: '24px',
+  gap: '12px',
+});
+
+export const WeatherIcon = styled(Box)({
+  fontSize: '48px',
+  color: '#B0BEC5',
 });
 
 export const Temperature = styled(Typography)({
@@ -91,43 +80,44 @@ export const Temperature = styled(Typography)({
 
 export const WeatherCondition = styled(Typography)({
   fontSize: '18px',
-  fontWeight: 500,
+  paddingLeft: '4px',
   color: '#666666',
+  textAlign: 'left',
+  marginTop: '0px',
 });
 
 export const InfoGroup = styled(Box)({
   display: 'flex',
-  gap: '32px',
-  paddingTop: '16px',
-  borderTop: '1px solid #e0e0e0',
-  '@media (max-width: 768px)': {
-    flexDirection: 'column',
-    gap: '16px',
-  },
+  gap: '20px',
+  marginTop: '3rem',
 });
 
 export const InfoBox = styled(Box)({
+  backgroundColor: '#5B9EFF',
+  borderRadius: '30px',
+  padding: '12px 20px',
+  flex: 1,
   display: 'flex',
   flexDirection: 'column',
+  alignItems: 'center',
+  minHeight: '100px',
   gap: '4px',
 });
 
 export const InfoLabel = styled(Typography)({
-  fontSize: '14px',
-  fontWeight: 500,
-  color: '#999999',
+  fontSize: '16px',
+  color: '#ffffff',
+  fontWeight: 400,
 });
 
 export const InfoValue = styled(Typography)({
-  fontSize: '18px',
+  marginTop: '0.7rem',
+  fontSize: '40px',
+  color: '#ffffff',
   fontWeight: 600,
-  color: '#333333',
 });
 
-// ============================================
-// TodayOutfitRecommendation 컴포넌트 스타일
-// ============================================
-
+// Today Outfit Recommendation---------------------------------------
 export const OutfitCard = styled(Box)({
   backgroundColor: '#ffffff',
   borderRadius: '16px',
@@ -136,7 +126,7 @@ export const OutfitCard = styled(Box)({
   minHeight: '350px',
   display: 'flex',
   flexDirection: 'column',
-  gap: '20px',
+  gap: '16px',
 });
 
 export const OutfitHeader = styled(Box)({
@@ -164,15 +154,6 @@ export const StyleLabel = styled(Typography)({
   color: '#666666',
   textAlign: 'center',
   marginBottom: '12px',
-});
-
-export const OutfitGridContainer = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '16px',
-  flex: 1,
-  position: 'relative',
 });
 
 export const OutfitGrid = styled(Box)({
@@ -214,114 +195,13 @@ export const ClothingIconPlaceholder = styled(Box)({
   color: '#5B9EFF',
   fontSize: '48px',
 });
-
-// Hourly Weather ------------------------------------------------
-export const HourlyWeatherCard = styled(Box)({
-  backgroundColor: '#ffffff',
-  borderRadius: '16px',
-  padding: '20px',
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-  gridColumn: '1 / -1',
-  minHeight: '120px',
-  overflow: 'hidden',
-});
-
-export const HourlyContainer = styled(Box)({
+export const OutfitGridContainer = styled(Box)({
   display: 'flex',
-  gap: '36px',
-  width: '100%',
-  justifyContent: 'stretch',
-});
-
-export const HourlyItem = styled(Box)({
-  backgroundColor: '#C8DDFF',
-  borderRadius: '12px',
-  height: '120px',
-  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '16px',
   flex: 1,
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '4px',
-});
-
-export const HourLabel = styled(Typography)({
-  fontSize: '14px',
-  fontWeight: 500,
-  color: '#333333',
-});
-
-export const WeatherIconBox = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-});
-
-export const TemperatureLabel = styled(Typography)({
-  fontSize: '18px',
-  fontWeight: 600,
-  color: '#333333',
-});
-
-// AI Recommendation ----------------------------------------------------
-
-export const RecommendationCard = styled(Box)({
-  backgroundColor: '#ffffff',
-  borderRadius: '16px',
-  padding: '32px 40px',
-  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
-  gridColumn: '1 / -1',
-  minHeight: '100px',
-  display: 'flex',
-  justifyContent: 'center',
-  gap: '24px',
-  alignItems: 'flex-start',
-  '@media (max-width: 768px)': {
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-});
-
-export const IconBox = styled(Box)({
-  width: '80px',
-  height: '80px',
-  backgroundColor: '#BFDBFE',
-  borderRadius: '16px',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  flexShrink: 0,
-});
-
-export const ContentSection = styled(Box)({
-  flex: 1,
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '12px',
-  justifyContent: 'center',
-});
-
-export const HeaderText = styled(Typography)({
-  fontSize: '16px',
-  fontWeight: 500,
-  color: '#666666',
-  textAlign: 'left',
-});
-
-export const MainRecommendation = styled(Typography)({
-  fontSize: '22px',
-  fontWeight: 700,
-  color: '#333333',
-  textAlign: 'left',
-  lineHeight: 1.5,
-  wordBreak: 'keep-all',
-});
-
-export const LoadingText = styled(Typography)({
-  fontSize: '18px',
-  fontWeight: 500,
-  color: '#999999',
-  textAlign: 'left',
+  position: 'relative',
 });
 
 export const NavigationButton = styled(IconButton)({
@@ -329,13 +209,7 @@ export const NavigationButton = styled(IconButton)({
   color: '#5B9EFF',
   width: '48px',
   height: '48px',
-  borderRadius: '50%',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
   flexShrink: 0,
-  cursor: 'pointer',
-  transition: 'all 0.2s',
   '&:hover': {
     backgroundColor: '#E0E0E0',
     color: '#4A8EEE',
@@ -355,18 +229,7 @@ export const IndicatorContainer = styled(Box)({
   justifyContent: 'center',
   marginTop: '8px',
 });
-
-export const OutfitGridContainer = styled(Box)({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '16px',
-  flex: 1,
-  position: 'relative',
-// ============================================
-// HourlyForecast 컴포넌트 스타일
-// ============================================
-
+// Hourly Weather ------------------------------------------------
 export const HourlyWeatherCard = styled(Box)({
   backgroundColor: '#ffffff',
   borderRadius: '16px',
@@ -431,9 +294,4 @@ export const TemperatureLabel = styled(Typography)({
   fontSize: '16px',
   fontWeight: 600,
   color: '#333333',
-});
-
-export const RecommendCard = styled(PlaceholderCard)({
-  minHeight: '350px',
-  gridColumn: '1 / -1',
 });
