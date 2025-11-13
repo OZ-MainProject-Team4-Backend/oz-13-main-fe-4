@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 
 export const chatContainer = css`
   position: fixed;
-  bottom: 8%;
+  bottom: 6%;
   right: 3%;
   width: 400px;
   height: 600px;
@@ -20,7 +20,6 @@ export const header = css`
   padding: 15px;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.29);
 `;
 
 export const headerContent = css`
@@ -78,6 +77,9 @@ export const chatBody = css`
   flex-direction: column;
   gap: 6px;
   background: #f8f7f7;
+  box-shadow:
+    inset 0 5px 15px -8px rgba(0, 0, 0, 0.1),
+    inset 0 -5px 15px -8px rgba(0, 0, 0, 0.1);
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -140,4 +142,61 @@ export const messageBubbleUser = css`
   ${messageBubble};
   background: #2c4a8f;
   color: white;
+`;
+
+export const inputContainer = css`
+  padding: 14px;
+  background: white;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+`;
+
+export const inputWrapper = css`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
+export const input = css`
+  width: 100%;
+  padding: 12px 80px 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: #2c4a8f;
+  }
+
+  &::placeholder {
+    color: #94a3b8;
+  }
+`;
+
+export const sendButton = css`
+  position: absolute;
+  right: 6px;
+  padding: 8px 16px;
+  background: #2c4a8f;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &:hover {
+    background: #233b73;
+  }
+
+  &:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+  }
 `;

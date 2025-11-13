@@ -1,7 +1,25 @@
 import * as styles from './Chatbot.styles';
 import { CgBot } from 'react-icons/cg';
+import { IoSend } from 'react-icons/io5';
+import { useState } from 'react';
 
 const Chatbot = () => {
+  const [message, setMessage] = useState('');
+
+  const handleSendMessage = () => {
+    if (message.trim()) {
+      console.log('메시지 전송:', message);
+      setMessage('');
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   return (
     <div css={styles.chatContainer}>
       {/* 챗봇 상단 */}
@@ -38,6 +56,28 @@ const Chatbot = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* 메시지 입력 영역 */}
+      <div css={styles.inputContainer}>
+        <div css={styles.inputWrapper}>
+          <input
+            type='text'
+            css={styles.input}
+            placeholder='메시지를 입력하세요...'
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+          />
+          <button
+            type='button'
+            css={styles.sendButton}
+            onClick={handleSendMessage}
+            disabled={!message.trim()}
+          >
+            <IoSend />
+          </button>
+        </div>
       </div>
     </div>
   );
