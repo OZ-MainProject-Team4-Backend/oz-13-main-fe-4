@@ -195,7 +195,6 @@ export const ClothingIconPlaceholder = styled(Box)({
   color: '#5B9EFF',
   fontSize: '48px',
 });
-
 // Hourly Weather ------------------------------------------------
 export const HourlyWeatherCard = styled(Box)({
   backgroundColor: '#ffffff',
