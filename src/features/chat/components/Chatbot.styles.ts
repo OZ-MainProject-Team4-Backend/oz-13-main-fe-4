@@ -77,9 +77,7 @@ export const chatBody = css`
   flex-direction: column;
   gap: 6px;
   background: #f8f7f7;
-  box-shadow:
-    inset 0 5px 15px -8px rgba(0, 0, 0, 0.1),
-    inset 0 -5px 15px -8px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 5px 15px -8px rgba(0, 0, 0, 0.1);
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -199,4 +197,37 @@ export const sendButton = css`
     background: #cbd5e1;
     cursor: not-allowed;
   }
+`;
+
+export const keywordContainer = css`
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 0;
+  box-shadow: inset 0 -5px 15px -8px rgba(0, 0, 0, 0.1);
+`;
+
+export const keywordButton = css`
+  padding: 10px 16px;
+  background: white;
+  color: #2c4a8f;
+  border: 1px solid #2c4a8f;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #2c4a8f;
+    color: white;
+  }
+`;
+
+export const welcomeMessage = css`
+  text-align: center;
+  padding: 20px 10px;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
 `;
