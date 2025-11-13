@@ -20,7 +20,6 @@ interface HourlyWeatherProps {
 }
 
 export const HourlyWeather = ({ hourlyData = [] }: HourlyWeatherProps) => {
-  // 기본 8개 시간대 생성 (데이터 없을 시)
   const displayData =
     hourlyData.length > 0
       ? hourlyData
