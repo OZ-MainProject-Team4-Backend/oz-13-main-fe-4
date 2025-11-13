@@ -316,3 +316,8 @@ export const TemperatureLabel = styled(Typography)({
   fontWeight: 600,
   color: '#333333',
 });
+
+export const RecommendCard = styled(PlaceholderCard)({
+  minHeight: '350px',
+  gridColumn: '1 / -1',
+});
