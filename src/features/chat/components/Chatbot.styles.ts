@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-export const ChatContainer = () => css`
+export const chatContainer = css`
   position: fixed;
   bottom: 8%;
   right: 3%;
@@ -41,8 +41,7 @@ export const profileWrapper = css`
 
 export const chatEmoji = css`
   color: #2c4a8f;
-  width: 35px;
-  height: 35px;
+  font-size: 40px;
 `;
 
 export const headerInfo = css`
@@ -69,4 +68,76 @@ export const onlineDot = css`
   height: 8px;
   background: #4ade80;
   border-radius: 50%;
+`;
+
+export const chatBody = css`
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #f8f7f7;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+`;
+
+export const messageWrapper = css`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  animation: fadeIn 0.3s ease-in;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+
+export const messageWrapperUser = css`
+  ${messageWrapper};
+  flex-direction: row-reverse;
+`;
+
+export const messageAvatar = css`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #2c4a8f;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+`;
+
+export const messageBubble = css`
+  max-width: 70%;
+  padding: 10px 14px;
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  word-wrap: break-word;
+  font-size: 14px;
+  line-height: 1.4;
+`;
+
+export const messageBubbleUser = css`
+  ${messageBubble};
+  background: #2c4a8f;
+  color: white;
 `;
