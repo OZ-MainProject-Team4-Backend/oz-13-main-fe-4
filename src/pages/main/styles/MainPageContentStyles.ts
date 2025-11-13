@@ -204,14 +204,28 @@ export const HourlyWeatherCard = styled(Box)({
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
   gridColumn: '1 / -1',
   minHeight: '120px',
-  overflow: 'hidden',
+  overflow: 'hidden', // 다시 추가 - 이게 있어야 가로 스크롤 방지
 });
 
-export const HourlyContainer = styled(Box)({
+export const HourlyScrollContainer = styled(Box)({
   display: 'flex',
   gap: '36px',
+  overflowX: 'scroll', // auto에서 scroll로 변경
+  overflowY: 'hidden', // 세로 스크롤 방지
   width: '100%',
-  justifyContent: 'stretch',
+  cursor: 'grab',
+  userSelect: 'none',
+  WebkitOverflowScrolling: 'touch', // 모바일 스크롤 개선
+
+  // 스크롤바 숨김
+  scrollbarWidth: 'none',
+  '&::-webkit-scrollbar': {
+    display: 'none',
+  },
+
+  '&:active': {
+    cursor: 'grabbing',
+  },
 });
 
 export const HourlyItem = styled(Box)({
@@ -219,11 +233,19 @@ export const HourlyItem = styled(Box)({
   borderRadius: '12px',
   height: '120px',
   display: 'flex',
-  flex: 1,
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
   gap: '4px',
+  minWidth: '120px',
+  width: '120px', // 고정 너비 추가
+  flexShrink: 0,
+
+  '@media (min-width: 1200px)': {
+    flex: 1,
+    width: 'auto', // 넓은 화면에서는 auto
+    maxWidth: '150px',
+  },
 });
 
 export const HourLabel = styled(Typography)({
