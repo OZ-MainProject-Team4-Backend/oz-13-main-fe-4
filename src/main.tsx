@@ -4,6 +4,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.tsx';
+import './axios/interceptors'; // 🔥요청 가로채려면 가장 상단 필수
 import './index.css';
 
 async function enableMocking() {
