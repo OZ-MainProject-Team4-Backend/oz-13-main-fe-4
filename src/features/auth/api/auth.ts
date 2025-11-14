@@ -11,6 +11,7 @@ import {
   ResponseEmailSendDTO,
   ResponseEmailVerifyDTO,
   ResponseLoginDTO,
+  ResponseMeDTO,
   ResponseNicknameValidateDTO,
   ResponseRefreshToken,
 } from '../types/auth';
@@ -104,5 +105,17 @@ export async function logOut(): Promise<void> {
       throw error.response.data;
     }
     throw new Error('로그아웃 실패');
+  }
+}
+//- ====================  마이페이지 조회 ====================
+export async function getMe(): Promise<ResponseMeDTO> {
+  try {
+    const res = await instance.get('/api/auth/me');
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw new Error('프로필 조회 실패');
   }
 }
