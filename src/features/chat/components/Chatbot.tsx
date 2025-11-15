@@ -6,7 +6,12 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Message } from '../types/chat';
 import { useSendMessage } from '../hooks/useChatQueries';
 
-const KEYWORDS = ['오늘 날씨', '추천 옷차림', '이번주 날씨'];
+const KEYWORDS = ['서비스 소개', '추천 옷차림', '이번주 날씨'];
+
+const keywordsAnswer: Record<string, string> = {
+  '서비스 소개':
+    '사용자가 선택한 위치에 맞는 날씨 정보와 그에 맞는 옷 조합을 소개하는 서비스입니다. 원하는 지역을 즐겨찾기에 추가하고 날씨 사진 또는 오늘 정한 스타일을 찍은 사진을 업로드 할 수 있는 일기장 페이지 또한 마련되어 있습니다.',
+};
 
 const Chatbot = () => {
   const [message, setMessage] = useState('');
@@ -71,12 +76,23 @@ const Chatbot = () => {
 
   const handleKeywordClick = async (keyword: string) => {
     // 사용자가 키워드를 클릭한 것처럼 메시지 추가
+    const timestamp = Date.now();
     const userMessage: Message = {
-      id: Date.now(),
+      id: timestamp,
       type: 'user',
       content: keyword,
     };
     setMessages((prev) => [...prev, userMessage]);
+
+    if (keywordsAnswer[keyword]) {
+      const botMessage: Message = {
+        id: timestamp + 1,
+        type: 'bot',
+        content: keywordsAnswer[keyword],
+      };
+      setMessages((prev) => [...prev, botMessage]);
+      return;
+    }
 
     try {
       const response = await sendMessage.mutateAsync({
