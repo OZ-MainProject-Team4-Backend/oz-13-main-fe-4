@@ -3,27 +3,17 @@ import { CgBot } from 'react-icons/cg';
 import { IoSend, IoClose } from 'react-icons/io5';
 import { useState, useEffect, useRef } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-
-interface Message {
-  id: number;
-  type: 'bot' | 'user';
-  content: string;
-}
+import { Message } from '../types/chat';
+import { useSendMessage } from '../hooks/useChatQueries';
 
 const KEYWORDS = ['오늘 날씨', '추천 옷차림', '이번주 날씨'];
-
-const KEYWORD_RESPONSES: { [key: string]: string } = {
-  '오늘 날씨': '오늘은 맑고 18도 정도로, 산책이나 가벼운 외출하기 좋은 날씨예요~',
-  '추천 옷차림': '오늘은 가벼운 겉옷만 입어도 괜찮아요. 활동하기 편한 옷차림을 추천드려요!',
-  '이번주 날씨':
-    '이번주는 대체로 맑고 쾌적한 날씨가 예상돼요. 기온 변화가 있으니 아침저녁으로는 가벼운 겉옷 챙기시는 게 좋아요.',
-};
 
 const Chatbot = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const sendMessage = useSendMessage();
 
   useEffect(() => {
     // 초기 환영 메시지
@@ -42,13 +32,12 @@ const Chatbot = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     const trimmedMessage = message.trim();
     if (!trimmedMessage) return;
 
     const currentMessage = trimmedMessage;
 
-    // 사용자 메시지 추가
     const userMessage: Message = {
       id: Date.now(),
       type: 'user',
@@ -57,18 +46,30 @@ const Chatbot = () => {
     setMessages((prev) => [...prev, userMessage]);
     setMessage('');
 
-    // 임시로 setTimeout으로 봇 응답 시뮬레이션
-    setTimeout(() => {
+    try {
+      const response = await sendMessage.mutateAsync({
+        message: currentMessage,
+      });
+
       const botMessage: Message = {
-        id: Date.now() + 1,
+        id: response.id,
         type: 'bot',
-        content: `"${currentMessage}"에 대한 답변입니다.`,
+        content: response.botResponse,
+        createdAt: response.createdAt,
       };
       setMessages((prev) => [...prev, botMessage]);
-    }, 500);
+    } catch (error) {
+      // 에러 발생 시 안내 메시지 표시
+      const errorMessage: Message = {
+        id: Date.now(),
+        type: 'bot',
+        content: '죄송합니다. 메시지 전송 중 오류가 발생했습니다. 다시 시도해주세요.',
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    }
   };
 
-  const handleKeywordClick = (keyword: string) => {
+  const handleKeywordClick = async (keyword: string) => {
     // 사용자가 키워드를 클릭한 것처럼 메시지 추가
     const userMessage: Message = {
       id: Date.now(),
@@ -77,15 +78,28 @@ const Chatbot = () => {
     };
     setMessages((prev) => [...prev, userMessage]);
 
-    // 키워드에 대한 봇 응답
-    setTimeout(() => {
+    try {
+      const response = await sendMessage.mutateAsync({
+        message: keyword,
+      });
+
+      // 봇 응답을 UI에 추가
       const botMessage: Message = {
-        id: Date.now() + 1,
+        id: response.id,
         type: 'bot',
-        content: KEYWORD_RESPONSES[keyword],
+        content: response.botResponse,
+        createdAt: response.createdAt,
       };
       setMessages((prev) => [...prev, botMessage]);
-    }, 300);
+    } catch (error) {
+      console.error('메시지 전송 실패:', error);
+      const errorMessage: Message = {
+        id: Date.now(),
+        type: 'bot',
+        content: '죄송합니다. 메시지 전송 중 오류가 발생했습니다. 다시 시도해주세요.',
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    }
   };
 
   return isChatOpen ? (
