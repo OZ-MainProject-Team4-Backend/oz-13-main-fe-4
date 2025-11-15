@@ -6,8 +6,8 @@ import {
   ReqChatHistoryParams,
 } from '../types/chat';
 
-export const sendMessage = async (data: ReqSendMessage): Promise<ResSendMessage> => {
-  const res = await instance.post('/api/chat/messages', data);
+export const sendMessage = async (message: ReqSendMessage): Promise<ResSendMessage> => {
+  const res = await instance.post('/api/chat/messages', message);
   return res.data;
 };
 
