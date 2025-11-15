@@ -4,7 +4,7 @@ import { IoSend, IoClose } from 'react-icons/io5';
 import { useState, useEffect, useRef } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Message } from '../types/chat';
-import { useSendMessage } from '../hooks/useChatQueries';
+import { useSendMessage, useChatHistory } from '../hooks/useChatQueries';
 
 const KEYWORDS = ['서비스 소개', '추천 옷차림', '이번주 날씨'];
 
@@ -19,18 +19,24 @@ const Chatbot = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const sendMessage = useSendMessage();
+  const { data: chatHistory, isLoading } = useChatHistory({ limit: 50 });
 
   useEffect(() => {
-    // 초기 환영 메시지
-    setMessages([
-      {
-        id: Date.now(),
-        type: 'bot',
-        content:
-          '안녕하세요! 날씨 기반 옷차림 추천 챗봇입니다. 궁금한 내용을 선택하거나 질문해주세요!',
-      },
-    ]);
-  }, []);
+    // 서버에서 채팅 히스토리를 불러오거나 초기 메시지 표시
+    if (chatHistory?.messages && chatHistory.messages.length > 0) {
+      setMessages(chatHistory.messages);
+    } else if (!isLoading && chatHistory) {
+      // 히스토리가 없으면 초기 환영 메시지
+      setMessages([
+        {
+          id: Date.now(),
+          type: 'bot',
+          content:
+            '안녕하세요! 날씨 기반 옷차림 추천 챗봇입니다. 궁금한 내용을 선택하거나 질문해주세요!',
+        },
+      ]);
+    }
+  }, [chatHistory, isLoading]);
 
   useEffect(() => {
     // 메시지가 추가될 때마다 스크롤을 아래로
