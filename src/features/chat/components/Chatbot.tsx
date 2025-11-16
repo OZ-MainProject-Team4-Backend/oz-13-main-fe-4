@@ -19,7 +19,7 @@ const Chatbot = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const sendMessage = useSendMessage();
-  const { data: chatHistory, isLoading } = useChatHistory({ limit: 50 });
+  const { data: chatHistory, isLoading } = useChatHistory();
 
   useEffect(() => {
     // 서버에서 채팅 히스토리를 불러오거나 초기 메시지 표시
@@ -30,9 +30,8 @@ const Chatbot = () => {
       setMessages([
         {
           id: Date.now(),
-          type: 'bot',
-          content:
-            '안녕하세요! 날씨 기반 옷차림 추천 챗봇입니다. 궁금한 내용을 선택하거나 질문해주세요!',
+          role: 'ai',
+          text: '안녕하세요! 날씨 기반 옷차림 추천 챗봇입니다. 궁금한 내용을 선택하거나 질문해주세요!',
         },
       ]);
     }
@@ -51,8 +50,8 @@ const Chatbot = () => {
 
     const userMessage: Message = {
       id: Date.now(),
-      type: 'user',
-      content: currentMessage,
+      role: 'user',
+      text: currentMessage,
     };
     setMessages((prev) => [...prev, userMessage]);
     setMessage('');
@@ -63,18 +62,18 @@ const Chatbot = () => {
       });
 
       const botMessage: Message = {
-        id: response.id,
-        type: 'bot',
-        content: response.botResponse,
-        createdAt: response.createdAt,
+        id: Date.now(),
+        role: 'ai',
+        text: response.answer,
+        createdAt: response.created_at,
       };
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
       // 에러 발생 시 안내 메시지 표시
       const errorMessage: Message = {
         id: Date.now(),
-        type: 'bot',
-        content: '죄송합니다. 메시지 전송 중 오류가 발생했습니다. 다시 시도해주세요.',
+        role: 'ai',
+        text: '죄송합니다. 메시지 전송 중 오류가 발생했습니다. 다시 시도해주세요.',
       };
       setMessages((prev) => [...prev, errorMessage]);
     }
@@ -85,16 +84,16 @@ const Chatbot = () => {
     const timestamp = Date.now();
     const userMessage: Message = {
       id: timestamp,
-      type: 'user',
-      content: keyword,
+      role: 'user',
+      text: keyword,
     };
     setMessages((prev) => [...prev, userMessage]);
 
     if (keywordsAnswer[keyword]) {
       const botMessage: Message = {
         id: timestamp + 1,
-        type: 'bot',
-        content: keywordsAnswer[keyword],
+        role: 'ai',
+        text: keywordsAnswer[keyword],
       };
       setMessages((prev) => [...prev, botMessage]);
       return;
@@ -107,18 +106,18 @@ const Chatbot = () => {
 
       // 봇 응답을 UI에 추가
       const botMessage: Message = {
-        id: response.id,
-        type: 'bot',
-        content: response.botResponse,
-        createdAt: response.createdAt,
+        id: Date.now(),
+        role: 'ai',
+        text: response.answer,
+        createdAt: response.created_at,
       };
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
       console.error('메시지 전송 실패:', error);
       const errorMessage: Message = {
         id: Date.now(),
-        type: 'bot',
-        content: '죄송합니다. 메시지 전송 중 오류가 발생했습니다. 다시 시도해주세요.',
+        role: 'ai',
+        text: '죄송합니다. 메시지 전송 중 오류가 발생했습니다. 다시 시도해주세요.',
       };
       setMessages((prev) => [...prev, errorMessage]);
     }
@@ -149,16 +148,16 @@ const Chatbot = () => {
       <div css={styles.chatBody}>
         {messages.map((msg) => (
           <div key={msg.id}>
-            {msg.type === 'bot' ? (
+            {msg.role === 'ai' ? (
               <div css={styles.messageWrapper}>
                 <div css={styles.messageAvatar}>
                   <CgBot />
                 </div>
-                <div css={styles.messageBubble}>{msg.content}</div>
+                <div css={styles.messageBubble}>{msg.text}</div>
               </div>
             ) : (
               <div css={styles.messageWrapperUser}>
-                <div css={styles.messageBubbleUser}>{msg.content}</div>
+                <div css={styles.messageBubbleUser}>{msg.text}</div>
               </div>
             )}
           </div>

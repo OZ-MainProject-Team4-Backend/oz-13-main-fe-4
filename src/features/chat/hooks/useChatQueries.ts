@@ -1,10 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  ReqChatHistoryParams,
-  ReqSendMessage,
-  ResChatHistory,
-  ResSendMessage,
-} from '../types/chat';
+import { ReqSendMessage, ResChatHistory, ResSendMessage } from '../types/chat';
 import { getChatHistory, sendMessage } from '../api/chat';
 
 // 메시지를 서버로 보내기
@@ -23,9 +18,9 @@ export const useSendMessage = () => {
 };
 
 // 서버에서 대화 내역 받아오기
-export const useChatHistory = (params?: ReqChatHistoryParams) => {
+export const useChatHistory = () => {
   return useQuery<ResChatHistory, Error>({
-    queryKey: ['chatHistory', params],
-    queryFn: () => getChatHistory(params),
+    queryKey: ['chatHistory'],
+    queryFn: getChatHistory,
   });
 };
