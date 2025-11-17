@@ -1,12 +1,15 @@
 // src/features/auth/types/auth.ts
 //===========공통 타입 ============
+export type Gender = '' | 'M' | 'F';
+export type AgeGroup = '' | 'ten' | 'twenty' | 'thirty' | 'fourthy' | 'fifth' | 'sixth';
+
 export type User = {
   id: number;
   email: string;
   name: string;
   nickname: string;
-  gender: string;
-  age: string;
+  gender: Gender;
+  age: AgeGroup;
   is_verified: boolean;
   favorite_regions?: string[]; // 마이페이지 조회 시에만 포함
   created_at: string;
@@ -50,8 +53,8 @@ export type RequestSignUpDTO = {
   name: string;
   password: string;
   nickname: string;
-  gender: string;
-  age: string;
+  gender: Gender;
+  age: AgeGroup;
 };
 
 export type ResponsetSignUpDTO = ApiResponse<{
@@ -91,19 +94,6 @@ export type RequestRefreshToken = null;
 export type ResponseRefreshToken = ApiResponse<{
   access: string;
 }>;
-//=========== 마이페이지 ============
-export type ResponseMeDTO = ApiResponse<User>;
-
-//=========== 프로필수정 ============
-export type RequestProfileUpdateDTO = {
-  nickname?: string;
-  gender?: string;
-  email?: string;
-  age?: string;
-  password?: string;
-};
-
-export type ResponseProfileUpdateDTO = ApiResponse;
 
 //==================== 즐겨찾는 지역 수정 ====================
 export type RequestFavoriteRegionsUpdateDTO = {
@@ -114,6 +104,18 @@ export type ResponseFavoriteRegionsUpdateDTO = ApiResponse<{
   favorite_regions: string[];
 }>;
 
+//=========== 마이페이지 ============
+export type ResponseMeDTO = ApiResponse<User>;
+
+//=========== 프로필수정 ============
+export type RequestProfileUpdateDTO = {
+  nickname?: string;
+  email?: string;
+  gender?: Gender; // ✅ 사용
+  age?: AgeGroup; // ✅ 사용
+};
+
+export type ResponseProfileUpdateDTO = ApiResponse;
 //=========== 비밀번호 변경(새로덮는것임) ============
 export type RequestPasswordChangeDTO = {
   old_password: string;
