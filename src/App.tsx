@@ -3,7 +3,7 @@ import './App.css';
 import LogIn from './pages/auth/LogIn';
 import SignUp from './pages/auth/SignUp';
 import Layout from './pages/Layout';
-import { Mainpage } from './pages/main/MainPage';
+import { MainPage } from './pages/main/MainPage';
 import Mypage from './pages/Mypage';
 import Diary from './pages/diary/diary';
 
@@ -15,7 +15,7 @@ function App() {
 
     <Routes>
       <Route element={<Layout />}>
-        <Route index element={<Mainpage />} />
+        <Route index element={<MainPage />} />
         <Route path='/login' element={<LogIn />} />
         <Route path='/signup' element={<SignUp />} />
         <Route path='/mypage' element={<Mypage />} />
