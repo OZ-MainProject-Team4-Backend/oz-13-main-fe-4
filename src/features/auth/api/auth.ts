@@ -7,12 +7,16 @@ import {
   RequestEmailVerifyDTO,
   RequestLoginDTO,
   RequestNicknameValidateDTO,
+  RequestPasswordChangeDTO,
+  RequestProfileUpdateDTO,
   RequestSignUpDTO,
   ResponseEmailSendDTO,
   ResponseEmailVerifyDTO,
   ResponseLoginDTO,
   ResponseMeDTO,
   ResponseNicknameValidateDTO,
+  ResponsePasswordChangeDTO,
+  ResponseProfileUpdateDTO,
   ResponseRefreshToken,
 } from '../types/auth';
 
@@ -117,5 +121,34 @@ export async function getMe(): Promise<ResponseMeDTO> {
       throw error.response.data;
     }
     throw new Error('프로필 조회 실패');
+  }
+}
+
+//- ====================  프로필 수정 ====================
+export async function updateProfile(
+  data: RequestProfileUpdateDTO
+): Promise<ResponseProfileUpdateDTO> {
+  try {
+    const res = await instance.get('/api/auth/profile');
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw new Error('프로필 수정 실패');
+  }
+}
+//- ====================  비밀번호 수정 ====================
+export async function updatePassword(
+  data: RequestPasswordChangeDTO
+): Promise<ResponsePasswordChangeDTO> {
+  try {
+    const res = await instance.get('/api/auth/password');
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw new Error('비밀번호 수정 실패');
   }
 }
