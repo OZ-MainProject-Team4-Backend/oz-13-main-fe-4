@@ -1,11 +1,12 @@
 import axios from 'axios';
-const instance = axios.create({
-  baseURL: 'http://localhost:5173',
+export const instance = axios.create({
+  baseURL: 'http://localhost:5173/api',
   timeout: 1000,
   headers: { 'Content-Type': 'application/json' },
+  withCredentials: true, //리프레쉬토큰의 쿠키 송수신 허용
 });
 
-const diaryInstance = axios.create({
-  baseURL: 'http://localhost:5173',
+export const diaryInstance = axios.create({
+  baseURL: 'http://localhost:5173/api',
   timeout: 1000,
 });

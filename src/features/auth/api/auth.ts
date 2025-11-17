@@ -1,5 +1,7 @@
 // src/features/auth/api/authApi.ts
 
+import axios from 'axios';
+import { instance } from '../../../axios/instance';
 import {
   RequestEmailSendDTO,
   RequestEmailVerifyDTO,
@@ -10,97 +12,97 @@ import {
   ResponseEmailVerifyDTO,
   ResponseLoginDTO,
   ResponseNicknameValidateDTO,
+  ResponseRefreshToken,
 } from '../types/auth';
 
 //- ==================== 닉네임 검증 ====================
 export async function validateNickname(
   data: RequestNicknameValidateDTO
 ): Promise<ResponseNicknameValidateDTO> {
-  const res = await fetch('/api/auth/nickname/validate', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-  const json = await res.json();
-
-  if (!res.ok) {
-    throw new Error(json.error?.message || '닉네임 검증 실패');
+  try {
+    const res = await instance.post('/auth/nickname/validate', data);
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw new Error('닉네임 검증 중 오류가 발생했습니다');
   }
-  return json;
 }
 
 //- ==================== 이메일 검증 ====================
 export async function sendEmailCode(data: RequestEmailSendDTO): Promise<ResponseEmailSendDTO> {
-  const res = await fetch('/api/auth/email/send', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  const json = await res.json();
-  if (!res.ok) {
-    throw new Error(json.error?.message || '이메일 발송 실패');
+  try {
+    const res = await instance.post('/auth/email/send', data);
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw new Error('이메일 검증 오류');
   }
-  return json;
 }
 
 //- ==================== 이메일 코드 검증 ====================
 export async function verifyEmailCode(
   data: RequestEmailVerifyDTO
 ): Promise<ResponseEmailVerifyDTO> {
-  const res = await fetch('/api/auth/email/verify', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-
-  const json = await res.json();
-
-  if (!res.ok) {
-    throw new Error(json.error?.message || '인증 코드 검증 실패');
+  try {
+    const res = await instance.post('/auth/email/verify', data);
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw new Error('이메일 인증 코드 검증 실패');
   }
-
-  return json;
 }
 
 //- ==================== 회원가입 ====================
 export async function signUp(data: RequestSignUpDTO): Promise<{ message: string }> {
-  const res = await fetch('/api/auth/signup', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!res.ok) {
+  try {
+    const res = await instance.post('/auth/signup', data);
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
     throw new Error('회원가입 실패');
   }
-
-  return res.json();
 }
 //- ==================== 로그인 ====================
 export async function logIn(data: RequestLoginDTO): Promise<ResponseLoginDTO> {
-  const res = await fetch('/api/auth/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-    // ✅ 쿠키 전송/수신 허용
-    credentials: 'include',
-  });
-
-  const json = await res.json();
-
-  if (!res.ok) {
-    throw new Error(json.error?.message || '로그인 실패');
+  try {
+    const res = await instance.post('/auth/login', data);
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw new Error('로그인 실패');
   }
-
-  return json;
 }
+//- ==================== 리프레쉬토큰 ====================
+export async function refreshToken(): Promise<ResponseRefreshToken> {
+  try {
+    const res = await instance.post('/auth/refresh');
+    return res.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw new Error('리프레쉬토큰으로 액세스토큰발급 실패');
+  }
+}
+
 //- ==================== 로그아웃 ====================
 export async function logOut(): Promise<void> {
-  await fetch('/api/auth/logout', {
-    method: 'POST',
-  });
+  try {
+    await instance.post('/auth/logout');
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+    throw new Error('로그아웃 실패');
+  }
 }

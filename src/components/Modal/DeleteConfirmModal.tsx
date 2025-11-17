@@ -5,9 +5,15 @@ interface DeleteConfirmModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  isLoading?: boolean;
 }
 
-const DeleteConfirmModal = ({ isOpen, onClose, onConfirm }: DeleteConfirmModalProps) => {
+const DeleteConfirmModal = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  isLoading = false,
+}: DeleteConfirmModalProps) => {
   return (
     <BaseModal
       isOpen={isOpen}
@@ -16,12 +22,12 @@ const DeleteConfirmModal = ({ isOpen, onClose, onConfirm }: DeleteConfirmModalPr
       subtitle='삭제 후에는 복구할 수 없습니다.'
       footer={
         <>
-          <Button onClick={onClose} variant='outlined' color='primary'>
+          <Button onClick={onClose} variant='outlined' color='primary' disabled={isLoading}>
             취소
           </Button>
 
-          <Button onClick={onConfirm} variant='contained' color='primary'>
-            삭제하기
+          <Button onClick={onConfirm} variant='contained' color='primary' disabled={isLoading}>
+            {isLoading ? '삭제 중...' : '삭제하기'}
           </Button>
         </>
       }

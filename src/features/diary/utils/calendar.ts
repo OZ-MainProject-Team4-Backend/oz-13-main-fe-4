@@ -48,11 +48,27 @@ export const isToday = (
   );
 };
 
-// Date객체 -> "YYYY년 MM월 DD일"로 변환
+// Date객체 -> "YYYY-MM-DD" (DB 저장용 ISO 형식)
+export const getISODate = (selectedDate: Date | null): string => {
+  if (!selectedDate) return '';
+  const year = selectedDate.getFullYear();
+  const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+  const day = String(selectedDate.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+// Date객체 -> "YYYY년 MM월 DD일" (화면 표시용)
 export const getFormattedDate = (selectedDate: Date | null): string => {
   if (!selectedDate) return '';
   const year = selectedDate.getFullYear();
   const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
   const day = String(selectedDate.getDate()).padStart(2, '0');
+  return `${year}년 ${month}월 ${day}일`;
+};
+
+// "YYYY-MM-DD" -> "YYYY년 MM월 DD일"
+export const formatDateForDisplay = (isoDate: string): string => {
+  if (!isoDate) return '';
+  const [year, month, day] = isoDate.split('-');
   return `${year}년 ${month}월 ${day}일`;
 };

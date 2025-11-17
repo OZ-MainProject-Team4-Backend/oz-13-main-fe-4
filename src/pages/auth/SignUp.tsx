@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Box,
   Button,
+  CssBaseline,
   Divider,
   FormControl,
   FormControlLabel,
@@ -163,6 +164,8 @@ export default function SignUp() {
 
   return (
     <AppTheme>
+      <CssBaseline enableColorScheme />
+
       <ContainerMui direction='column' justifyContent='space-between'>
         <CardMui variant='outlined'>
           {/* 에러 메시지 표시 */}
