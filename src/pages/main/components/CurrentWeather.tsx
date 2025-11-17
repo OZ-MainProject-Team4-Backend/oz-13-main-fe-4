@@ -1,4 +1,5 @@
-import { Box } from '@mui/material';
+// src/components/MainPage/CurrentWeather.tsx
+import { Box, Button } from '@mui/material';
 import {
   CurrentWeatherCardHeader,
   InfoBox,
@@ -10,43 +11,71 @@ import {
   TemperatureSection,
   WeatherCard,
   WeatherCondition,
-  WeatherIcon,
-} from '../styles/MainPageContentStyles';
+} from '../styles/CurrentWeatherStyles';
+import { WeatherIcon } from './WeatherIcon';
+import { getWeatherDescriptionKorean } from '../../../utils/weatherIcon';
 
 interface CurrentWeatherProps {
   location: string;
   temperature: number;
   condition: string;
-  precipitation: number; // 강수확률
-  feelsLike: number; // 체감온도
+  iconCode: string;
+  precipitation: number;
+  feelsLike: number;
   onEditLocation?: () => void;
 }
 
-export const CurrentWeather = () => {
+export const CurrentWeather = ({
+  location,
+  temperature,
+  condition,
+  iconCode,
+  precipitation,
+  feelsLike,
+  onEditLocation,
+}: CurrentWeatherProps) => {
   return (
     <WeatherCard>
       <CurrentWeatherCardHeader>
-        <LocationText>location</LocationText>
+        <LocationText>{location}</LocationText>
+        <Button
+          onClick={onEditLocation}
+          sx={{
+            backgroundColor: '#5B9EFF',
+            color: '#ffffff',
+            borderRadius: '20px',
+            padding: '4px 16px',
+            fontSize: '12px',
+            textTransform: 'none',
+            '&:hover': {
+              backgroundColor: '#4A8EEE',
+            },
+          }}
+        >
+          지역 설정
+        </Button>
       </CurrentWeatherCardHeader>
+
       <TemperatureSection>
-        <WeatherIcon>🌍</WeatherIcon>
+        <WeatherIcon iconCode={iconCode} size={80} />
         <Box>
-          <Temperature>18 °C</Temperature>
-          <WeatherCondition>맑음</WeatherCondition>
+          <Temperature>{temperature} °C</Temperature>
+          <WeatherCondition>{getWeatherDescriptionKorean(condition)}</WeatherCondition>
         </Box>
       </TemperatureSection>
+
       <InfoGroup>
         <InfoBox>
           <InfoLabel>기온</InfoLabel>
-          <InfoValue>18 °C</InfoValue>
+          <InfoValue>{temperature} °C</InfoValue>
         </InfoBox>
         <InfoBox>
           <InfoLabel>강수확률</InfoLabel>
-          <InfoValue>5%</InfoValue>
+          <InfoValue>{precipitation}%</InfoValue>
         </InfoBox>
         <InfoBox>
           <InfoLabel>체감온도</InfoLabel>
-          <InfoValue>16 °C</InfoValue>
+          <InfoValue>{feelsLike} °C</InfoValue>
         </InfoBox>
       </InfoGroup>
     </WeatherCard>

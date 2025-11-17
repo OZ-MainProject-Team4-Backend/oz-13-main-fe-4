@@ -15,7 +15,7 @@ import {
   PlusIcon,
   StyleLabel,
   TemperatureInfo,
-} from '../styles/MainPageContentStyles';
+} from '../styles/TodayOutfitStyles';
 import { OutfitItemIcon } from './OutfitItemIcon';
 
 interface TodayOutfitRecommendationProps {
