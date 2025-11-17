@@ -83,6 +83,7 @@ export async function logIn(data: RequestLoginDTO): Promise<ResponseLoginDTO> {
     const res = await instance.post('/auth/login', data);
     return res.data;
   } catch (error) {
+    console.log(error);
     if (axios.isAxiosError(error) && error.response) {
       const apiError = error.response.data;
       throw new Error(apiError.error?.message || '로그인 실패');
@@ -117,7 +118,7 @@ export async function logOut(): Promise<void> {
 //- ====================  마이페이지 조회 ====================
 export async function getMe(): Promise<ResponseMeDTO> {
   try {
-    const res = await instance.get('/api/auth/me');
+    const res = await instance.get('/auth/me');
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -133,7 +134,7 @@ export async function updateProfile(
   data: RequestProfileUpdateDTO
 ): Promise<ResponseProfileUpdateDTO> {
   try {
-    const res = await instance.patch('/api/auth/profile', data);
+    const res = await instance.patch('/auth/profile', data);
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -148,7 +149,7 @@ export async function updatePassword(
   data: RequestPasswordChangeDTO
 ): Promise<ResponsePasswordChangeDTO> {
   try {
-    const res = await instance.patch('/api/auth/password', data);
+    const res = await instance.patch('/auth/password', data);
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
