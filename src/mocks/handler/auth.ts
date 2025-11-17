@@ -4,6 +4,8 @@ import {
   RequestEmailVerifyDTO,
   RequestLoginDTO,
   RequestNicknameValidateDTO,
+  RequestPasswordChangeDTO,
+  RequestProfileUpdateDTO,
   RequestSignUpDTO,
   ResponseLoginDTO,
   ResponseRefreshToken,
@@ -376,6 +378,206 @@ export const authHandlers = [
       success: true,
       statusCode: 200,
       data: user,
+    });
+  }),
+
+  //- ==================== 프로필 수정 ====================
+  http.patch('/api/auth/profile', async ({ request }) => {
+    const authHeader = request.headers.get('Authorization');
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return HttpResponse.json(
+        {
+          success: false,
+          statusCode: 401,
+          error: {
+            code: 'unauthorized',
+            message: '인증이 필요합니다',
+          },
+        },
+        { status: 401 }
+      );
+    }
+
+    const body = (await request.json()) as RequestProfileUpdateDTO;
+
+    // 닉네임 중복 확인
+    if (body.nickname && usedNicknames.has(body.nickname)) {
+      const currentUser = mockUsers[0]; // 현재 사용자
+      // 자기 자신의 닉네임이 아닌 경우에만 중복 에러
+      if (currentUser.nickname !== body.nickname) {
+        return HttpResponse.json(
+          {
+            success: false,
+            statusCode: 400,
+            error: {
+              code: 'nickname_duplicate',
+              message: '이미 사용 중인 닉네임입니다',
+            },
+          },
+          { status: 400 }
+        );
+      }
+    }
+
+    // 이메일 중복 확인
+    if (body.email) {
+      const existingUser = mockUsers.find((u) => u.email === body.email);
+      const currentUser = mockUsers[0];
+      if (existingUser && existingUser.id !== currentUser.id) {
+        return HttpResponse.json(
+          {
+            success: false,
+            statusCode: 400,
+            error: {
+              code: 'email_duplicate',
+              message: '이미 사용 중인 이메일입니다',
+            },
+          },
+          { status: 400 }
+        );
+      }
+    }
+
+    // 사용자 정보 업데이트
+    const user = mockUsers[0];
+
+    if (body.nickname) {
+      usedNicknames.delete(user.nickname); // 기존 닉네임 제거
+      user.nickname = body.nickname;
+      usedNicknames.add(body.nickname); // 새 닉네임 추가
+    }
+    if (body.email) user.email = body.email;
+    if (body.gender) user.gender = body.gender;
+    if (body.age) user.age = body.age;
+
+    console.log(`✏️ [MSW] 프로필 수정 완료:`, user);
+
+    return HttpResponse.json({
+      success: true,
+      statusCode: 200,
+      message: '프로필 수정 완료',
+    });
+  }),
+
+  //- ==================== 비밀번호 변경 ====================
+  http.patch('/api/auth/password', async ({ request }) => {
+    const authHeader = request.headers.get('Authorization');
+
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return HttpResponse.json(
+        {
+          success: false,
+          statusCode: 401,
+          error: {
+            code: 'unauthorized',
+            message: '인증이 필요합니다',
+          },
+        },
+        { status: 401 }
+      );
+    }
+
+    // 👇 try-catch로 감싸기
+    let body;
+    try {
+      body = await request.json();
+    } catch (error) {
+      console.error('❌ [MSW] JSON 파싱 실패:', error);
+      return HttpResponse.json(
+        {
+          success: false,
+          statusCode: 400,
+          error: {
+            code: 'invalid_request',
+            message: '잘못된 요청입니다',
+          },
+        },
+        { status: 400 }
+      );
+    }
+
+    const { old_password, new_password, new_password_confirm } = body as RequestPasswordChangeDTO;
+
+    const user = mockUsers[0];
+    const savedPassword = mockPasswords.get(user.email);
+
+    console.log('🔒 [MSW] 비밀번호 변경 요청:', {
+      savedPassword,
+      old_password,
+      new_password,
+    });
+
+    // 1. 현재 비밀번호 확인
+    if (savedPassword !== old_password) {
+      return HttpResponse.json(
+        {
+          success: false,
+          statusCode: 401,
+          error: {
+            code: 'password_incorrect',
+            message: '비밀번호가 일치하지 않습니다',
+          },
+        },
+        { status: 401 }
+      );
+    }
+
+    // 2. 새 비밀번호 일치 확인
+    if (new_password !== new_password_confirm) {
+      return HttpResponse.json(
+        {
+          success: false,
+          statusCode: 400,
+          error: {
+            code: 'passwords_not_match',
+            message: '새 비밀번호가 일치하지 않습니다',
+          },
+        },
+        { status: 400 }
+      );
+    }
+
+    // 3. 새 비밀번호 == 현재 비밀번호 확인
+    if (old_password === new_password) {
+      return HttpResponse.json(
+        {
+          success: false,
+          statusCode: 400,
+          error: {
+            code: 'password_same_as_old',
+            message: '새 비밀번호는 현재 비밀번호와 달라야 합니다',
+          },
+        },
+        { status: 400 }
+      );
+    }
+
+    // 4. 비밀번호 형식 검증
+    const passwordRegex = /^(?=.*[a-z])(?=.*[0-9])[a-z0-9]+$/;
+    if (new_password.length < 6 || new_password.length > 20 || !passwordRegex.test(new_password)) {
+      return HttpResponse.json(
+        {
+          success: false,
+          statusCode: 400,
+          error: {
+            code: 'password_invalid',
+            message: '비밀번호 형식이 올바르지 않습니다',
+          },
+        },
+        { status: 400 }
+      );
+    }
+
+    // 비밀번호 업데이트
+    mockPasswords.set(user.email, new_password);
+
+    console.log(`🔒 [MSW] 비밀번호 변경 완료: ${user.email}`);
+
+    return HttpResponse.json({
+      success: true,
+      statusCode: 200,
+      message: '비밀번호 변경 완료',
     });
   }),
 ];
