@@ -57,7 +57,8 @@ export async function verifyEmailCode(
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      throw error.response.data;
+      const apiError = error.response.data;
+      throw new Error(apiError.error?.message || '이메일 코드 검증 실패');
     }
     throw new Error('네트워크 오류');
   }
@@ -70,7 +71,8 @@ export async function signUp(data: RequestSignUpDTO): Promise<{ message: string 
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      throw error.response.data;
+      const apiError = error.response.data;
+      throw new Error(apiError.error?.message || '회원가입 실패');
     }
     throw new Error('네트워크 오류');
   }
@@ -82,7 +84,8 @@ export async function logIn(data: RequestLoginDTO): Promise<ResponseLoginDTO> {
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      throw error.response.data;
+      const apiError = error.response.data;
+      throw new Error(apiError.error?.message || '로그인 실패');
     }
     throw new Error('네트워크 오류');
   }
@@ -118,7 +121,8 @@ export async function getMe(): Promise<ResponseMeDTO> {
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      throw error.response.data;
+      const apiError = error.response.data;
+      throw new Error(apiError.error?.message || '마이페이지 조회 실패');
     }
     throw new Error('네트워크 오류');
   }
@@ -133,7 +137,8 @@ export async function updateProfile(
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      throw error.response.data;
+      const apiError = error.response.data;
+      throw new Error(apiError.error?.message || '프로필 수정 실패');
     }
     throw new Error('네트워크 오류');
   }
@@ -147,7 +152,8 @@ export async function updatePassword(
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      throw error.response.data;
+      const apiError = error.response.data;
+      throw new Error(apiError.error?.message || '비밀번호 수정 실패');
     }
     throw new Error('네트워크 오류');
   }
