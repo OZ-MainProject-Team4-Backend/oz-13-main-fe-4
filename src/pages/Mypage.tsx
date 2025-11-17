@@ -324,6 +324,7 @@ export default function Mypage() {
                         setIsEmailVerified(false);
                         setIsEmailCodeChecked(false);
                         setIsNicknameValidated(false);
+                        reset();
                       }}
                       sx={{ minWidth: 'fit-content', whiteSpace: 'nowrap' }}
                       variant='contained'
