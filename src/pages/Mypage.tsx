@@ -51,6 +51,8 @@ export default function Mypage() {
   // src/pages/auth/SignUp.tsx
   const [isEmailVerified, setIsEmailVerified] = useState(false); //이메일 중복 상태
   const [isEmailCodeChecked, setIsEmailCodeChecked] = useState(false); //이메일 인증코드 상태
+  const [isEditMode, setIsEditMode] = useState(false); //수정모드 상태
+  const [isPasswordEditMode, setIsPasswordEditMode] = useState(false); //비밀번호 수정모드 상태
   // Hook 호출 (자동으로 API 실행됨)
   const { data, isLoading, error } = useGetMeQuery();
 
