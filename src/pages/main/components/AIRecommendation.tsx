@@ -1,7 +1,7 @@
-import { Box, CircularProgress } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
-import { getAIRecommendation } from '../../../lib/services/claudeAPI';
+import { Box, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { getAIRecommendation } from '../../../lib/services/claudeAPI';
 import {
   ContentSection,
   HeaderText,
