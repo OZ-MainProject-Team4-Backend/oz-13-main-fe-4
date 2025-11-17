@@ -148,7 +148,7 @@ export async function updatePassword(
   data: RequestPasswordChangeDTO
 ): Promise<ResponsePasswordChangeDTO> {
   try {
-    const res = await instance.patch('/api/auth/password');
+    const res = await instance.patch('/api/auth/password', data);
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
