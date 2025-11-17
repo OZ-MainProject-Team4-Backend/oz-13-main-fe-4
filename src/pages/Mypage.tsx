@@ -31,8 +31,12 @@ import {
   useVerifyEmailCodeMutation,
 } from '../features/auth/hooks/useEmailVerificationMutation';
 import { useGetMeQuery } from '../features/auth/hooks/useGetMeQuery';
+import {
+  useUpdatePasswordMutation,
+  useUpdateProfileMutation,
+} from '../features/auth/hooks/useMypageMutation';
 import { useNicknameValidateMutation } from '../features/auth/hooks/useNicknameValidateMutation';
-import { MyPageFormData } from '../features/auth/types/zodTypes';
+import { FormFieldPassword, MyPageFormData } from '../features/auth/types/zodTypes';
 import AppTheme from '../styles/AppTheme';
 import { CardMui, ContainerMui } from '../styles/AuthStyle';
 const FormGrid = styled(Grid)(() => ({
@@ -53,19 +57,22 @@ export default function Mypage() {
   const [isEmailCodeChecked, setIsEmailCodeChecked] = useState(false); //이메일 인증코드 상태
   const [isEditMode, setIsEditMode] = useState(false); //수정모드 상태
   const [isPasswordEditMode, setIsPasswordEditMode] = useState(false); //비밀번호 수정모드 상태
+  // Mutation hooks
+  const updateProfileMutation = useUpdateProfileMutation();
+  const updatePasswordMutation = useUpdatePasswordMutation();
   // Hook 호출 (자동으로 API 실행됨)
   const { data, isLoading, error } = useGetMeQuery();
 
-  // 폼 초기값 설정
-  const { reset, register, control, handleSubmit, watch } = useForm<MyPageFormData>({
-    defaultValues: {
-      name: '',
-      nickname: '',
-      email: '',
-      gender: '',
-      emailCode: '',
-      age: '',
-    },
+  // 초기화 폼 분리(비밀번호,유저정보)
+  // 기본 정보 폼
+  const { reset, handleSubmit, control, watch, register } = useForm();
+  const profileForm = useForm<MyPageFormData>({
+    defaultValues: { name: '', nickname: '', email: '', gender: '', age: '' },
+  });
+
+  // 비밀번호 폼 (별도)
+  const passwordForm = useForm<FormFieldPassword>({
+    defaultValues: { oldPassword: '', newPassword: '', newPasswordConfirm: '' },
   });
 
   // 닉네임 중복 검사
@@ -143,6 +150,7 @@ export default function Mypage() {
       }
     );
   };
+
   // 초기화 후 데이터 들어오면 폼에 데이터 채우기.
   useEffect(() => {
     if (data?.data) {
@@ -166,11 +174,55 @@ export default function Mypage() {
     return <div>에러 발생</div>;
   }
 
-  // 제출 버튼
-  const onSubmit: SubmitHandler<MyPageFormData> = (data) => {
-    console.log(data);
-    alert('수정성공');
+  // 회원정보 수정완료 핸들러
+  const handleProfileSubmit: SubmitHandler<MyPageFormData> = (data) => {
+    updateProfileMutation.mutate(
+      {
+        nickname: data.nickname,
+        email: data.email,
+        gender: data.gender,
+        age: data.age,
+      },
+      {
+        onSuccess: () => {
+          setModalMessage('프로필 수정 완료');
+          setEmailShowModal(true);
+          setIsEditMode(false);
+          //쿼리 갱신
+          // queryClient.invalidateQueries({ queryKey: ['me'] });
+        },
+
+        onError: (error) => {
+          setModalMessage(error.message);
+          setEmailShowModal(true);
+        },
+      }
+    );
   };
+
+  // 비밀번호 수정 완료
+  const handlePasswordSubmit: SubmitHandler<FormFieldPassword> = (formData) => {
+    updatePasswordMutation.mutate(
+      {
+        old_password: formData.oldPassword,
+        new_password: formData.newPassword,
+        new_password_confirm: formData.newPasswordConfirm,
+      },
+      {
+        onSuccess: () => {
+          setModalMessage('비밀번호 변경 완료');
+          setEmailShowModal(true);
+          setIsPasswordEditMode(false);
+          passwordForm.reset();
+        },
+        onError: (error) => {
+          setModalMessage(error.message);
+          setEmailShowModal(true);
+        },
+      }
+    );
+  };
+
   return (
     <AppTheme>
       <CssBaseline enableColorScheme />
@@ -209,7 +261,11 @@ export default function Mypage() {
             </Stack>
           </Box>
           {/* 스택 시작  */}
-          <Stack component='form' spacing={{ xs: 4, md: 8 }} onSubmit={handleSubmit(onSubmit)}>
+          <Stack
+            component='form'
+            spacing={{ xs: 4, md: 8 }}
+            onSubmit={handleSubmit(handleProfileSubmit)}
+          >
             <Stack>
               <Divider>
                 <Typography
