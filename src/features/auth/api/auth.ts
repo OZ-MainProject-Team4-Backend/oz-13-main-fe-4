@@ -133,7 +133,7 @@ export async function updateProfile(
   data: RequestProfileUpdateDTO
 ): Promise<ResponseProfileUpdateDTO> {
   try {
-    const res = await instance.patch('/api/auth/profile');
+    const res = await instance.patch('/api/auth/profile', data);
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
