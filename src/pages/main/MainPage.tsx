@@ -1,5 +1,7 @@
-// src/pages/MainPage.tsx
-import { Box } from '@mui/material';
+import { AIRecommendation } from './components/AIRecommendation';
+import { CurrentWeather } from './components/CurrentWeather';
+import { HourlyWeather } from './components/HourlyWeather';
+import { TodayOutfitRecommendation } from './components/TodayOutfitRecommendation';
 import {
   ComponentsGrid,
   FullWidthCard,
@@ -33,7 +35,7 @@ export const MainPage = () => {
         {/* 시간별 날씨 */}
         <HourlyWeather hourlyData={[]} />
 
-        <FullWidthCard>AI 추천 문구</FullWidthCard>
+        <AIRecommendation temperature={15} condition={'clear'} location={'seoul'} />
 
         <PlaceholderCard>즐겨 찾는 지역</PlaceholderCard>
 
