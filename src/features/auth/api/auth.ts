@@ -20,7 +20,7 @@ export async function validateNickname(
   data: RequestNicknameValidateDTO
 ): Promise<ResponseNicknameValidateDTO> {
   try {
-    const res = await instance.post('/api/auth/nickname/validate', data);
+    const res = await instance.post('/auth/nickname/validate', data);
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -33,7 +33,7 @@ export async function validateNickname(
 //- ==================== 이메일 검증 ====================
 export async function sendEmailCode(data: RequestEmailSendDTO): Promise<ResponseEmailSendDTO> {
   try {
-    const res = await instance.post('/api/auth/email/send', data);
+    const res = await instance.post('/auth/email/send', data);
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -48,7 +48,7 @@ export async function verifyEmailCode(
   data: RequestEmailVerifyDTO
 ): Promise<ResponseEmailVerifyDTO> {
   try {
-    const res = await instance.post('/api/auth/email/verify', data);
+    const res = await instance.post('/auth/email/verify', data);
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -61,7 +61,7 @@ export async function verifyEmailCode(
 //- ==================== 회원가입 ====================
 export async function signUp(data: RequestSignUpDTO): Promise<{ message: string }> {
   try {
-    const res = await instance.post('/api/auth/signup', data);
+    const res = await instance.post('/auth/signup', data);
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -73,7 +73,7 @@ export async function signUp(data: RequestSignUpDTO): Promise<{ message: string 
 //- ==================== 로그인 ====================
 export async function logIn(data: RequestLoginDTO): Promise<ResponseLoginDTO> {
   try {
-    const res = await instance.post('/api/auth/login', data);
+    const res = await instance.post('/auth/login', data);
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -85,7 +85,7 @@ export async function logIn(data: RequestLoginDTO): Promise<ResponseLoginDTO> {
 //- ==================== 리프레쉬토큰 ====================
 export async function refreshToken(): Promise<ResponseRefreshToken> {
   try {
-    const res = await instance.post('/api/auth/refresh');
+    const res = await instance.post('/auth/refresh');
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -98,7 +98,7 @@ export async function refreshToken(): Promise<ResponseRefreshToken> {
 //- ==================== 로그아웃 ====================
 export async function logOut(): Promise<void> {
   try {
-    await instance.post('/api/auth/logout');
+    await instance.post('/auth/logout');
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
       throw error.response.data;
