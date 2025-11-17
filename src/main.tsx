@@ -8,10 +8,10 @@ import './axios/interceptors'; // 🔥요청 가로채려면 가장 상단 필�
 import './index.css';
 
 async function enableMocking() {
-  if (import.meta.env.DEV) {
+  if (import.meta.env.DEV && import.meta.env.VITE_USE_MOCK === 'use') {
     const { worker } = await import('./mocks/browser.ts');
     return worker.start({
-      onUnhandledRequest: 'warn',
+      onUnhandledRequest: 'bypass', // 모킹 안된 요청은 실제 서버로
     });
   }
 }
