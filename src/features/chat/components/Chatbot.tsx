@@ -4,9 +4,10 @@ import { IoSend, IoClose } from 'react-icons/io5';
 import { useState, useEffect, useRef } from 'react';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Message } from '../types/chat';
-import { useSendMessage } from '../hooks/useChatQueries';
+import { useSendMessage, useChatHistory } from '../hooks/useChatQueries';
 
 const KEYWORDS = ['서비스 소개', '추천 옷차림', '이번주 날씨'];
+const CHAT_SESSION_KEY = 'chat-session-id';
 
 const keywordsAnswer: Record<string, string> = {
   '서비스 소개':
@@ -25,6 +26,24 @@ const Chatbot = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const sendMessage = useSendMessage();
+
+  // localStorage에서 session_id 가져오기
+  const [sessionId, setSessionId] = useState<string | null>(() => {
+    return localStorage.getItem(CHAT_SESSION_KEY);
+  });
+  const { data: chatHistory } = useChatHistory(sessionId || undefined);
+
+  useEffect(() => {
+    if (sessionId) {
+      localStorage.setItem(CHAT_SESSION_KEY, sessionId);
+    }
+  }, [sessionId]);
+
+  useEffect(() => {
+    if (chatHistory?.messages && chatHistory.messages.length > 0) {
+      setMessages(chatHistory.messages);
+    }
+  }, [chatHistory]);
 
   useEffect(() => {
     // 메시지가 추가될 때마다 스크롤을 아래로
@@ -49,6 +68,10 @@ const Chatbot = () => {
       const response = await sendMessage.mutateAsync({
         message: currentMessage,
       });
+
+      if (response.session_id) {
+        setSessionId(response.session_id);
+      }
 
       const botMessage: Message = {
         id: Date.now(),
@@ -92,6 +115,10 @@ const Chatbot = () => {
       const response = await sendMessage.mutateAsync({
         message: keyword,
       });
+
+      if (response.session_id) {
+        setSessionId(response.session_id);
+      }
 
       // 봇 응답을 UI에 추가
       const botMessage: Message = {
