@@ -9,7 +9,7 @@ import {
   LoadingText,
   MainRecommendation,
   RecommendationCard,
-} from '../styles/MainPageContentStyles';
+} from '../styles/AIRecommendationStyles';
 
 interface AIRecommendationProps {
   temperature: number;

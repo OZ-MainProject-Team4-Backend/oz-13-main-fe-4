@@ -36,7 +36,7 @@ export const HourlyItem = styled(Box)({
   gap: '8px',
   minWidth: '100px',
   padding: '16px 12px',
-  backgroundColor: '#F0F7FF', // 아주 연한 파란색
+  backgroundColor: '#F0F7FF',
   borderRadius: '16px',
   flexShrink: 0,
   transition: 'all 0.2s',
