@@ -3,7 +3,7 @@ import { Box, Button, CssBaseline, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 import BaseModal from '../components/Modal/BaseModal';
 import EmailSection from '../features/mypage/components/EmailSection';
-import FavoriteLocationSection from '../features/mypage/components/FavoriteLocationSection';
+import FavoriteLocationSection from '../features/location/components/FavoriteLocationSection';
 import PasswordSection from '../features/mypage/components/PasswordSection';
 import ProfileSection from '../features/mypage/components/ProfileSection';
 import { useMypageForm } from '../features/mypage/hooks/useMypageForm';
