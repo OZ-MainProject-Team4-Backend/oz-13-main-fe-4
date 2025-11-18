@@ -32,7 +32,7 @@ const DiaryModalFields = ({
       <div css={styles.imageContainer}>
         <input
           type='file'
-          accept='image/*'
+          accept='image/jpeg,image/jpg,image/png,image/gif,image/webp'
           id='upload-input'
           onChange={handleImage}
           css={styles.fileInput}

@@ -78,6 +78,22 @@ const DiaryModal = ({
 
     const file = files[0];
 
+    // 파일 크기 제한 체크
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
+    if (file.size > MAX_FILE_SIZE) {
+      alert('이미지 파일 크기는 5MB 이하로 업로드해주세요.');
+      e.target.value = '';
+      return;
+    }
+
+    // 이미지 파일 형식 체크
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      alert('JPG, PNG, GIF, WebP 형식의 이미지만 업로드 가능합니다.');
+      e.target.value = '';
+      return;
+    }
+
     // 이전 미리보기 url 해제
     if (preview && preview.startsWith('blob:')) URL.revokeObjectURL(preview);
 
