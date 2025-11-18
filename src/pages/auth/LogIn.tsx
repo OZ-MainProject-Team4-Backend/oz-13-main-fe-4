@@ -48,8 +48,8 @@ export default function LogIn() {
     logInMutation.mutate(
       { ...data, is_auto_login: isAutoLogin },
       {
-        onSuccess: (response) => {
-          alert(`안녕하세요, ${response.data?.user.name} 님!`);
+        onSuccess: () => {
+          alert(`로그인성공!`);
           navigator('/');
         },
       }

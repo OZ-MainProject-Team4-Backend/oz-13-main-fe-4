@@ -13,10 +13,9 @@ type AuthState = {
   getAccessToken: () => string | null; //액세스 토큰 반환
 };
 
-//- Zustand 동적 스토어(StateStorage미들웨어?!)
+//- Zustand 동적 스토어
 const dynamicStorage: StateStorage = {
   getItem: (name: string) => {
-    // 두 저장소 모두 확인 (우선순위: localStorage -> sessionStorage)
     const localValue = localStorage.getItem(name);
     const sessionValue = sessionStorage.getItem(name);
     return localValue || sessionValue;
@@ -24,7 +23,6 @@ const dynamicStorage: StateStorage = {
   setItem: (name: string, value: string) => {
     try {
       const state = JSON.parse(value);
-      // isAutoLogin 값에 따라 저장소 선택
       if (state.state?.isAutoLogin) {
         localStorage.setItem(name, value);
         sessionStorage.removeItem(name);
@@ -33,7 +31,6 @@ const dynamicStorage: StateStorage = {
         localStorage.removeItem(name);
       }
     } catch (error) {
-      // JSON 파싱 실패 시 기본적으로 sessionStorage 사용
       sessionStorage.setItem(name, value);
     }
   },
@@ -42,36 +39,30 @@ const dynamicStorage: StateStorage = {
     sessionStorage.removeItem(name);
   },
 };
-//- Zustand 기본 스토어
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
-      //초기 전역 상태
       user: null,
       access: null,
       isAutoLogin: false,
 
-      //로그인시 호출
-      setAuth: (user, accesstoken, isAutoLogin) => {
+      setAuth: (user, accessToken, isAutoLogin) => {
         set({
           user,
-          access: accesstoken,
+          access: accessToken,
           isAutoLogin,
         });
       },
 
-      //액세스 토큰 갱신 시 사용됨
-      setAccessToken: (accesstoken) => {
+      setAccessToken: (accessToken) => {
         set({
-          access: accesstoken,
+          access: accessToken,
         });
       },
 
-      // 액세스 토큰 반환
       getAccessToken: () => get().access,
 
-      //로그아웃시 토큰클리어
       clearAuth: () => {
         set({
           user: null,
