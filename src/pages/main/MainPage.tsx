@@ -5,8 +5,11 @@ import { CurrentWeather } from './components/CurrentWeather';
 
 import { HourlyWeather } from './components/HourlyWeather';
 import { TodayOutfitRecommendation } from './components/TodayOutfitRecommendation';
+import { FavoriteLocationOutfitRecommendation } from './components/FavoriteLocationOutfitRecommendation';
+
 import {
   getFavorites,
+  addFavorite,
   deleteFavorite,
   updateFavoriteAlias,
   reorderFavorites,
@@ -19,18 +22,16 @@ import {
   RecommendCard,
 } from './styles/MainPageContentStyles';
 import { EmptyFavorites } from './components/EmptyFavorite';
-import FavoriteRegionModal from '../../components/Modal/FavoriteRegionModal';
 import { FavoritesSection } from './components/FavoriteSection';
-import { FavoriteLocationOutfitRecommendation } from './components/FavoriteLocationOutfitRecommendation';
-import { AIRecommendation } from './components/AIRecommendation';
+import FavoriteRegionModal from '../../components/Modal/FavoriteRegionModal';
 
 const MAX_FAVORITES = 3;
 
 export const MainPage = () => {
   const [favorites, setFavorites] = useState<FavoriteLocation[]>([]);
+  const [selectedFavoriteId, setSelectedFavoriteId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
-  const [editingFavorite, setEditingFavorite] = useState<FavoriteLocation | null>(null);
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
@@ -41,7 +42,6 @@ export const MainPage = () => {
     severity: 'success',
   });
 
-  // 초기 데이터 로드
   useEffect(() => {
     loadFavorites();
   }, []);
@@ -51,6 +51,10 @@ export const MainPage = () => {
       setLoading(true);
       const data = await getFavorites();
       setFavorites(data);
+
+      if (data.length > 0 && selectedFavoriteId === null) {
+        setSelectedFavoriteId(data[0].id);
+      }
     } catch (error) {
       console.error('즐겨찾기 로드 실패:', error);
       showSnackbar('즐겨찾기를 불러올 수 없습니다.', 'error');
@@ -59,40 +63,64 @@ export const MainPage = () => {
     }
   };
 
-  // EmptyFavorites에서 추가 성공 시
+  const handleFavoriteSelect = (id: number) => {
+    setSelectedFavoriteId(id);
+  };
+
   const handleAddSuccess = () => {
     loadFavorites();
     showSnackbar('추가되었습니다.', 'success');
   };
 
-  // EmptyFavorites에서 에러 발생 시
   const handleAddError = (message: string) => {
     showSnackbar(message, 'error');
   };
 
-  // + 버튼 클릭 (FavoritesSection에서)
   const handleAddClick = () => {
     if (favorites.length >= MAX_FAVORITES) {
       showSnackbar('즐겨찾기는 최대 3개까지 등록 가능합니다.', 'error');
       return;
     }
-    setEditingFavorite(null);
     setModalOpen(true);
   };
 
-  // 수정
-  const handleEdit = (favorite: FavoriteLocation) => {
-    setEditingFavorite(favorite);
-    setModalOpen(true);
+  const handleSave = async (data: { city: string; district: string }) => {
+    try {
+      await addFavorite(data);
+      setModalOpen(false);
+      loadFavorites();
+      showSnackbar('추가되었습니다.', 'success');
+    } catch (error) {
+      const axiosError = error as AxiosError<{ error: string; message: string }>;
+      const message = axiosError.response?.data?.message || '추가에 실패했습니다.';
+      showSnackbar(message, 'error');
+    }
   };
 
-  // 삭제
+  const handleAliasUpdate = async (id: number, alias: string) => {
+    try {
+      await updateFavoriteAlias(id, { alias });
+      setFavorites((prev) => prev.map((item) => (item.id === id ? { ...item, alias } : item)));
+      showSnackbar('별칭이 변경되었습니다.', 'success');
+    } catch (error) {
+      const axiosError = error as AxiosError<{ error: string; message: string }>;
+      const message = axiosError.response?.data?.message || '별칭 변경에 실패했습니다.';
+      showSnackbar(message, 'error');
+    }
+  };
+
   const handleDelete = async (id: number) => {
     if (!confirm('정말 삭제하시겠습니까?')) return;
 
     try {
       await deleteFavorite(id);
       setFavorites((prev) => prev.filter((item) => item.id !== id));
+
+      if (selectedFavoriteId === id) {
+        const remaining = favorites.filter((f) => f.id !== id);
+        setSelectedFavoriteId(remaining.length > 0 ? remaining[0].id : null);
+      }
+
       showSnackbar('삭제되었습니다.', 'success');
     } catch (error) {
       const axiosError = error as AxiosError<{ error: string; message: string }>;
@@ -101,7 +129,6 @@ export const MainPage = () => {
     }
   };
 
-  // 순서 변경
   const handleReorder = async (newFavorites: FavoriteLocation[]) => {
     const oldFavorites = [...favorites];
     setFavorites(newFavorites);
@@ -119,27 +146,11 @@ export const MainPage = () => {
     }
   };
 
-  // 수정 제출
-  const handleUpdate = async (data: { city: string; district: string; alias: string }) => {
-    if (!editingFavorite) return;
-
-    try {
-      await updateFavoriteAlias(editingFavorite.id, { alias: data.alias });
-      setFavorites((prev) =>
-        prev.map((item) => (item.id === editingFavorite.id ? { ...item, alias: data.alias } : item))
-      );
-      showSnackbar('수정되었습니다.', 'success');
-    } catch (error) {
-      const axiosError = error as AxiosError<{ error: string; message: string }>;
-      const message = axiosError.response?.data?.message || '수정에 실패했습니다.';
-      throw new Error(message);
-    }
-  };
-
-  // 스낵바 표시
   const showSnackbar = (message: string, severity: 'success' | 'error') => {
     setSnackbar({ open: true, message, severity });
   };
+
+  const selectedFavorite = favorites && favorites.find((f) => f.id === selectedFavoriteId);
 
   if (loading) {
     return <MainContainer>로딩 중...</MainContainer>;
@@ -160,36 +171,41 @@ export const MainPage = () => {
           }}
         />
         <TodayOutfitRecommendation temperature={18} />
-        <HourlyWeather hourlyData={[]} />
-
-        <AIRecommendation temperature={15} condition={'clear'} location={'seoul'} />
-
-        {/* 하단 추가 정보 */}
-        <FullWidthCard>지금, ○○○경기장에 가시는건가요?</FullWidthCard>
+        <HourlyWeather />
         <FullWidthCard>AI 추천 문구</FullWidthCard>
+
         {favorites.length === 0 ? (
           <EmptyFavorites onSuccess={handleAddSuccess} onError={handleAddError} />
         ) : (
           <>
             <FavoritesSection
               favorites={favorites}
+              selectedFavoriteId={selectedFavoriteId}
+              onFavoriteSelect={handleFavoriteSelect}
               onAddClick={handleAddClick}
-              onEdit={handleEdit}
+              onAliasUpdate={handleAliasUpdate}
               onDelete={handleDelete}
               onReorder={handleReorder}
             />
+
             <RecommendCard>
-              <FavoriteLocationOutfitRecommendation favorite={favorites[0]} temperature={18} />
+              {selectedFavorite && (
+                <FavoriteLocationOutfitRecommendation
+                  favorite={selectedFavorite}
+                  temperature={18}
+                />
+              )}
             </RecommendCard>
           </>
         )}
       </ComponentsGrid>
+
       <FavoriteRegionModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        onSave={handleUpdate}
-        editingFavorite={editingFavorite}
+        onSave={handleSave}
       />
+
       <Snackbar
         open={snackbar.open}
         autoHideDuration={3000}
