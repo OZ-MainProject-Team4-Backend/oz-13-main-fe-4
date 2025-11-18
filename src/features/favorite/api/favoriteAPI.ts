@@ -24,7 +24,7 @@ export interface ReorderRequest {
 }
 
 export const getFavorites = async (): Promise<FavoriteLocation[]> => {
-  const response = await instance.get<FavoriteLocation[]>('/locations/favorites');
+  const response = await instance.get<FavoriteLocation[]>('/locations/favorites/');
   return response.data;
 };
 
@@ -32,25 +32,28 @@ export const addFavorite = async (
   data: AddFavoriteRequest
 ): Promise<{ message: string; id: number }> => {
   const response = await instance.post<{ message: string; id: number }>(
-    '/locations/favorites',
+    '/locations/favorites/',
     data
   );
   return response.data;
 };
 
 export const deleteFavorite = async (id: number): Promise<void> => {
-  await instance.delete(`/locations/favorites/${id}`);
+  await instance.delete(`/locations/favorites/${id}/`);
 };
 
 export const updateFavoriteAlias = async (
   id: number,
   data: UpdateAliasRequest
 ): Promise<{ message: string }> => {
-  const response = await instance.patch<{ message: string }>(`/locations/favorites/${id}`, data);
+  const response = await instance.patch<{ message: string }>(`/locations/favorites/${id}/`, data);
   return response.data;
 };
 
 export const reorderFavorites = async (items: ReorderRequest[]): Promise<{ message: string }> => {
-  const response = await instance.patch<{ message: string }>('/locations/favorites/reorder', items);
+  const response = await instance.patch<{ message: string }>(
+    '/locations/favorites/reorder/',
+    items
+  );
   return response.data;
 };
