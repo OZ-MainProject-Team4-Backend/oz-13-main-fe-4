@@ -1,35 +1,28 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Route, Routes } from 'react-router-dom';
+import './App.css';
+import LogIn from './pages/auth/LogIn';
+import SignUp from './pages/auth/SignUp';
+import Layout from './pages/Layout';
+import { MainPage } from './pages/main/MainPage';
+import Mypage from './pages/Mypage';
+import Diary from './pages/diary/diary';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    /*
+    createTheme. 으로 프리텐타드로 섷ㄹ정하기
+     */
+
+    <Routes>
+      <Route element={<Layout />}>
+        <Route index element={<MainPage />} />
+        <Route path='/login' element={<LogIn />} />
+        <Route path='/signup' element={<SignUp />} />
+        <Route path='/mypage' element={<Mypage />} />
+        <Route path='/diary' element={<Diary />} />
+      </Route>
+    </Routes>
+  );
 }
 
-export default App
+export default App;
