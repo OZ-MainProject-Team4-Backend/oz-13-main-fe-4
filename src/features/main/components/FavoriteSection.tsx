@@ -103,21 +103,25 @@ export const FavoritesSection = ({
     })
   );
 
+  const safeFavorites = Array.isArray(favorites) ? favorites : [];
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (!over || active.id === over.id) return;
+    if (!over || active.id === over.id || !Array.isArray(safeFavorites)) return;
 
-    const oldIndex = favorites.findIndex((item) => item.id === active.id);
-    const newIndex = favorites.findIndex((item) => item.id === over.id);
-    const newFavorites = arrayMove(favorites, oldIndex, newIndex);
+    const oldIndex = safeFavorites.findIndex((item) => item?.id === active.id);
+    const newIndex = safeFavorites.findIndex((item) => item?.id === over.id);
 
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    const newFavorites = arrayMove(safeFavorites, oldIndex, newIndex);
     onReorder(newFavorites);
   };
 
   const slots = Array.from({ length: MAX_FAVORITES }, (_, index) => {
-    const favorite = favorites[index];
+    const favorite = safeFavorites[index];
 
-    if (favorite) {
+    if (favorite?.id) {
       return (
         <CardSlot key={favorite.id}>
           <FavoriteLocationCard
@@ -132,7 +136,7 @@ export const FavoritesSection = ({
           />
         </CardSlot>
       );
-    } else if (index === favorites.length && favorites.length < MAX_FAVORITES) {
+    } else if (index === safeFavorites.length && safeFavorites.length < MAX_FAVORITES) {
       return (
         <CardSlot key={`add-${index}`}>
           <AddButton onClick={onAddClick}>+</AddButton>
@@ -142,6 +146,8 @@ export const FavoritesSection = ({
       return <CardSlot key={`empty-${index}`} />;
     }
   });
+
+  const validFavorites = safeFavorites.filter((f) => f?.id);
 
   return (
     <Container>
@@ -154,7 +160,7 @@ export const FavoritesSection = ({
 
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext
-          items={favorites.map((f) => f.id)}
+          items={validFavorites.map((f) => f.id)}
           strategy={horizontalListSortingStrategy}
         >
           <GridLayout>{slots}</GridLayout>
