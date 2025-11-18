@@ -13,27 +13,26 @@ export const useCreateDiary = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ diary, image }: { diary: DiaryData; image: File | null }) =>
-      postDiaryApi(diary, image),
-    onSuccess: (response, variables) => {
+    mutationFn: ({
+      diary,
+      image,
+      lat,
+      lon,
+    }: {
+      diary: DiaryData;
+      image: File | null;
+      lat?: number;
+      lon?: number;
+    }) => postDiaryApi(diary, image, lat, lon),
+    onSuccess: (response) => {
       console.log('일기 작성 성공 : ', response);
 
-      const diaryId = response.diary_id || response.id;
-
+      // 서버 응답을 그대로 사용 (weather 정보 포함)
       queryClient.setQueriesData<DiaryData[]>({ queryKey: ['diary', 'calendar'] }, (oldData) => {
         if (!oldData) return oldData;
 
-        const newDiary: DiaryData = {
-          id: diaryId,
-          date: variables.diary.date,
-          title: variables.diary.title,
-          emotion: variables.diary.emotion,
-          notes: variables.diary.notes,
-          weather: variables.diary.weather,
-          image_url: null,
-        };
-
-        return [...oldData, newDiary];
+        // 서버에서 받은 전체 응답을 사용
+        return [...oldData, response];
       });
 
       // 전체 재조회 (서버에서 정확한 데이터 가져옴)
