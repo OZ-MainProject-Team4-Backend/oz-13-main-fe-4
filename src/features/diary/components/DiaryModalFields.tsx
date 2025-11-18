@@ -78,7 +78,7 @@ const DiaryModalFields = ({
             <SiAccuweather css={styles.weatherIcon} />
           )}
           <div css={styles.weatherText}>
-            <h3>{diary.weather.temperature}°C</h3>
+            <h3>{Math.round(diary.weather.temperature)}°C</h3>
             <p>{diary.weather.condition}</p>
           </div>
         </div>
