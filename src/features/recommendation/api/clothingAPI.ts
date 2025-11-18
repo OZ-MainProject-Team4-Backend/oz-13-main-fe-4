@@ -1,6 +1,6 @@
-const API_BASE_URL = 'http://localhost:5173/api';
+import { instance } from '../../../axios/instance';
 
-interface OutfitRecommendation {
+export interface OutfitRecommendation {
   rec_1: string;
   rec_2: string;
   rec_3: string;
@@ -8,25 +8,19 @@ interface OutfitRecommendation {
 }
 
 export const outfitAPI = {
-  // 위치 기반 의상 추천
-  getRecommendationByCoords: async (lat: number, lon: number): Promise<OutfitRecommendation> => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/recommend/outfit?lat=${lat}&lon=${lon}`);
-      if (!response.ok) throw new Error('의상 추천을 가져오는데 실패했습니다');
-      return await response.json();
-    } catch (error) {
-      console.error('getRecommendation error:', error);
-      throw error;
-    }
+  // 좌표 기반 의상 추천 (현재 날씨용) 1118 현재 500 에러 발생
+  getRecommendationByCoords: async (lat: number, lon: number) => {
+    const response = await instance.get<OutfitRecommendation>(
+      `/recommend/outfit?lat=${lat}&lon=${lon}`
+    );
+    return response.data;
   },
-  getRecommendationByLocation: async (location: string): Promise<OutfitRecommendation> => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/recommend/outfit?location=${location}`);
-      if (!response.ok) throw new Error('의상 추천을 가져오는데 실패했습니다');
-      return await response.json();
-    } catch (error) {
-      console.error('getRecommendation error:', error);
-      throw error;
-    }
+
+  // 주소 기반 의상 추천 (즐겨찾기 지역용) 1118 현재 500에러 발생
+  getRecommendationByLocation: async (location: string) => {
+    const response = await instance.get<OutfitRecommendation>(
+      `/recommend/outfit?location=${location}`
+    );
+    return response.data;
   },
 };
