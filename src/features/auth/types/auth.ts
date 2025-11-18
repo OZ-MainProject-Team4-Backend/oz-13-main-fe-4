@@ -82,7 +82,6 @@ export type RequestLoginDTO = {
 };
 
 export type ResponseLoginDTO = ApiResponse<{
-  user: User;
   access: string;
   access_expires_at: string; // 🔐로그인 요청하면 서버에서 JWT토큰값 뱉어냄
   is_auto_login: boolean;

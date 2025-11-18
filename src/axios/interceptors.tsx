@@ -48,11 +48,11 @@ const processQueue = (error: unknown, token: string | null = null) => {
       // 401 에러
       if (error.response?.status === 401) {
         // 401이지만 password 변경 실패는 로그아웃 안 함
-        if (error.config?.url === '/api/auth/password' && error.response?.status === 401) {
+        if (error.config?.url === '/auth/password' && error.response?.status === 401) {
           return Promise.reject(error);
         }
         // refresh API 자체가 실패한 경우 무한 루프 방지
-        if (originalRequest.url?.includes('/api/auth/refresh')) {
+        if (originalRequest.url?.includes('/auth/refresh')) {
           // Refresh Token이 만료됨 - 로그인 페이지로 리다이렉션
           useAuthStore.getState().clearAuth(); // Zustand store 클리어 (localStorage도 자동 클리어)
           window.location.href = '/login';

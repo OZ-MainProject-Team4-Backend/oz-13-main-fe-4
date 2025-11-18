@@ -49,16 +49,16 @@ const AdminButton = styled(Button)({
 });
 export const Header = () => {
   const navigator = useNavigate();
-  const userStore = useAuthStore();
-  const userData = userStore.user;
+  const { user, clearAuth } = useAuthStore();
+
+  console.log('userStore👀', user);
 
   const handleLogOut = () => {
-    userStore.clearAuth();
+    clearAuth();
     alert('로그아웃 성공!!!! ');
     navigator('/');
   };
-  console.log(userStore);
-  console.log(userData?.name);
+
   return (
     <>
       <HeaderAppBar position='static'>
@@ -72,9 +72,7 @@ export const Header = () => {
         <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
           <NavButton href='/'>Today</NavButton>
           <NavButton href='/diary'>날씨 일기장</NavButton>
-          {/* 날씨 일기장 처리필요 */}
-
-          {userData === null ? (
+          {user === null ? (
             <>
               <NavButton href='/login'>로그인</NavButton>
               <NavButton href='/signup'>회원가입</NavButton>
