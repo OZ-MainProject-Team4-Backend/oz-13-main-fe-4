@@ -1,48 +1,31 @@
-name: Deploy
+name: Sync to personal repo
 
 on:
   push:
-    branches: ["dev"]
+    branches: ["dev"] # 조직 레포 dev에 push될 때 트리거
 
 jobs:
-  build:
+  sync:
     runs-on: ubuntu-latest
-
-    container: pandoc/latex
 
     steps:
       - uses: actions/checkout@v2
 
+      # 필요 없다면 이 단계는 제거해도 됨
       - name: Install mustache (to update the date)
+        run: sudo apt-get update && sudo apt-get install -y ruby && sudo gem install mustache
 
-        run: apk add ruby && gem install mustache
-
-      - name: creates output
-
+      - name: Create output directory with full repo content
         run: sh ./build.sh
 
       - name: Pushes to another repository
-
-        id: push_directory
-
         uses: cpina/github-action-push-to-another-repository@main
-
         env:
           API_TOKEN_GITHUB: ${{ secrets.AUTO_ACTIONS }}
-
         with:
           source-directory: "output"
-
           destination-github-username: "yeeun-kor"
-
           destination-repository-name: "oz-13-main-fe-4"
-
           user-email: ${{ secrets.EMAIL }}
-
           commit-message: ${{ github.event.commits[0].message }}
-
           target-branch: dev
-
-      - name: Test get variable exported by push-to-another-repository
-
-        run: echo $DESTINATION_CLONED_DIRECTORY
