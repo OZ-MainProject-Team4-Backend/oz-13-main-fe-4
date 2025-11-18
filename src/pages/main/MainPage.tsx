@@ -8,9 +8,6 @@ import {
   MainContainer,
   PlaceholderCard,
 } from './styles/MainPageContentStyles';
-import { CurrentWeather } from './components/CurrentWeather';
-import { TodayOutfitRecommendation } from './components/TodayOutfitRecommendation';
-import { HourlyWeather } from './components/HourlyWeather';
 
 export const MainPage = () => {
   return (
