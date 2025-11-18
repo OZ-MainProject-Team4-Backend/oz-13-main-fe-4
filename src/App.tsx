@@ -1,18 +1,14 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import LogIn from './pages/auth/LogIn';
-import SignUp from './pages/auth/SignUp';
+import Diary from './pages/diary/diary';
 import Layout from './pages/Layout';
+import LogIn from './pages/LogIn';
 import { MainPage } from './pages/main/MainPage';
 import Mypage from './pages/Mypage';
-import Diary from './pages/diary/diary';
+import SignUp from './pages/SignUp';
 
 function App() {
   return (
-    /*
-    createTheme. 으로 프리텐타드로 섷ㄹ정하기
-     */
-
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<MainPage />} />

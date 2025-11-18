@@ -20,17 +20,17 @@ import {
 import { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { GoogleButton, KakaoButton, NaverButton } from '../../components/Button';
-import BaseModal from '../../components/Modal/BaseModal';
+import { GoogleButton, KakaoButton, NaverButton } from '../components/Button';
+import BaseModal from '../components/Modal/BaseModal';
 import {
   useSendEmailCodeMutation,
   useVerifyEmailCodeMutation,
-} from '../../features/auth/hooks/useEmailVerificationMutation';
-import { useNicknameValidateMutation } from '../../features/auth/hooks/useNicknameValidateMutation';
-import { useSignUpMutation } from '../../features/auth/hooks/useSignUpMutation';
-import { FormField, signUpSchema } from '../../features/auth/types/zodTypes';
-import AppTheme from '../../styles/AppTheme';
-import { CardMui, ContainerMui } from '../../styles/AuthStyle';
+} from '../features/auth/hooks/useEmailVerificationMutation';
+import { useNicknameValidateMutation } from '../features/auth/hooks/useNicknameValidateMutation';
+import { useSignUpMutation } from '../features/auth/hooks/useSignUpMutation';
+import { FormField, signUpSchema } from '../features/auth/types/zodTypes';
+import AppTheme from '../styles/AppTheme';
+import { CardMui, ContainerMui } from '../styles/AuthStyle';
 
 export default function SignUp() {
   const [isNicknameValidated, setIsNicknameValidated] = useState(false); //닉네임 중복검사 확인 상태

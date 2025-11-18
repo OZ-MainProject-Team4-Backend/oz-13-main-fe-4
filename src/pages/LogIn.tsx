@@ -15,12 +15,12 @@ import {
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { GoogleButton, KakaoButton, NaverButton } from '../../components/Button';
-import ForgotPassword from '../../components/Modal/ForgotPassword';
-import { useLogInMutation } from '../../features/auth/hooks/useLogInMutation';
-import { FormFieldLogin, logInSchema } from '../../features/auth/types/zodTypes';
-import AppTheme from '../../styles/AppTheme';
-import { CardMui, ContainerMui } from '../../styles/AuthStyle';
+import { GoogleButton, KakaoButton, NaverButton } from '../components/Button';
+import ForgotPassword from '../components/Modal/ForgotPassword';
+import { useLogInMutation } from '../features/auth/hooks/useLogInMutation';
+import { FormFieldLogin, logInSchema } from '../features/auth/types/zodTypes';
+import AppTheme from '../styles/AppTheme';
+import { CardMui, ContainerMui } from '../styles/AuthStyle';
 
 export default function LogIn() {
   const navigator = useNavigate();
