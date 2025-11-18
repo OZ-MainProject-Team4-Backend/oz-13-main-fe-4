@@ -23,13 +23,11 @@ export interface ReorderRequest {
   order: number;
 }
 
-// 즐겨찾기 목록 조회
 export const getFavorites = async (): Promise<FavoriteLocation[]> => {
   const response = await instance.get<FavoriteLocation[]>('/locations/favorites');
   return response.data;
 };
 
-// 즐겨찾기 추가
 export const addFavorite = async (
   data: AddFavoriteRequest
 ): Promise<{ message: string; id: number }> => {
@@ -40,12 +38,10 @@ export const addFavorite = async (
   return response.data;
 };
 
-// 즐겨찾기 삭제
 export const deleteFavorite = async (id: number): Promise<void> => {
   await instance.delete(`/locations/favorites/${id}`);
 };
 
-// 즐겨찾기 별칭 수정
 export const updateFavoriteAlias = async (
   id: number,
   data: UpdateAliasRequest
@@ -54,7 +50,6 @@ export const updateFavoriteAlias = async (
   return response.data;
 };
 
-// 즐겨찾기 순서 변경
 export const reorderFavorites = async (items: ReorderRequest[]): Promise<{ message: string }> => {
   const response = await instance.patch<{ message: string }>('/locations/favorites/reorder', items);
   return response.data;
