@@ -8,6 +8,8 @@ import {
   PlaceholderCard,
   RecommendCard,
 } from './styles/MainPageContentStyles';
+import { useAuthStore } from '../../features/auth/store/authStore';
+import Chatbot from '../../features/chat/components/Chatbot';
 
 interface WeatherData {
   location: string;
@@ -15,6 +17,8 @@ interface WeatherData {
   condition: string;
 }
 export const Mainpage = () => {
+  const { user } = useAuthStore();
+
   return (
     <MainContainer>
       <ComponentsGrid>
@@ -31,6 +35,7 @@ export const Mainpage = () => {
 
         <RecommendCard>즐겨 찾는 지역 의상 추천</RecommendCard>
       </ComponentsGrid>
+      {user && <Chatbot />}
     </MainContainer>
   );
 };

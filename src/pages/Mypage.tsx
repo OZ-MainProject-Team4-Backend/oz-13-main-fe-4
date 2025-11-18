@@ -27,6 +27,8 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { FormFieldMypage, mypageSchema } from '../features/auth/types/zodTypes';
 import AppTheme from '../styles/AppTheme';
 import { CardMui, ContainerMui } from '../styles/AuthStyle';
+import { useAuthStore } from '../features/auth/store/authStore';
+import Chatbot from '../features/chat/components/Chatbot';
 const FormGrid = styled(Grid)(() => ({
   display: 'flex',
   flexDirection: 'column',
@@ -35,6 +37,7 @@ const FormGrid = styled(Grid)(() => ({
 export default function Mypage() {
   // const { user } = useAuthStore().user;
   // console.log(user);
+  const { user } = useAuthStore();
   const {
     register,
     handleSubmit,
@@ -353,6 +356,7 @@ export default function Mypage() {
           </Stack>
         </CardMui>
       </ContainerMui>
+      {user && <Chatbot />}
     </AppTheme>
   );
 }
