@@ -4,6 +4,7 @@ import { outfitHandlers } from './handler/clothingHandler';
 import { diaryHandlers } from './handler/diary';
 import { handlers } from './handler/index';
 import { locationHandlers } from './handler/locationHandlers';
+import { favoriteHandlers } from './handler/favorite';
 
 export const worker = setupWorker(
   ...handlers,
@@ -11,4 +12,5 @@ export const worker = setupWorker(
   ...authHandlers,
   ...diaryHandlers,
   ...locationHandlers
+  ...favoriteHandlers
 );
