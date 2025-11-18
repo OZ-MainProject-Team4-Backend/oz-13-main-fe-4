@@ -22,7 +22,7 @@ interface FavoriteLocationCardProps {
 }
 
 const CardContainer = styled(Box)<{ isSelected: boolean }>(({ isSelected }) => ({
-  width: '400px',
+  width: '20rem',
   flexShrink: 0,
   backgroundColor: isSelected ? '#E3F2FD' : '#FFF',
   border: isSelected ? '3px solid #1976D2' : '2px solid #E0E0E0',
