@@ -7,8 +7,19 @@ export const sendMessage = async (message: ReqSendMessage): Promise<ResSendMessa
   return res.data;
 };
 
-export const getChatHistory = async (sessionId?: string): Promise<ResChatHistory> => {
-  const url = sessionId ? `/chat/session?session_id=${sessionId}` : '/chat/session';
+export const getChatHistory = async (
+  sessionId?: string,
+  limit: number = 20,
+  beforeId?: number
+): Promise<ResChatHistory> => {
+  const params = new URLSearchParams();
+
+  if (sessionId) params.append('session_id', sessionId);
+  if (limit) params.append('limit', String(limit));
+  if (beforeId !== undefined) params.append('before_id', String(beforeId));
+
+  const url = `/chat/session?${params.toString()}`;
+
   const res = await instance.get(url);
 
   const messages = res.data?.messages && Array.isArray(res.data.messages) ? res.data.messages : [];

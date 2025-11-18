@@ -24,6 +24,7 @@ const Chatbot = () => {
     },
   ]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatRef = useRef<HTMLDivElement>(null);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const sendMessage = useSendMessage();
 
@@ -31,7 +32,17 @@ const Chatbot = () => {
   const [sessionId, setSessionId] = useState<string | null>(() => {
     return localStorage.getItem(CHAT_SESSION_KEY);
   });
-  const { data: chatHistory } = useChatHistory(sessionId || undefined);
+
+  // 페이지네이션 상태
+  const [beforeId, setBeforeId] = useState<number | undefined>(undefined);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
+
+  const { data: chatHistory } = useChatHistory({
+    sessionId: sessionId || undefined,
+    limit: 20,
+    beforeId,
+  });
 
   useEffect(() => {
     if (sessionId) {
@@ -39,16 +50,45 @@ const Chatbot = () => {
     }
   }, [sessionId]);
 
+  // 채팅 히스토리 로드 시 메시지 업데이트
   useEffect(() => {
     if (chatHistory?.messages && chatHistory.messages.length > 0) {
-      setMessages(chatHistory.messages);
+      if (beforeId) {
+        // 이전 메시지 로드 시 기존 메시지에 추가 (중복 제거)
+        setMessages((prev) => {
+          const newMessages = chatHistory.messages.filter(
+            (newMsg) => !prev.some((existingMsg) => existingMsg.id === newMsg.id)
+          );
+          return [...newMessages, ...prev];
+        });
+        setIsLoadingMore(false);
+      } else {
+        // 최초 로드 또는 새로고침
+        setMessages(chatHistory.messages);
+      }
+      setHasMore(chatHistory.has_more);
     }
-  }, [chatHistory]);
+  }, [chatHistory, beforeId]);
 
   useEffect(() => {
-    // 메시지가 추가될 때마다 스크롤을 아래로
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (!isLoadingMore) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isLoadingMore]);
+
+  // 스크롤 이벤트로 이전 메시지 로드
+  const handleScroll = () => {
+    const chatBody = chatRef.current;
+    if (!chatBody || isLoadingMore || !hasMore) return;
+
+    if (chatBody.scrollTop === 0) {
+      setIsLoadingMore(true);
+      // next_before_id를 사용하여 이전 메시지 로드
+      if (chatHistory?.next_before_id) {
+        setBeforeId(chatHistory.next_before_id);
+      }
+    }
+  };
 
   const handleSendMessage = async () => {
     const trimmedMessage = message.trim();
@@ -161,7 +201,12 @@ const Chatbot = () => {
       </div>
 
       {/* 메시지 영역 */}
-      <div css={styles.chatBody}>
+      <div css={styles.chatBody} ref={chatRef} onScroll={handleScroll}>
+        {isLoadingMore && hasMore && (
+          <div style={{ textAlign: 'center', padding: '10px', color: '#999' }}>
+            이전 메시지 로드 중...
+          </div>
+        )}
         {messages.map((msg) => (
           <div key={msg.id}>
             {msg.role === 'ai' ? (

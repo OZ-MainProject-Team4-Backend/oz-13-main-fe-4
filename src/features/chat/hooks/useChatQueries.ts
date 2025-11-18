@@ -17,11 +17,17 @@ export const useSendMessage = () => {
   });
 };
 
+interface UseChatHistoryParams {
+  sessionId?: string;
+  limit?: number;
+  beforeId?: number;
+}
+
 // 서버에서 대화 내역 받아오기 (실시간 세션)
-export const useChatHistory = (sessionId?: string) => {
+export const useChatHistory = ({ sessionId, limit = 20, beforeId }: UseChatHistoryParams) => {
   return useQuery<ResChatHistory, Error>({
-    queryKey: ['chatHistory', sessionId],
-    queryFn: () => getChatHistory(sessionId),
+    queryKey: ['chatHistory', sessionId, limit, beforeId], // beforeId 상태가 변경되면 react query가 자동으로 재요청
+    queryFn: () => getChatHistory(sessionId, limit, beforeId),
     enabled: !!sessionId, // sessionId가 있을 때만 실행
   });
 };
