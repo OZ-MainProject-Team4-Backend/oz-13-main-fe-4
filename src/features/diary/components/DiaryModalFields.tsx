@@ -17,6 +17,8 @@ const DiaryModalFields = ({
   disabled,
 }: DiaryModalFieldsProps) => {
   const titleRef = useRef<HTMLInputElement>(null);
+  const BASE_URL = 'https://openweathermap.org/img/wn';
+  const weatherIconUrl = diary.weather?.icon ? `${BASE_URL}/${diary.weather.icon}@2x.png` : null;
 
   useEffect(() => {
     if (!disabled && titleRef.current) {
@@ -39,8 +41,8 @@ const DiaryModalFields = ({
         <label htmlFor='upload-input' css={styles.imageLabel}>
           {preview ? (
             <img src={preview!} alt='미리보기' width={'100%'} css={styles.previewImage} />
-          ) : diary.image_url ? (
-            <img src={diary.image_url} alt='저장된 이미지' />
+          ) : diary.image ? (
+            <img src={diary.image} alt='저장된 이미지' />
           ) : (
             <div css={styles.uploadPlaceholder}>
               <IoImageOutline />
@@ -68,13 +70,19 @@ const DiaryModalFields = ({
       </Box>
 
       {/* 날씨 */}
-      <div css={styles.weatherSection}>
-        <SiAccuweather css={styles.weatherIcon} />
-        <div css={styles.weatherText}>
-          <h3>{diary.weather.temperature}°C</h3>
-          <p>{diary.weather.condition}</p>
+      {diary.weather && (
+        <div css={styles.weatherSection}>
+          {weatherIconUrl ? (
+            <img src={weatherIconUrl} alt={diary.weather.condition} css={styles.weatherIcon} />
+          ) : (
+            <SiAccuweather css={styles.weatherIcon} />
+          )}
+          <div css={styles.weatherText}>
+            <h3>{diary.weather.temperature}°C</h3>
+            <p>{diary.weather.condition}</p>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* 기분 */}
       <div css={styles.emotionSection}>
