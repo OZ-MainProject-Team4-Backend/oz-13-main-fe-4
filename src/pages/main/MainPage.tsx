@@ -24,6 +24,7 @@ import {
 import { EmptyFavorites } from '../../features/main/components/EmptyFavorite';
 import { FavoritesSection } from '../../features/main/components/FavoriteSection';
 import FavoriteRegionModal from '../../components/Modal/FavoriteRegionModal';
+import { AIRecommendation } from '../../features/main/components/AIRecommendation';
 
 const MAX_FAVORITES = 3;
 
@@ -172,7 +173,7 @@ export const MainPage = () => {
         />
         <TodayOutfitRecommendation temperature={18} />
         <HourlyWeather />
-        <FullWidthCard>AI 추천 문구</FullWidthCard>
+        <AIRecommendation temperature={15} condition={'clear'} location={'seoul'} />
 
         {favorites.length === 0 ? (
           <EmptyFavorites onSuccess={handleAddSuccess} onError={handleAddError} />
