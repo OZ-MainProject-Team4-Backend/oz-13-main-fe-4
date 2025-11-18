@@ -2,4 +2,4 @@
 cd ../
 mkdir output
 cp -R ./[team-repo-name]/* ./output
-cp -R ./output ./[team-repo-name]/
+cp -R ./output ./oz-13-main-fe-4/
