@@ -19,14 +19,6 @@ export interface PasswordSectionProps {
 export interface FavoriteLocationSectionProps {
   // 추후 지역 데이터 타입 추가
 }
-
-// 모달 상태 관리 타입
-export interface ModalState {
-  isOpen: boolean;
-  title: string;
-  message: string;
-}
-
 // 검증 상태 타입
 export interface ValidationState {
   isNicknameValidated: boolean;
