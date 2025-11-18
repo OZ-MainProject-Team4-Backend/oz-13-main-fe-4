@@ -6,4 +6,5 @@ rm -rf output
 mkdir output
 
 # 레포 전체 복사 (필요 시 제외할 파일/폴더 추가)
-cp -R ./* ./output
+shopt -s extglob
+cp -R !(output) ./output

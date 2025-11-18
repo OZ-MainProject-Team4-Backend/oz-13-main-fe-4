@@ -16,7 +16,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y ruby && sudo gem install mustache
 
       - name: Create output directory with full repo content
-        run: sh ./build.sh
+        run: bash ./build.sh
 
       - name: Pushes to another repository
         uses: cpina/github-action-push-to-another-repository@main
