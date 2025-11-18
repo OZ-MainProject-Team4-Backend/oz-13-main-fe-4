@@ -2,7 +2,7 @@ import { Box, IconButton } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useState, useEffect } from 'react';
-import { outfitAPI } from '../../../features/recommendation/api/clothingAPI';
+import { outfitAPI } from '../../recommendation/api/clothingAPI';
 import { parseOutfitString } from '../../../utils/clothingParser';
 import { OutfitItemIcon } from './OutfitItemIcon';
 import {
@@ -14,7 +14,7 @@ import {
   OutfitRecommendationIndicatorContainer,
   OutfitRecommendationIndicatorDot,
 } from '../styles/FavoriteStyles';
-import { FavoriteLocation } from '../../../features/favorite/api/favoriteAPI';
+import { FavoriteLocation } from '../../favorite/api/favoriteAPI';
 
 interface FavoriteLocationOutfitRecommendationProps {
   favorite: FavoriteLocation;

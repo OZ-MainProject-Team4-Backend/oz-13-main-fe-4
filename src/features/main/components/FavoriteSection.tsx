@@ -17,7 +17,7 @@ import {
   horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { FavoriteLocationCard } from './FavoriteLocationCard';
-import { FavoriteLocation } from '../../../features/favorite/api/favoriteAPI';
+import { FavoriteLocation } from '../../favorite/api/favoriteAPI';
 
 const MAX_FAVORITES = 3;
 

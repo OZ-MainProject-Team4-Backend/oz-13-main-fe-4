@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Snackbar, Alert } from '@mui/material';
 import { AxiosError } from 'axios';
-import { CurrentWeather } from './components/CurrentWeather';
+import { CurrentWeather } from '../../features/main/components/CurrentWeather';
 
-import { HourlyWeather } from './components/HourlyWeather';
-import { TodayOutfitRecommendation } from './components/TodayOutfitRecommendation';
-import { FavoriteLocationOutfitRecommendation } from './components/FavoriteLocationOutfitRecommendation';
+import { HourlyWeather } from '../../features/main/components/HourlyWeather';
+import { TodayOutfitRecommendation } from '../../features/main/components/TodayOutfitRecommendation';
+import { FavoriteLocationOutfitRecommendation } from '../../features/main/components/FavoriteLocationOutfitRecommendation';
 
 import {
   getFavorites,
@@ -20,9 +20,9 @@ import {
   FullWidthCard,
   MainContainer,
   RecommendCard,
-} from './styles/MainPageContentStyles';
-import { EmptyFavorites } from './components/EmptyFavorite';
-import { FavoritesSection } from './components/FavoriteSection';
+} from '../../features/main/styles/MainPageContentStyles';
+import { EmptyFavorites } from '../../features/main/components/EmptyFavorite';
+import { FavoritesSection } from '../../features/main/components/FavoriteSection';
 import FavoriteRegionModal from '../../components/Modal/FavoriteRegionModal';
 
 const MAX_FAVORITES = 3;

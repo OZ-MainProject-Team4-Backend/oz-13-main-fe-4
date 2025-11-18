@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Typography } from '@mui/material';
 import { AxiosError } from 'axios';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { addFavorite } from '../../../features/favorite/api/favoriteAPI';
+import { addFavorite } from '../../favorite/api/favoriteAPI';
 import FavoriteRegionModal from '../../../components/Modal/FavoriteRegionModal';
 import {
   EmptyFavoritesAddButton,

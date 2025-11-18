@@ -8,7 +8,7 @@ import styled from '@emotion/styled';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useState } from 'react';
-import { FavoriteLocation } from '../../../features/favorite/api/favoriteAPI';
+import { FavoriteLocation } from '../../favorite/api/favoriteAPI';
 
 interface FavoriteLocationCardProps {
   favorite: FavoriteLocation;
