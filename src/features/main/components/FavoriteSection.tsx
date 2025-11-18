@@ -66,13 +66,13 @@ const CardSlot = styled(Box)({
 });
 
 const AddButton = styled('button')({
-  width: '200px',
-  height: '200px',
+  width: '100px',
+  height: '100px',
   backgroundColor: '#1E3A8A',
   color: '#FFF',
   fontSize: '48px',
   border: 'none',
-  borderRadius: '12px',
+  borderRadius: '48px',
   cursor: 'pointer',
   display: 'flex',
   alignItems: 'center',
