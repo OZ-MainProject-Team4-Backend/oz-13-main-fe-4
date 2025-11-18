@@ -73,14 +73,13 @@ export const useEditDiary = () => {
     mutationFn: ({ id, diary, image }: { id: number; diary: DiaryData; image: File | null }) =>
       patchDiaryApi(diary, id, image),
     onSuccess: (updatedDiary: DiaryData) => {
-      // calendar 데이터 즉시 업데이트 -> 네트워크 요청 없음
-      queryClient.setQueriesData<DiaryData[]>({ queryKey: ['diary', 'calendar'] }, (oldData) => {
-        if (!oldData) return oldData;
-        return oldData.map((diary) => (diary.id === updatedDiary.id ? updatedDiary : diary));
-      });
+      console.log('일기 수정 성공:', updatedDiary);
 
-      // detail은 서버에서 정확한 데이터 다시 조회
-      queryClient.invalidateQueries({ queryKey: ['diary', 'detail', updatedDiary.id] });
+      // 모든 calendar 캐시 무효화 (year, month와 상관없이 모든 캘린더 새로고침)
+      queryClient.invalidateQueries({ queryKey: ['diary', 'calendar'] });
+
+      // detail 캐시도 업데이트
+      queryClient.setQueryData(['diary', 'detail', updatedDiary.id], updatedDiary);
     },
     onError: (error: Error) => {
       console.log('일기 수정 실패 : ', error.message);
