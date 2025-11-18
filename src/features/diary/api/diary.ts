@@ -14,7 +14,7 @@ export const postDiaryApi = async (diary: DiaryData, image: File | null) => {
     formData.append('image_url', image);
   }
 
-  const { data } = await diaryInstance.post('/diary', formData);
+  const { data } = await diaryInstance.post('/diaries/', formData);
   return data;
 };
 
@@ -22,7 +22,7 @@ export const getDiariesForCalendar = async (year: number, month: number): Promis
   console.log('getDiariesForCalendar 실행됨', year, month);
 
   // JavaScript Date는 month를 0~11로 사용하지만, 서버는 1~12를 받음
-  const { data } = await diaryInstance.get<DiaryData[]>('/diary', {
+  const { data } = await diaryInstance.get<DiaryData[]>('/diaries/', {
     params: { year, month: month + 1 },
   });
 
@@ -31,7 +31,7 @@ export const getDiariesForCalendar = async (year: number, month: number): Promis
 };
 
 export const getDiaryForDetail = async (id: number) => {
-  const { data } = await diaryInstance.get<DiaryData>(`/diary/${id}`);
+  const { data } = await diaryInstance.get<DiaryData>(`/diaries/${id}/`);
   return data;
 };
 
@@ -45,12 +45,12 @@ export const patchDiaryApi = async (diary: DiaryData, id: number, image: File | 
     formData.append('image_url', image);
   }
 
-  const { data } = await diaryInstance.patch<DiaryData>(`/diary/${id}`, formData);
+  const { data } = await diaryInstance.patch<DiaryData>(`/diaries/${id}/`, formData);
   return data;
 };
 
 export const deleteDiaryApi = async (id: number) => {
-  const response = await diaryInstance.delete(`/diary/${id}`);
+  const response = await diaryInstance.delete(`/diaries/${id}/`);
 
   if (response.status === 204) {
     return id;
