@@ -18,12 +18,10 @@ import { FavoriteLocation } from '../../favorite/api/favoriteAPI';
 
 interface FavoriteLocationOutfitRecommendationProps {
   favorite: FavoriteLocation;
-  temperature: number;
 }
 
 export const FavoriteLocationOutfitRecommendation = ({
   favorite,
-  temperature,
 }: FavoriteLocationOutfitRecommendationProps) => {
   const [outfits, setOutfits] = useState<string[]>([]);
   const [explanation, setExplanation] = useState('');
