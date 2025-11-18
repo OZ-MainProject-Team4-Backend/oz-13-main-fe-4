@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { getISODate } from '../utils/calendar';
 import { EMOTIONS } from '../constants/emotions';
 import { useCreateDiary, useDeleteDiary, useEditDiary } from '../hooks/useDiaryQueries';
+import { useCurrentLocation } from '../../../hooks/useCurrentLocation';
 
 const DiaryModal = ({
   isOpen,
@@ -20,17 +21,11 @@ const DiaryModal = ({
   onModalChange,
 }: DiaryModalProps) => {
   const [diary, setDiary] = useState<DiaryData>({
-    // id는 서버에서 생성하므로 초기값 없음
     date: getISODate(selectedDate), // ISO 형식으로 DB에 저장
     title: '',
     emotion: 'happy',
     notes: '',
-    weather: {
-      condition: 'cloudy',
-      temperature: 18,
-      icon: 0,
-    },
-    image_url: null,
+    image: null,
   });
 
   const [image, setImage] = useState<File | null>(null);
@@ -40,18 +35,25 @@ const DiaryModal = ({
   const createDiary = useCreateDiary();
   const editDiary = useEditDiary();
   const deleteDiary = useDeleteDiary();
+  const { location, fetchLocation } = useCurrentLocation();
   const isLoading = createDiary.isPending || editDiary.isPending || deleteDiary.isPending;
-  // const { location, fetchLocation } = useCurrentLocation();
 
   // const BASE_URL = 'https://openweathermap.org/img/wn';
   // const iconUrl = `${BASE_URL}/${diary.weather.icon}@2x.png`;
+
+  // 모달이 열릴 때 위치 정보 가져오기
+  useEffect(() => {
+    if (isOpen && mode === 'create') {
+      fetchLocation();
+    }
+  }, [isOpen, mode, fetchLocation, selectedDate]);
 
   // 모드별 초기화
   useEffect(() => {
     // view , edit
     if ((mode === 'view' || mode === 'edit') && selectedDiary) {
       setDiary(selectedDiary);
-      setPreview(selectedDiary.image_url || null);
+      setPreview(selectedDiary.image || null);
       setImage(null);
     } else if (mode === 'create') {
       // create
@@ -60,12 +62,7 @@ const DiaryModal = ({
         title: '',
         emotion: 'happy',
         notes: '',
-        weather: {
-          condition: 'cloudy',
-          temperature: 18,
-          icon: 0,
-        },
-        image_url: null,
+        image: null,
       });
       setPreview(null);
       setImage(null);
@@ -148,7 +145,7 @@ const DiaryModal = ({
 
     if (mode === 'create') {
       createDiary.mutate(
-        { diary, image },
+        { diary, image, lat: location?.lat ?? 0, lon: location?.lon ?? 0 },
         {
           onSuccess: () => {
             onClose();
