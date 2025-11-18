@@ -57,7 +57,7 @@ export const CurrentWeather = ({ onEditLocation }: CurrentWeatherProps) => {
     <WeatherCard>
       <CurrentWeatherCardHeader>
         <LocationText>{location || weather.location_name}</LocationText>
-        <Button
+        {/* <Button
           onClick={onEditLocation}
           sx={{
             backgroundColor: '#5B9EFF',
@@ -72,7 +72,7 @@ export const CurrentWeather = ({ onEditLocation }: CurrentWeatherProps) => {
           }}
         >
           지역 설정
-        </Button>
+        </Button> */}
       </CurrentWeatherCardHeader>
 
       <TemperatureSection>
