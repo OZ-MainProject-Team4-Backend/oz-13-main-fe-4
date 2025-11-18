@@ -22,17 +22,17 @@ import { useLocationStore } from '../../location/store/locationStore';
 
 export const TodayOutfitRecommendation = () => {
   const { weather } = useCurrentWeather();
-  const { location } = useLocationStore();
+  const { latitude, longitude } = useLocationStore();
   const [outfits, setOutfits] = useState<string[]>([]);
   const [explanation, setExplanation] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
     const fetchRecommendation = async () => {
-      if (!location) return;
+      if (!latitude || !longitude) return;
 
       try {
-        const data = await outfitAPI.getRecommendationByLocation(location);
+        const data = await outfitAPI.getRecommendationByCoords(latitude, longitude);
         setOutfits([data.rec_1, data.rec_2, data.rec_3]);
         setExplanation(data.explanation);
       } catch (error) {
@@ -40,7 +40,7 @@ export const TodayOutfitRecommendation = () => {
       }
     };
     fetchRecommendation();
-  }, [location]);
+  }, [latitude, longitude]);
 
   const handlePrevious = () => {
     setSelectedIndex((prev) => (prev === 0 ? outfits.length - 1 : prev - 1));
