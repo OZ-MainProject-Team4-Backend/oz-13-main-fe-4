@@ -18,7 +18,7 @@ export const getChatHistory = async (
   if (limit) params.append('limit', String(limit));
   if (beforeId !== undefined) params.append('before_id', String(beforeId));
 
-  const url = `/chat/session?${params.toString()}`;
+  const url = `/chat/session/?${params.toString()}`;
 
   const res = await instance.get(url);
 
