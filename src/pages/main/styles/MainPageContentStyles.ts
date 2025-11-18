@@ -17,7 +17,6 @@ export const ComponentsGrid = styled(Box)({
 });
 
 export const PlaceholderCard = styled(Box)({
-  backgroundColor: '#ffffff',
   borderRadius: '16px',
   padding: '20px',
   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
