@@ -34,6 +34,14 @@ const theme = createTheme({
       main: '#1F3A89',
     },
   },
+  components: {
+    MuiTextField: {
+      defaultProps: { size: 'small' },
+    },
+    MuiSelect: {
+      defaultProps: { size: 'small' },
+    },
+  },
 });
 
 enableMocking().then(() => {
