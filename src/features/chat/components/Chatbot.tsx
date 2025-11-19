@@ -265,7 +265,7 @@ const Chatbot = () => {
     </div>
   ) : (
     <button type='button' css={styles.toggleButton} onClick={() => setIsChatOpen(true)}>
-      <KeyboardArrowDownIcon sx={{ fontSize: 40 }} />
+      <CgBot />
     </button>
   );
 };
