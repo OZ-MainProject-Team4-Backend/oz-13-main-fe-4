@@ -15,6 +15,7 @@ import {
   OutfitRecommendationIndicatorDot,
 } from '../styles/FavoriteStyles';
 import { FavoriteLocation } from '../../favorite/api/favoriteAPI';
+import { useFavoriteOutfit } from '../hooks/useFavoriteOutfit';
 
 interface FavoriteLocationOutfitRecommendationProps {
   favorite: FavoriteLocation;
@@ -27,16 +28,18 @@ export const FavoriteLocationOutfitRecommendation = ({
   const [explanation, setExplanation] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [loading, setLoading] = useState(false);
+  const { outfit, error, refetch } = useFavoriteOutfit({
+    city: favorite.city,
+    district: favorite.district,
+  });
 
   useEffect(() => {
     const fetchRecommendation = async () => {
       try {
         setLoading(true);
-        // city, district 각각 전달
-        const data = await outfitAPI.getRecommendationByLocation(favorite.city, favorite.district);
-
-        setOutfits([data.rec_1, data.rec_2, data.rec_3]);
-        setExplanation(data.explanation);
+        if (!outfit) return;
+        setOutfits([outfit.rec_1, outfit.rec_2, outfit.rec_3]);
+        setExplanation(outfit.explanation);
         setSelectedIndex(0);
       } catch (error) {
         console.error('의상 추천 가져오기 실패:', error);
@@ -50,7 +53,7 @@ export const FavoriteLocationOutfitRecommendation = ({
     if (favorite) {
       fetchRecommendation();
     }
-  }, [favorite.id, favorite.city, favorite.district, favorite]);
+  }, [favorite.id, favorite.city, favorite.district, favorite, outfit]);
 
   const handlePrev = () => {
     setSelectedIndex((prev) => (prev === 0 ? outfits.length - 1 : prev - 1));

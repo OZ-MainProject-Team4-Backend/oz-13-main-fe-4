@@ -19,6 +19,7 @@ import {
 import { OutfitItemIcon } from './OutfitItemIcon';
 import { useCurrentWeather } from '../hooks/useCurrentWeather';
 import { useLocationStore } from '../../location/store/locationStore';
+import { useCurrentOutfit } from '../hooks/useCurrentOutfit';
 
 export const TodayOutfitRecommendation = () => {
   const { weather } = useCurrentWeather();
@@ -26,21 +27,22 @@ export const TodayOutfitRecommendation = () => {
   const [outfits, setOutfits] = useState<string[]>([]);
   const [explanation, setExplanation] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const { outfit } = useCurrentOutfit();
 
   useEffect(() => {
     const fetchRecommendation = async () => {
       if (!latitude || !longitude) return;
 
       try {
-        const data = await outfitAPI.getRecommendationByCoords(latitude, longitude);
-        setOutfits([data.rec_1, data.rec_2, data.rec_3]);
-        setExplanation(data.explanation);
+        if (!outfit) return null;
+        setOutfits([outfit.rec_1, outfit.rec_2, outfit.rec_3]);
+        setExplanation(outfit.explanation);
       } catch (error) {
         console.error('의상 추천 가져오기 실패:', error);
       }
     };
     fetchRecommendation();
-  }, [latitude, longitude]);
+  }, [latitude, longitude, outfit]);
 
   const handlePrevious = () => {
     setSelectedIndex((prev) => (prev === 0 ? outfits.length - 1 : prev - 1));
