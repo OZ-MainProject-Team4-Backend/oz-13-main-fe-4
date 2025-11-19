@@ -104,6 +104,16 @@ const Chatbot = () => {
     setMessages((prev) => [...prev, userMessage]);
     setMessage('');
 
+    // 로딩 메시지 추가
+    const loadingMessageId = Date.now() + 1;
+    const loadingMessage: Message = {
+      id: loadingMessageId,
+      role: 'ai',
+      text: '답장중...',
+      isLoading: true,
+    };
+    setMessages((prev) => [...prev, loadingMessage]);
+
     try {
       const response = await sendMessage.mutateAsync({
         message: currentMessage,
@@ -113,21 +123,28 @@ const Chatbot = () => {
         setSessionId(response.session_id);
       }
 
-      const botMessage: Message = {
-        id: Date.now(),
-        role: 'ai',
-        text: response.response,
-        created_at: response.created_at,
-      };
-      setMessages((prev) => [...prev, botMessage]);
+      // 로딩 메시지 제거 후 실제 응답 추가
+      setMessages((prev) => {
+        const filtered = prev.filter((msg) => msg.id !== loadingMessageId);
+        const botMessage: Message = {
+          id: Date.now(),
+          role: 'ai',
+          text: response.response,
+          created_at: response.created_at,
+        };
+        return [...filtered, botMessage];
+      });
     } catch (error) {
-      // 에러 발생 시 안내 메시지 표시
-      const errorMessage: Message = {
-        id: Date.now(),
-        role: 'ai',
-        text: '죄송합니다. 메시지 전송 중 오류가 발생했습니다. 다시 시도해주세요.',
-      };
-      setMessages((prev) => [...prev, errorMessage]);
+      // 로딩 메시지 제거 후 에러 메시지 표시
+      setMessages((prev) => {
+        const filtered = prev.filter((msg) => msg.id !== loadingMessageId);
+        const errorMessage: Message = {
+          id: Date.now(),
+          role: 'ai',
+          text: '죄송합니다. 메시지 전송 중 오류가 발생했습니다. 다시 시도해주세요.',
+        };
+        return [...filtered, errorMessage];
+      });
     }
   };
 
@@ -141,13 +158,29 @@ const Chatbot = () => {
     };
     setMessages((prev) => [...prev, userMessage]);
 
+    // 로딩 메시지 추가
+    const loadingMessageId = timestamp + 1;
+    const loadingMessage: Message = {
+      id: loadingMessageId,
+      role: 'ai',
+      text: '답장중...',
+      isLoading: true,
+    };
+    setMessages((prev) => [...prev, loadingMessage]);
+
     if (keywordsAnswer[keyword]) {
-      const botMessage: Message = {
-        id: timestamp + 1,
-        role: 'ai',
-        text: keywordsAnswer[keyword],
-      };
-      setMessages((prev) => [...prev, botMessage]);
+      // 서비스 소개 등 미리 정의된 답변에 지연 시간 추가 (1초)
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      setMessages((prev) => {
+        const filtered = prev.filter((msg) => msg.id !== loadingMessageId);
+        const botMessage: Message = {
+          id: Date.now(),
+          role: 'ai',
+          text: keywordsAnswer[keyword],
+        };
+        return [...filtered, botMessage];
+      });
       return;
     }
 
@@ -160,22 +193,28 @@ const Chatbot = () => {
         setSessionId(response.session_id);
       }
 
-      // 봇 응답을 UI에 추가
-      const botMessage: Message = {
-        id: Date.now(),
-        role: 'ai',
-        text: response.response,
-        created_at: response.created_at,
-      };
-      setMessages((prev) => [...prev, botMessage]);
+      // 로딩 메시지 제거 후 봇 응답을 UI에 추가
+      setMessages((prev) => {
+        const filtered = prev.filter((msg) => msg.id !== loadingMessageId);
+        const botMessage: Message = {
+          id: Date.now(),
+          role: 'ai',
+          text: response.response,
+          created_at: response.created_at,
+        };
+        return [...filtered, botMessage];
+      });
     } catch (error) {
       console.error('메시지 전송 실패:', error);
-      const errorMessage: Message = {
-        id: Date.now(),
-        role: 'ai',
-        text: '죄송합니다. 메시지 전송 중 오류가 발생했습니다. 다시 시도해주세요.',
-      };
-      setMessages((prev) => [...prev, errorMessage]);
+      setMessages((prev) => {
+        const filtered = prev.filter((msg) => msg.id !== loadingMessageId);
+        const errorMessage: Message = {
+          id: Date.now(),
+          role: 'ai',
+          text: '죄송합니다. 메시지 전송 중 오류가 발생했습니다. 다시 시도해주세요.',
+        };
+        return [...filtered, errorMessage];
+      });
     }
   };
 
