@@ -46,28 +46,12 @@ export const logInSchema = z.object({
 
 //- 마이페이지 스키마
 export const mypageSchema = z.object({
-  name: z.string().min(1, '이름 입력은 필수입니다.').optional(),
-  nickname: z
-    .string()
-    .min(2, '닉네임 입력 필수입니다.')
-    .max(10, '닉네임은10자 이내로 작성해주세요')
-    .optional(),
-  gender: z
-    .enum(['', 'M', 'W'], {
-      message: '성별을 선택해주세요',
-    })
-    .optional(),
-  age_group: z
-    .enum(['', '10', '20', '30', '40', '50', '60'], {
-      message: '연령대를 선택해주세요',
-    })
-    .optional(),
-  email: z.string().email('유효한 이메일 주소를 입력해주세요.').optional(),
-  emailCode: z
-    .string()
-    .min(6, '숫자코드6자리 입력해주세요')
-    .max(6, '숫자코드 6자리 입니다.')
-    .optional(),
+  name: z.string().optional(),
+  nickname: z.string().optional(),
+  gender: z.enum(['', 'M', 'W']).optional(),
+  age_group: z.enum(['', '10', '20', '30', '40', '50', '60']).optional(),
+  email: z.string().optional(),
+  emailCode: z.string().optional(),
 });
 
 export type FormFieldMypage = z.infer<typeof mypageSchema>;
