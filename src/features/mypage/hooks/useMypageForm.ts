@@ -30,7 +30,7 @@ export const useMypageForm = () => {
       nickname: '',
       email: '',
       gender: '',
-      age: '',
+      age_group: '',
       emailCode: '',
     },
   });
@@ -43,7 +43,7 @@ export const useMypageForm = () => {
         nickname: data.data?.nickname,
         email: data.data?.email,
         gender: data.data?.gender,
-        age: data.data?.age,
+        age_group: data.data?.age_group,
       });
     }
   }, [data, form.reset]);
@@ -59,7 +59,7 @@ export const useMypageForm = () => {
         nickname: formData.nickname,
         email: formData.email,
         gender: formData.gender,
-        age: formData.age,
+        age_group: formData.age_group,
       },
       {
         onSuccess: () => {

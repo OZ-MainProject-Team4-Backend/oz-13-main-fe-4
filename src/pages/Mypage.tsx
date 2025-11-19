@@ -1,6 +1,7 @@
 // pages/Mypage.tsx
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Button, Divider, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import BaseModal from '../components/Modal/BaseModal';
 import FavoriteLocationSection from '../features/location/components/FavoriteLocationSection';
 import EmailSection from '../features/mypage/components/EmailSection';
@@ -14,6 +15,7 @@ export default function Mypage() {
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [modalTitle, setModalTitle] = useState('');
+  const navigate = useNavigate();
 
   const { form, handleProfileSubmit, resetValidation, isLoading, error } = useMypageForm();
 
@@ -43,10 +45,13 @@ export default function Mypage() {
       }
     );
   });
-
+  const handleDelete = () => {
+    console.log('UserDelegte');
+    navigate('/signup');
+  };
   return (
     <ContainerMui direction='column' justifyContent='space-between'>
-      <CardMui>
+      <CardMui sx={{ gap: 4 }}>
         <Typography
           component='h1'
           variant='h4'
@@ -78,7 +83,7 @@ export default function Mypage() {
                   sx={{ minWidth: 'fit-content', whiteSpace: 'nowrap' }}
                   variant='contained'
                   size='small'
-                  color='secondary'
+                  color='primary'
                   onClick={(e) => {
                     e.preventDefault();
                     setIsEditMode(true);
@@ -146,6 +151,18 @@ export default function Mypage() {
 
         {/* 즐겨찾는 지역 섹션 */}
         <FavoriteLocationSection />
+        <Divider sx={{ my: 4 }} />
+        <Stack sx={{ alignItems: 'end' }}>
+          <Button
+            type='button'
+            variant='outlined'
+            color='inherit'
+            size='small'
+            onClick={handleDelete}
+          >
+            회원탈퇴
+          </Button>
+        </Stack>
       </CardMui>
     </ContainerMui>
   );
