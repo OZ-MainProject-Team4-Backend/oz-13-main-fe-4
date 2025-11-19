@@ -127,9 +127,6 @@ export const FavoritesSection = ({
           <FavoriteLocationCard
             favorite={favorite}
             isSelected={selectedFavoriteId === favorite.id}
-            temperature={18}
-            precipitationProbability={5}
-            feelsLike={16}
             onClick={() => onFavoriteSelect(favorite.id)}
             onAliasUpdate={onAliasUpdate}
             onDelete={onDelete}

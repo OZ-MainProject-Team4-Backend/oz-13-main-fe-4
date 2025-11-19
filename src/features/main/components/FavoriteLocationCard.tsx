@@ -9,13 +9,11 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useState } from 'react';
 import { FavoriteLocation } from '../../favorite/api/favoriteAPI';
+import { useCurrentWeatherByLocation } from '../hooks/useCurrentWeatherByLocation';
 
 interface FavoriteLocationCardProps {
   favorite: FavoriteLocation;
   isSelected: boolean;
-  temperature: number;
-  precipitationProbability: number;
-  feelsLike: number;
   onClick: () => void;
   onAliasUpdate: (id: number, alias: string) => void;
   onDelete: (id: number) => void;
@@ -98,9 +96,6 @@ const ActionButtons = styled(Box)({
 export const FavoriteLocationCard = ({
   favorite,
   isSelected,
-  temperature,
-  precipitationProbability,
-  feelsLike,
   onClick,
   onAliasUpdate,
   onDelete,
@@ -150,6 +145,11 @@ export const FavoriteLocationCard = ({
     e.stopPropagation();
     onDelete(favorite.id);
   };
+  const { weather } = useCurrentWeatherByLocation({
+    city: favorite.city,
+    district: favorite.district,
+  });
+  if (!weather) return null;
 
   return (
     <CardContainer ref={setNodeRef} style={style} isSelected={isSelected} onClick={onClick}>
@@ -196,17 +196,17 @@ export const FavoriteLocationCard = ({
 
       <WeatherRow>
         <WeatherLabel>기온</WeatherLabel>
-        <WeatherValue>{temperature}°C</WeatherValue>
+        <WeatherValue>{weather.temperature}°C</WeatherValue>
       </WeatherRow>
 
       <WeatherRow>
         <WeatherLabel>강수확률</WeatherLabel>
-        <WeatherValue>{precipitationProbability}%</WeatherValue>
+        <WeatherValue>{weather.rain_probability || 0}%</WeatherValue>
       </WeatherRow>
 
       <WeatherRow>
         <WeatherLabel>체감온도</WeatherLabel>
-        <WeatherValue>{feelsLike}°C</WeatherValue>
+        <WeatherValue>{weather.feels_like}°C</WeatherValue>
       </WeatherRow>
     </CardContainer>
   );

@@ -42,6 +42,12 @@ export const weatherAPI = {
     );
     return response.data;
   },
+  getCurrentWeatherByLocation: async (city: string, district: string) => {
+    const response = await instance.get<CurrentWeatherData>(
+      `/weather/current/?city=${city}&district=${district}`
+    );
+    return response.data;
+  },
 
   getForecast: async (lat: number, lon: number) => {
     const response = await instance.get<ForecastResponse>(
