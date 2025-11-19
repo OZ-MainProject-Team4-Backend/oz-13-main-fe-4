@@ -71,10 +71,10 @@ const Chatbot = () => {
   }, [chatHistory, beforeId]);
 
   useEffect(() => {
-    if (!isLoadingMore) {
+    if (!isLoadingMore || isChatOpen) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages, isLoadingMore]);
+  }, [messages, isLoadingMore, isChatOpen]);
 
   // 스크롤 이벤트로 이전 메시지 로드
   const handleScroll = () => {
