@@ -8,9 +8,11 @@ import {
   AddFavoriteRequest,
   ReorderRequest,
 } from '../../favorite/api/favoriteAPI';
+import { useAuthStore } from '../../auth/store/authStore';
 
 export const useFavoriteLocations = () => {
   const queryClient = useQueryClient();
+  const { access } = useAuthStore();
 
   const {
     data: favorites = [],
@@ -19,6 +21,7 @@ export const useFavoriteLocations = () => {
   } = useQuery({
     queryKey: ['favoriteLocations'],
     queryFn: getFavorites,
+    enabled: !!access,
   });
 
   const addMutation = useMutation({
