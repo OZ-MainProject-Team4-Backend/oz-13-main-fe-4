@@ -2,7 +2,7 @@ import { Box, IconButton } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useState, useEffect } from 'react';
-import { outfitAPI } from '../../recommendation/api/clothingAPI';
+import { outfitAPI } from '../../recommendation/api/outfitAPI';
 import { parseOutfitString } from '../../../utils/clothingParser';
 import { OutfitItemIcon } from './OutfitItemIcon';
 import {
@@ -32,9 +32,8 @@ export const FavoriteLocationOutfitRecommendation = ({
     const fetchRecommendation = async () => {
       try {
         setLoading(true);
-        // 주소 기반 의상 추천
-        const location = `${favorite.city} ${favorite.district}`.trim();
-        const data = await outfitAPI.getRecommendationByLocation(location);
+        // city, district 각각 전달
+        const data = await outfitAPI.getRecommendationByLocation(favorite.city, favorite.district);
 
         setOutfits([data.rec_1, data.rec_2, data.rec_3]);
         setExplanation(data.explanation);
