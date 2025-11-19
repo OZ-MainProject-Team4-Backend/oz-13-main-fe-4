@@ -7,7 +7,7 @@ import { Message } from '../types/chat';
 import { useSendMessage, useChatHistory } from '../hooks/useChatQueries';
 import { useCurrentLocation } from '../../../hooks/useCurrentLocation';
 
-const KEYWORDS = ['서비스 소개', '추천 옷차림', '이번주 날씨'];
+const KEYWORDS = ['서비스 소개', '추천 옷차림'];
 const CHAT_SESSION_KEY = 'chat-session-id';
 
 const keywordsAnswer: Record<string, string> = {
