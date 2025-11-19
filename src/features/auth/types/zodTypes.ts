@@ -10,10 +10,10 @@ export const signUpSchema = z
       .string()
       .min(2, '닉네임 입력 필수입니다.')
       .max(10, '닉네임은10자 이내로 작성해주세요'),
-    gender: z.enum(['', 'M', 'F'], {
+    gender: z.enum(['', 'M', 'W'], {
       message: '성별을 선택해주세요',
     }),
-    age: z.enum(['', 'ten', 'twenty', 'thirty', 'fourthy', 'fifth', 'sixth'], {
+    age_group: z.enum(['', '10', '20', '30', '40', '50', '60'], {
       message: '연령대를 선택해주세요',
     }),
     email: z.string().email('유효한 이메일 주소를 입력해주세요.'),
@@ -53,12 +53,12 @@ export const mypageSchema = z.object({
     .max(10, '닉네임은10자 이내로 작성해주세요')
     .optional(),
   gender: z
-    .enum(['', 'M', 'F'], {
+    .enum(['', 'M', 'W'], {
       message: '성별을 선택해주세요',
     })
     .optional(),
-  age: z
-    .enum(['', 'ten', 'twenty', 'thirty', 'fourthy', 'fifth', 'sixth'], {
+  age_group: z
+    .enum(['', '10', '20', '30', '40', '50', '60'], {
       message: '연령대를 선택해주세요',
     })
     .optional(),
