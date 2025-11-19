@@ -157,12 +157,12 @@ export default function ProfileSection({ isEditMode, onEditModeChange }: Profile
 
         <FormGrid flex={1}>
           <FormControl>
-            <FormLabel htmlFor='named-select'>연령대</FormLabel>
+            <FormLabel htmlFor='age_group'>연령대</FormLabel>
             <Controller
               name='age_group'
               control={control}
               render={({ field }) => (
-                <Select {...field} disabled={!isEditMode} id='named-select'>
+                <Select {...field} disabled={!isEditMode} id='age_group'>
                   <MenuItem value={'10'}>10대</MenuItem>
                   <MenuItem value={'20'}>20대</MenuItem>
                   <MenuItem value={'30'}>30대</MenuItem>
