@@ -29,6 +29,7 @@ const Chatbot = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const sendMessage = useSendMessage();
   const { location, fetchLocation } = useCurrentLocation();
+  const messageIdCounter = useRef(0);
 
   // localStorage에서 session_id 가져오기
   const [sessionId, setSessionId] = useState<string | null>(() => {
@@ -55,18 +56,19 @@ const Chatbot = () => {
   // 채팅 히스토리 로드 시 메시지 업데이트
   useEffect(() => {
     if (chatHistory?.messages && chatHistory.messages.length > 0) {
+      // 서버 메시지에 고유 ID 부여 (서버에서 같은 ID넘겨주고 있음)
+      const messagesWithUniqueId = chatHistory.messages.map((msg) => ({
+        ...msg,
+        id: messageIdCounter.current++,
+      }));
+
       if (beforeId) {
-        // 이전 메시지 로드 시 기존 메시지에 추가 (중복 제거)
-        setMessages((prev) => {
-          const newMessages = chatHistory.messages.filter(
-            (newMsg) => !prev.some((existingMsg) => existingMsg.id === newMsg.id)
-          );
-          return [...newMessages, ...prev];
-        });
+        // 이전 메시지 로드 시 기존 메시지에 추가
+        setMessages((prev) => [...messagesWithUniqueId, ...prev]);
         setIsLoadingMore(false);
       } else {
         // 최초 로드 또는 새로고침
-        setMessages(chatHistory.messages);
+        setMessages(messagesWithUniqueId);
       }
       setHasMore(chatHistory.has_more);
     }
@@ -98,7 +100,7 @@ const Chatbot = () => {
 
     const currentMessage = trimmedMessage;
 
-    const userMessageId = Date.now();
+    const userMessageId = messageIdCounter.current++;
     const userMessage: Message = {
       id: userMessageId,
       role: 'user',
@@ -108,7 +110,7 @@ const Chatbot = () => {
     setMessage('');
 
     // 로딩 메시지 추가
-    const loadingMessageId = Date.now() + 1;
+    const loadingMessageId = messageIdCounter.current++;
     const loadingMessage: Message = {
       id: loadingMessageId,
       role: 'ai',
@@ -134,36 +136,43 @@ const Chatbot = () => {
         setSessionId(response.session_id);
       }
 
-      const botMessage: Message = {
-        id: Date.now(),
-        role: 'ai',
-        text: response.response,
-        created_at: response.created_at,
-      };
-      setMessages((prev) => [...prev, botMessage]);
+      // 로딩 메시지 제거 후 실제 응답 추가
+      setMessages((prev) => {
+        const filtered = prev.filter((msg) => msg.id !== loadingMessageId);
+        const botMessage: Message = {
+          id: messageIdCounter.current++,
+          role: 'ai',
+          text: response.response,
+          created_at: response.created_at,
+        };
+        return [...filtered, botMessage];
+      });
     } catch (error) {
-      // 에러 발생 시 안내 메시지 표시
-      const errorMessage: Message = {
-        id: Date.now(),
-        role: 'ai',
-        text: '죄송합니다. 메시지 전송 중 오류가 발생했습니다. 다시 시도해주세요.',
-      };
-      setMessages((prev) => [...prev, errorMessage]);
+      // 로딩 메시지 제거 후 에러 메시지 표시
+      setMessages((prev) => {
+        const filtered = prev.filter((msg) => msg.id !== loadingMessageId);
+        const errorMessage: Message = {
+          id: messageIdCounter.current++,
+          role: 'ai',
+          text: '죄송합니다. 메시지 전송 중 오류가 발생했습니다. 다시 시도해주세요.',
+        };
+        return [...filtered, errorMessage];
+      });
     }
   };
 
   const handleKeywordClick = async (keyword: string) => {
     // 사용자가 키워드를 클릭한 것처럼 메시지 추가
-    const timestamp = Date.now();
+    const userMessageId = messageIdCounter.current++;
     const userMessage: Message = {
-      id: timestamp,
+      id: userMessageId,
       role: 'user',
       text: keyword,
     };
     setMessages((prev) => [...prev, userMessage]);
 
     // 로딩 메시지 추가
-    const loadingMessageId = timestamp + 1;
+    const loadingMessageId = messageIdCounter.current++;
     const loadingMessage: Message = {
       id: loadingMessageId,
       role: 'ai',
@@ -179,7 +188,7 @@ const Chatbot = () => {
       setMessages((prev) => {
         const filtered = prev.filter((msg) => msg.id !== loadingMessageId);
         const botMessage: Message = {
-          id: Date.now(),
+          id: messageIdCounter.current++,
           role: 'ai',
           text: keywordsAnswer[keyword],
         };
@@ -209,7 +218,7 @@ const Chatbot = () => {
       setMessages((prev) => {
         const filtered = prev.filter((msg) => msg.id !== loadingMessageId);
         const botMessage: Message = {
-          id: Date.now(),
+          id: messageIdCounter.current++,
           role: 'ai',
           text: response.response,
           created_at: response.created_at,
@@ -221,7 +230,7 @@ const Chatbot = () => {
       setMessages((prev) => {
         const filtered = prev.filter((msg) => msg.id !== loadingMessageId);
         const errorMessage: Message = {
-          id: Date.now(),
+          id: messageIdCounter.current++,
           role: 'ai',
           text: '죄송합니다. 메시지 전송 중 오류가 발생했습니다. 다시 시도해주세요.',
         };
