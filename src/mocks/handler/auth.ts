@@ -224,7 +224,6 @@ export const authHandlers = [
         statusCode: 200,
         message: '로그인 성공',
         data: {
-          user: user,
           access: accessToken,
           access_expires_at: accessExpiresAt,
           is_auto_login: is_auto_login,
@@ -497,19 +496,20 @@ export const authHandlers = [
       );
     }
 
-    const { old_password, new_password, new_password_confirm } = body as RequestPasswordChangeDTO;
+    const { current_password, new_password, new_password_confirm } =
+      body as RequestPasswordChangeDTO;
 
     const user = mockUsers[0];
     const savedPassword = mockPasswords.get(user.email);
 
     console.log('🔒 [MSW] 비밀번호 변경 요청:', {
       savedPassword,
-      old_password,
+      current_password,
       new_password,
     });
 
     // 1. 현재 비밀번호 확인
-    if (savedPassword !== old_password) {
+    if (savedPassword !== current_password) {
       return HttpResponse.json(
         {
           success: false,
@@ -539,7 +539,7 @@ export const authHandlers = [
     }
 
     // 3. 새 비밀번호 == 현재 비밀번호 확인
-    if (old_password === new_password) {
+    if (current_password === new_password) {
       return HttpResponse.json(
         {
           success: false,

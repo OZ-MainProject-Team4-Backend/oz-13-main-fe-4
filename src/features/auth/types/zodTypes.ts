@@ -59,7 +59,7 @@ export type FormFieldMypage = z.infer<typeof mypageSchema>;
 //- 비밀번호 스키마
 export const passwordSchema = z
   .object({
-    oldPassword: z.string().min(1, '현재 비밀번호를 입력하세요'), // ✅ 유지
+    currentPassword: z.string().min(1, '현재 비밀번호를 입력하세요'), // ✅ 유지
     newPassword: z
       .string()
       .min(6, '비밀번호는 6자 이상 입력해주세요')
@@ -71,7 +71,7 @@ export const passwordSchema = z
     message: '새 비밀번호가 일치하지 않습니다',
     path: ['newPasswordConfirm'],
   })
-  .refine((data) => data.oldPassword !== data.newPassword, {
+  .refine((data) => data.currentPassword !== data.newPassword, {
     message: '새 비밀번호는 현재 비밀번호와 달라야 합니다.',
     path: ['newPassword'], // 👈 에러 위치
   });

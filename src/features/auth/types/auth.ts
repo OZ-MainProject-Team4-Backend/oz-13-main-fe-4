@@ -117,7 +117,7 @@ export type RequestProfileUpdateDTO = {
 export type ResponseProfileUpdateDTO = ApiResponse;
 //=========== 비밀번호 변경(새로덮는것임) ============
 export type RequestPasswordChangeDTO = {
-  old_password: string;
+  current_password: string;
   new_password: string;
   new_password_confirm: string;
 };
