@@ -133,7 +133,7 @@ export const authHandlers = [
       name: body.name,
       nickname: body.nickname,
       gender: body.gender,
-      age: body.age,
+      age_group: body.age_group,
       is_verified: true,
       created_at: new Date().toISOString(),
     };
@@ -449,7 +449,7 @@ export const authHandlers = [
     }
     if (body.email) user.email = body.email;
     if (body.gender) user.gender = body.gender;
-    if (body.age) user.age = body.age;
+    if (body.age_group) user.age_group = body.age_group;
 
     console.log(`✏️ [MSW] 프로필 수정 완료:`, user);
 
