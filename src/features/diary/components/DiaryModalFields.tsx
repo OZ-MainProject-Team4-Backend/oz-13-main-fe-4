@@ -66,6 +66,11 @@ const DiaryModalFields = ({
           disabled={disabled}
           inputRef={titleRef}
           css={styles.disabledTextField}
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
+          }}
         />
       </Box>
 
@@ -119,6 +124,11 @@ const DiaryModalFields = ({
           value={diary.notes}
           disabled={disabled}
           css={styles.disabledTextField}
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
+          }}
         />
       </Box>
     </>
