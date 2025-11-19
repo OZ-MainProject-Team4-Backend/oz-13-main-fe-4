@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Snackbar, Alert } from '@mui/material';
 import { CurrentWeather } from '../../features/main/components/CurrentWeather';
-import { HourlyWeather } from '../../features/main/components/HourlyWeather';
 import { TodayOutfitRecommendation } from '../../features/main/components/TodayOutfitRecommendation';
-import { FavoriteLocationOutfitRecommendation } from '../../features/main/components/FavoriteLocationOutfitRecommendation';
+import { HourlyWeather } from '../../features/main/components/HourlyWeather';
 import { AIRecommendation } from '../../features/main/components/AIRecommendation';
+import { FavoriteLocationOutfitRecommendation } from '../../features/main/components/FavoriteLocationOutfitRecommendation';
 import FavoriteRegionModal from '../../components/Modal/FavoriteRegionModal';
 import { useFavoriteLocations } from '../../features/location/hooks/useFavoriteLocations';
 import { FavoriteLocation } from '../../features/favorite/api/favoriteAPI';
@@ -15,12 +15,14 @@ import {
 } from '../../features/main/styles/MainPageContentStyles';
 import { EmptyFavorites } from '../../features/main/components/EmptyFavorite';
 import { FavoritesSection } from '../../features/main/components/FavoriteSection';
+import { useAuthStore } from '../../features/auth/store/authStore';
 
 export const MainPage = () => {
   const { favorites, isLoading, addFavorite, deleteFavorite, updateAlias, reorderFavorites } =
     useFavoriteLocations();
   const [selectedFavoriteId, setSelectedFavoriteId] = useState<number | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const { access } = useAuthStore();
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
@@ -94,12 +96,15 @@ export const MainPage = () => {
         <HourlyWeather />
         <AIRecommendation />
 
-        {favorites.length === 0 ? (
+        {/* 로그인 상태일 때만 즐겨찾기 관련 컨텐츠 표시 */}
+        {access && favorites.length === 0 && (
           <EmptyFavorites
             onSuccess={() => showSnackbar('추가되었습니다.', 'success')}
             onError={(msg) => showSnackbar(msg, 'error')}
           />
-        ) : (
+        )}
+
+        {access && favorites.length > 0 && (
           <>
             <FavoritesSection
               favorites={favorites}
