@@ -61,7 +61,7 @@ export default function PasswordSection() {
             <Button
               onClick={() => setIsPasswordEditMode(true)}
               variant='contained'
-              color='secondary'
+              color='primary'
               size='small'
               type='button'
             >

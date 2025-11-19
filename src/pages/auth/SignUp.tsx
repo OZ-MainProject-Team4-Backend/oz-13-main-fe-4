@@ -154,8 +154,8 @@ export default function SignUp() {
       email: '',
       password: '',
       passwordConfirm: '',
-      gender: 'F', //디폴트값 선택되게끔
-      age: 'thirty',
+      gender: 'W', //디폴트값 선택되게끔
+      age_group: '30',
       emailCode: '',
     },
   });
@@ -243,7 +243,7 @@ export default function SignUp() {
                 render={({ field }) => (
                   <RadioGroup {...field} row css={{ justifyContent: 'space-around' }}>
                     <FormControlLabel value='M' control={<Radio />} label='남자' />
-                    <FormControlLabel value='F' control={<Radio />} label='여자' />
+                    <FormControlLabel value='W' control={<Radio />} label='여자' />
                   </RadioGroup>
                 )}
               />
@@ -251,16 +251,16 @@ export default function SignUp() {
             <FormControl sx={{ flex: 1 }}>
               <FormLabel htmlFor='named-select'>연령대</FormLabel>
               <Controller
-                name='age'
+                name='age_group'
                 control={control}
                 render={({ field }) => (
                   <Select {...field} id='named-select'>
-                    <MenuItem value={'ten'}>10대</MenuItem>
-                    <MenuItem value={'twenty'}>20대</MenuItem>
-                    <MenuItem value={'thirty'}>30대</MenuItem>
-                    <MenuItem value={'fourthy'}>40대</MenuItem>
-                    <MenuItem value={'fifth'}>50대</MenuItem>
-                    <MenuItem value={'sixth'}>60대</MenuItem>
+                    <MenuItem value={'10'}>10대</MenuItem>
+                    <MenuItem value={'20'}>20대</MenuItem>
+                    <MenuItem value={'30'}>30대</MenuItem>
+                    <MenuItem value={'40'}>40대</MenuItem>
+                    <MenuItem value={'50'}>50대</MenuItem>
+                    <MenuItem value={'60'}>60대</MenuItem>
                   </Select>
                 )}
               />
