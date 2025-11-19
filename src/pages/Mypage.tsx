@@ -29,22 +29,31 @@ export default function Mypage() {
     return <div>에러 발생</div>;
   }
 
-  const onSubmit = form.handleSubmit((data) => {
-    handleProfileSubmit(
-      data,
-      () => {
-        setModalTitle('회원정보 수정');
-        setModalMessage('마이페이지 수정 완료');
-        setShowModal(true);
-        setIsEditMode(false);
-      },
-      (message) => {
-        setModalTitle('회원정보 수정 오류');
-        setModalMessage(message);
-        setShowModal(true);
-      }
-    );
-  });
+  const onSubmit = form.handleSubmit(
+    (data) => {
+      console.log('🚀 onSubmit 호출됨');
+      console.log('📋 폼 데이터:', data);
+      handleProfileSubmit(
+        data,
+        () => {
+          setModalTitle('회원정보 수정');
+          setModalMessage('마이페이지 수정 완료');
+          setShowModal(true);
+          setIsEditMode(false);
+        },
+        (message) => {
+          setModalTitle('회원정보 수정 오류');
+          setModalMessage(message);
+          setShowModal(true);
+        }
+      );
+    },
+    (errors) => {
+      console.error('❌ 폼 유효성 검사 실패:', errors);
+      console.log('현재 폼 값:', form.getValues());
+      console.log('에러 상세:', JSON.stringify(errors, null, 2));
+    }
+  );
   const handleDelete = () => {
     console.log('UserDelegte');
     navigate('/signup');

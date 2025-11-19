@@ -47,8 +47,8 @@ export default function SignUp() {
 
   //회원가입 버튼 클릭하면?mutation 불러서 비동기 통신해야함.
   const onSubmit: SubmitHandler<FormField> = (data) => {
-    //🎃confirm비밀번호는 제외해야함 -> 구조분해 할당
-    const { passwordConfirm, ...rest } = data;
+    //🎃confirm비밀번호와 emailCode는 제외해야함 -> 구조분해 할당
+    const { passwordConfirm, emailCode, ...rest } = data;
     signUpMutation.mutate(rest, {
       onSuccess: () => {
         alert('회원가입 성공👋🏻');
