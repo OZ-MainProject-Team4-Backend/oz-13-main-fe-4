@@ -17,11 +17,15 @@ import { useState } from 'react';
 import { Controller } from 'react-hook-form';
 import BaseModal from '../../../components/Modal/BaseModal';
 import { useNicknameValidateMutation } from '../../auth/hooks/useNicknameValidateMutation';
-import { useMypageForm } from '../hooks/useMypageForm';
 import { ProfileSectionProps } from '../types/mypage.types';
 
-export default function ProfileSection({ isEditMode, onEditModeChange }: ProfileSectionProps) {
-  const { form, validationState, updateValidation, resetValidation } = useMypageForm();
+export default function ProfileSection({
+  isEditMode,
+  onEditModeChange,
+  form,
+  validationState,
+  updateValidation,
+}: ProfileSectionProps) {
   const {
     register,
     control,
