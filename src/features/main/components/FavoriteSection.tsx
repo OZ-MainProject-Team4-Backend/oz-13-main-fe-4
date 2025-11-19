@@ -126,7 +126,7 @@ export const FavoritesSection = ({
         <CardSlot key={favorite.id}>
           <FavoriteLocationCard
             favorite={favorite}
-            isSelected={selectedFavoriteId === favorite.id}
+            selected={selectedFavoriteId === favorite.id}
             onClick={() => onFavoriteSelect(favorite.id)}
             onAliasUpdate={onAliasUpdate}
             onDelete={onDelete}

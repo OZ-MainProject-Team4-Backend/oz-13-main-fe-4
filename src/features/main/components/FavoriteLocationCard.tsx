@@ -13,17 +13,17 @@ import { useCurrentWeatherByLocation } from '../hooks/useCurrentWeatherByLocatio
 
 interface FavoriteLocationCardProps {
   favorite: FavoriteLocation;
-  isSelected: boolean;
+  selected: boolean;
   onClick: () => void;
   onAliasUpdate: (id: number, alias: string) => void;
   onDelete: (id: number) => void;
 }
 
-const CardContainer = styled(Box)<{ isSelected: boolean }>(({ isSelected }) => ({
+const CardContainer = styled(Box)<{ selected: boolean }>(({ selected }) => ({
   width: '20rem',
   flexShrink: 0,
-  backgroundColor: isSelected ? '#E3F2FD' : '#FFF',
-  border: isSelected ? '3px solid #1976D2' : '2px solid #E0E0E0',
+  backgroundColor: selected ? '#E3F2FD' : '#FFF',
+  border: selected ? '3px solid #1976D2' : '2px solid #E0E0E0',
   borderRadius: '12px',
   padding: '16px',
   cursor: 'pointer',
@@ -95,7 +95,7 @@ const ActionButtons = styled(Box)({
 
 export const FavoriteLocationCard = ({
   favorite,
-  isSelected,
+  selected,
   onClick,
   onAliasUpdate,
   onDelete,
@@ -152,7 +152,7 @@ export const FavoriteLocationCard = ({
   if (!weather) return null;
 
   return (
-    <CardContainer ref={setNodeRef} style={style} isSelected={isSelected} onClick={onClick}>
+    <CardContainer ref={setNodeRef} style={style} selected={selected} onClick={onClick}>
       <CardHeader>
         <DragHandle {...attributes} {...listeners}>
           <DragIndicatorIcon fontSize='small' />
