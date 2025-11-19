@@ -1,14 +1,14 @@
-import { Box, Typography, IconButton, TextField } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
-import styled from '@emotion/styled';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import styled from '@emotion/styled';
+import BorderColorTwoToneIcon from '@mui/icons-material/BorderColorTwoTone';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import HighlightOffTwoToneIcon from '@mui/icons-material/HighlightOffTwoTone';
+import WbSunnyTwoToneIcon from '@mui/icons-material/WbSunnyTwoTone';
+import { Box, IconButton, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { FavoriteLocation } from '../../favorite/api/favoriteAPI';
-import { WeatherIcon } from '../../main/components/WeatherIcon';
 
 interface FavoriteLocationCardProps {
   favorite: FavoriteLocation;
@@ -17,7 +17,6 @@ interface FavoriteLocationCardProps {
 }
 
 const CardContainer = styled(Box)({
-  width: '100%',
   backgroundColor: '#FFF',
   border: '2px solid #E0E0E0',
   borderRadius: '12px',
@@ -128,7 +127,7 @@ export default function FavoriteLocationCard({
     <CardContainer ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <CardHeader>
         <LocationInfo>
-          <WeatherIcon iconCode='01d' size={40} />
+          <WbSunnyTwoToneIcon fontSize='large' color='warning' />
           {isEditing ? (
             <EditContainer>
               <TextField
@@ -157,10 +156,10 @@ export default function FavoriteLocationCard({
         {!isEditing && (
           <ActionButtons>
             <IconButton size='small' onClick={handleEditClick}>
-              <EditIcon fontSize='small' sx={{ color: '#1976D2' }} />
+              <BorderColorTwoToneIcon fontSize='medium' sx={{ color: '#1976D2' }} />
             </IconButton>
             <IconButton size='small' onClick={handleDelete}>
-              <DeleteIcon fontSize='small' sx={{ color: '#EF5350' }} />
+              <HighlightOffTwoToneIcon fontSize='medium' sx={{ color: '#EF5350' }} />
             </IconButton>
           </ActionButtons>
         )}
